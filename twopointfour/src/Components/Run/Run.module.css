@@ -1,0 +1,13 @@
+.run {
+  margin: 1rem 1rem;
+  display: flex;
+  flex-flow: column;
+}
+
+.runWrapper {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(35rem, 1fr));
+  gap: 1rem;
+  padding: 0;
+}

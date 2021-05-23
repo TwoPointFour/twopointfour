@@ -1,0 +1,31 @@
+.normal {
+  fill: #9ca3af;
+}
+
+.selected {
+  fill: #2563eb;
+}
+
+.nav__item {
+  background-color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.pop {
+  border-radius: 50%;
+  background-color: rgb(255, 196, 0);
+  fill: white !important;
+  height: 5rem;
+  width: 5rem;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(-1.5rem);
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.3);
+}
+
+.nav__item > * {
+  height: 2.5rem;
+}

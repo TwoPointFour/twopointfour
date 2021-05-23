@@ -1,0 +1,31 @@
+.metrics {
+  border-radius: 1rem;
+  padding: 0.5rem 1rem 1rem 1rem;
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  gap: 1rem;
+  background-image: linear-gradient(to top left, var(--yellow-100), var(--yellow-300));
+}
+
+.metrics__icon {
+  height: 1.5rem;
+  width: 1.5rem;
+  margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
+
+.metrics__icon svg {
+  fill: white;
+}
+
+.metrics__details {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+}
+
+.metrics__title h5 {
+  font-weight: 400;
+  color: var(--yellow-900);
+}

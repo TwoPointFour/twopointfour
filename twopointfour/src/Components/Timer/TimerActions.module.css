@@ -1,0 +1,23 @@
+.action__item svg {
+  height: 2rem;
+  fill: white;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+}
+
+.action__item {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.timer__actions {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  margin: 1rem 0;
+}

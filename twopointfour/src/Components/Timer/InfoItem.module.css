@@ -1,0 +1,13 @@
+.info__item {
+  display: flex;
+  flex-flow: row;
+  gap: 1rem;
+  background-color: white;
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.15);
+  padding: 0 1rem;
+  border-radius: 0.5rem;
+}
+
+.value {
+  color: #fbbf24;
+}

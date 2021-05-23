@@ -1,0 +1,17 @@
+.digit {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.large {
+  font-size: 8rem;
+  font-weight: 700;
+  width: 5.5rem;
+}
+.small {
+  font-size: 4rem;
+  font-weight: 500;
+  width: 2.5rem;
+  color: grey;
+}

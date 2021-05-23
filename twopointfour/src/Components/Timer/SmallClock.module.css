@@ -1,0 +1,17 @@
+.clock {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  background-color: rgb(255, 254, 250);
+  padding: 0.5rem 2rem;
+  border-radius: 2rem;
+  box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.15);
+}
+
+.rest {
+  background-color: #d1fae5;
+}
+
+.rest * {
+  color: #34d399;
+}

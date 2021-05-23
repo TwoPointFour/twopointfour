@@ -1,0 +1,17 @@
+.digit {
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 3.5rem;
+}
+
+.number {
+  display: flex;
+  flex-flow: row;
+  align-items: flex-end;
+  color: var(--yellow-500);
+}
+
+.unit {
+  font-weight: 700;
+  font-size: 1.3rem;
+}

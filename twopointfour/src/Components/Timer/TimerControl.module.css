@@ -1,0 +1,7 @@
+.timer__control {
+  margin-top: 2rem;
+  display: flex;
+  flex-flow: row;
+  height: 20rem;
+  width: 100%;
+}

@@ -1,0 +1,13 @@
+.input__multi {
+  display: flex;
+  flex-flow: column;
+}
+
+.input__group {
+  display: flex;
+  flex-flow: column;
+}
+
+.title {
+  margin-bottom: 1rem;
+}

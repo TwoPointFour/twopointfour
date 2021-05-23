@@ -1,0 +1,14 @@
+.questionnaire {
+  margin: 1rem;
+  margin-bottom: 2rem;
+}
+
+.form {
+  display: flex;
+  flex-flow: column;
+  gap: 2rem;
+}
+
+.header {
+  margin-bottom: 2rem;
+}

@@ -1,0 +1,8 @@
+.input__group {
+  display: flex;
+  flex-flow: column;
+}
+
+.input__group h4 {
+  font-weight: 500;
+}
