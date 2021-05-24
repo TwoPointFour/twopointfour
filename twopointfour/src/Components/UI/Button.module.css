@@ -60,3 +60,14 @@
   border-radius: 1rem;
   font-size: 2rem;
 }
+
+.large {
+  padding: 1rem 3rem;
+  border-radius: 0.5rem;
+  font-size: 2rem;
+}
+.small {
+  padding: 0.5rem 2rem;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+}

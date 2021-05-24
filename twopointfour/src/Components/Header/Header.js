@@ -1,31 +1,25 @@
 import Avatar from "../UI/Avatar";
 import styles from "./Header.module.css";
-import logoIcon from "../Assets/icon_x144.png";
 import yihein from "../Assets/yihein.jpg";
 import { useLocation } from "react-router";
+import Icons from "../Assets/Icons";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const { pathname } = useLocation();
-  const HeaderText = pathname
-    .slice(1)
-    .replace(pathname.slice(1)[0], pathname.slice(1)[0].toUpperCase());
-  console.log(HeaderText);
+  const HeaderText = pathname.split("/")[1].toUpperCase();
   return (
     <nav className={styles.header}>
       <ul className={styles["header__list"]}>
         <li>
-          <Avatar>
-            <img src={logoIcon}></img>
-          </Avatar>
+          <Avatar>{Icons["logo"]}</Avatar>
         </li>
         <li>
           <h2>{HeaderText}</h2>
         </li>
-        <li>
-          <Avatar>
-            <img src={yihein}></img>
-          </Avatar>
-        </li>
+        <Link to="/profile">
+          <li className={styles.profile}>{Icons["profile"]}</li>
+        </Link>
       </ul>
     </nav>
   );

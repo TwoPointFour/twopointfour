@@ -1,0 +1,96 @@
+.login {
+  height: 100vh;
+  width: 100vw;
+  background-color: white;
+  padding: 2rem;
+  display: grid;
+  grid-template-rows: 4fr 2.5fr 2.5fr;
+}
+
+.login__logo {
+  height: 12rem;
+  width: 12rem;
+}
+
+.login__title {
+  font-weight: 600;
+  text-align: center;
+}
+
+.login__description {
+  color: var(--gray-500);
+  text-align: center;
+}
+
+.login__signedUp {
+  color: var(--green-500);
+  text-align: center;
+  background-color: var(--green-50);
+  border-radius: 0.5rem;
+  padding: 0.2rem;
+  margin-top: 1rem;
+}
+
+.login__splash {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.login__button-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.login__button {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.input__wrapper {
+  display: flex;
+  flex-flow: column;
+  margin-bottom: 1rem;
+}
+
+.login__form {
+  margin-left: 2rem;
+  margin-right: 2rem;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.login__form p {
+  font-size: 0.9rem;
+  color: var(--gray-400);
+  text-align: center;
+}
+
+.login__form p a {
+  text-decoration: underline;
+  color: var(--gray-500);
+}
+
+.login__forgot {
+  margin-top: 0.5rem;
+  color: var(--yellow-400);
+  font-size: 1.3rem;
+  font-weight: 500;
+  justify-self: center;
+}
+
+.login__signup {
+  color: var(--gray-400);
+  font-size: 1.3rem;
+  justify-self: center;
+  align-self: flex-end;
+}
+
+.login__register {
+  color: var(--yellow-400);
+  cursor: pointer;
+}

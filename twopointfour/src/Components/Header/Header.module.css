@@ -22,3 +22,9 @@
 .header ul {
   list-style: none;
 }
+
+.profile {
+  height: 4rem;
+  width: 4rem;
+  fill: white;
+}

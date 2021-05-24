@@ -1,4 +1,5 @@
 import { configureStore, createSlice, current } from "@reduxjs/toolkit";
+import { useHistory } from "react-router";
 import { getJSON, getTrainingPlan } from "../Components/Helper/Helper";
 
 const initialUIState = {
@@ -12,6 +13,8 @@ const initialUIState = {
     status: "loading",
     title: "Loading",
     description: "Getting data... to do ownas;ldfjasl;dfjl workouts!!!",
+    buttonText: "temp",
+    buttonPath: "/run",
   },
 };
 
@@ -27,6 +30,8 @@ const UISlice = createSlice({
       state.modal.status = action.payload.status;
       state.modal.title = action.payload.title;
       state.modal.description = action.payload.description;
+      state.modal.buttonText = action.payload.buttonText;
+      state.modal.buttonPath = action.payload.buttonPath;
       console.log(current(state));
     },
     showModal(state, action) {
@@ -53,12 +58,15 @@ const workoutSlice = createSlice({
 
 export const workoutAction = workoutSlice.actions;
 
-export const retrieveNextWorkout = () => {
-  return async (dispatch) => {
+export const initialiseData = () => {
+  return async (dispatch, getState) => {
+    const state = getState().user.authentication;
+    const idToken = state.idToken;
+    const uid = state.uid;
     dispatch(UIAction.setMainUIStatus({ status: "loading" }));
 
     const nextWorkout = await getJSON(
-      "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/workouts/nextWorkout.json"
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/nextWorkout.json?auth=${idToken}`
     );
 
     dispatch(workoutAction.setNextWorkout(nextWorkout));
@@ -230,6 +238,15 @@ export const startTimer = () => {
 };
 
 const initialUserState = {
+  authentication: {
+    idToken: "",
+    uid: "",
+  },
+  userProfile: {
+    email: "",
+    displayName: "",
+    bio: "",
+  },
   questionnaire: {
     regular: "",
     frequency: null,
@@ -241,20 +258,42 @@ const initialUserState = {
   },
 };
 
-const userSlice = createSlice({ name: "user", initialState: initialUserState, reducers: {} });
+const userSlice = createSlice({
+  name: "user",
+  initialState: initialUserState,
+  reducers: {
+    updateAuthentication(state, action) {
+      state.authentication.idToken = action.payload.idToken;
+      state.authentication.uid = action.payload.uid;
+      console.log(current(state));
+    },
+    updateUserProfile(state, action) {
+      state.userProfile.email = action.payload.email;
+      state.userProfile.displayName = action.payload.displayName;
+      state.userProfile.bio = action.payload.bio;
+    },
+  },
+});
+
+export const userAction = userSlice.actions;
 
 export const sendQuestionnaire = (input) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState().user.authentication;
+    const idToken = state.idToken;
+    const uid = state.uid;
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
         status: "loading",
         title: "Loading...",
         description: "Sending questionnaire responses to the server...",
       })
     );
     await fetch(
-      "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/questionnaire.json",
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/questionnaire.json?auth=${idToken}`,
       {
         method: "PUT",
         headers: {
@@ -267,6 +306,8 @@ export const sendQuestionnaire = (input) => {
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
         status: "loading",
         title: "Loading...",
         description: "Clearing any previous records...",
@@ -274,7 +315,7 @@ export const sendQuestionnaire = (input) => {
     );
 
     await fetch(
-      "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/workouts/previousWorkout.json",
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/previousWorkout.json?auth=${idToken}`,
       {
         method: "PUT",
         headers: {
@@ -287,6 +328,8 @@ export const sendQuestionnaire = (input) => {
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
         status: "loading",
         title: "Loading...",
         description: "Downloading available workouts...",
@@ -295,19 +338,21 @@ export const sendQuestionnaire = (input) => {
 
     const [primary, secondary, pyramid] = await Promise.all([
       getJSON(
-        "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/primary.json"
+        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/primary.json?auth=${idToken}`
       ),
       getJSON(
-        "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/secondary.json"
+        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/secondary.json?auth=${idToken}`
       ),
       getJSON(
-        "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/pyramid.json"
+        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/pyramid.json?auth=${idToken}`
       ),
     ]);
 
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
         status: "loading",
         title: "Loading...",
         description:
@@ -320,6 +365,8 @@ export const sendQuestionnaire = (input) => {
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
         status: "loading",
         title: "Loading...",
         description: "Updating the server...",
@@ -327,7 +374,7 @@ export const sendQuestionnaire = (input) => {
     );
 
     await fetch(
-      "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/currentFitness.json",
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/currentFitness.json?auth=${idToken}`,
       {
         method: "PUT",
         headers: {
@@ -338,7 +385,7 @@ export const sendQuestionnaire = (input) => {
     );
 
     await fetch(
-      "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/workouts/nextWorkout.json",
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/nextWorkout.json?auth=${idToken}`,
       {
         method: "PUT",
         headers: {
@@ -353,6 +400,8 @@ export const sendQuestionnaire = (input) => {
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "View Workouts",
+        buttonPath: "/run",
         status: "success",
         title: "Success!",
         description: "Personalised workout found! View your next workout now! 🏃‍♂️",
@@ -362,10 +411,15 @@ export const sendQuestionnaire = (input) => {
 };
 
 export const saveWorkout = (workout) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState().user.authentication;
+    const idToken = state.idToken;
+    const uid = state.uid;
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
         status: "loading",
         title: "Loading...",
         description: "Sending workout data...",
@@ -373,7 +427,7 @@ export const saveWorkout = (workout) => {
     );
 
     await fetch(
-      "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/workouts/previousWorkout.json",
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/previousWorkout.json?auth=${idToken}`,
       {
         method: "PUT",
         headers: {
@@ -386,6 +440,8 @@ export const saveWorkout = (workout) => {
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
         status: "loading",
         title: "Loading...",
         description: "Updating the server...",
@@ -393,13 +449,13 @@ export const saveWorkout = (workout) => {
     );
 
     let count = await getJSON(
-      "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/workouts/count.json"
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/count.json?auth=${idToken}`
     );
 
     count++;
 
     await fetch(
-      "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/workouts/count.json",
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/count.json?auth=${idToken}`,
       {
         method: "PUT",
         headers: {
@@ -412,6 +468,8 @@ export const saveWorkout = (workout) => {
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
         status: "loading",
         title: "Loading...",
         description: "Creating workout entry in database...",
@@ -419,9 +477,9 @@ export const saveWorkout = (workout) => {
     );
 
     await fetch(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/workouts/logs/${
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs/${
         count - 1
-      }.json`,
+      }.json?auth=${idToken}`,
       {
         method: "PUT",
         headers: {
@@ -436,6 +494,8 @@ export const saveWorkout = (workout) => {
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
         status: "loading",
         title: "Loading...",
         description: "Initialising next workout recommender",
@@ -445,28 +505,30 @@ export const saveWorkout = (workout) => {
     const [primary, secondary, pyramid, questionnaire, previousWorkout, previousFitness] =
       await Promise.all([
         getJSON(
-          "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/primary.json"
+          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/primary.json?auth=${idToken}`
         ),
         getJSON(
-          "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/secondary.json"
+          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/secondary.json?auth=${idToken}`
         ),
         getJSON(
-          "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/pyramid.json"
+          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/pyramid.json?auth=${idToken}`
         ),
         getJSON(
-          "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/questionnaire.json"
+          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/questionnaire.json?auth=${idToken}`
         ),
         getJSON(
-          "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/workouts/previousWorkout.json"
+          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/previousWorkout.json?auth=${idToken}`
         ),
         getJSON(
-          "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/currentFitness.json"
+          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/currentFitness.json?auth=${idToken}`
         ),
       ]);
 
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
         status: "loading",
         title: "Loading...",
         description:
@@ -483,7 +545,7 @@ export const saveWorkout = (workout) => {
     );
 
     await fetch(
-      "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/currentFitness.json",
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/currentFitness.json?auth=${idToken}`,
       {
         method: "PUT",
         headers: {
@@ -498,7 +560,7 @@ export const saveWorkout = (workout) => {
     console.log("Sending next training...");
 
     await fetch(
-      "https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/yihein/workouts/nextWorkout.json",
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/nextWorkout.json?auth=${idToken}`,
       {
         method: "PUT",
         headers: {
@@ -511,6 +573,8 @@ export const saveWorkout = (workout) => {
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
         status: "loading",
         title: "Loading...",
         description: "Finding next training",
@@ -522,6 +586,8 @@ export const saveWorkout = (workout) => {
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
+        buttonText: "View Workouts",
+        buttonPath: "/run",
         status: "success",
         title: "Success!",
         description:
@@ -532,10 +598,13 @@ export const saveWorkout = (workout) => {
 };
 
 export const updateDatabase = (input, path) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const state = getState().user.authentication;
+    const idToken = state.idToken;
+    const uid = state.uid;
     console.log("Sending Data...");
     await fetch(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/${path}.json`,
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/${path}.json?auth=${idToken}`,
       {
         method: "PUT",
         headers: {
@@ -547,6 +616,61 @@ export const updateDatabase = (input, path) => {
     console.log("Data sent!");
   };
 };
+
+export const updateUserProfileHTTP = (input) => {
+  return async (dispatch, getState) => {
+    const state = getState().user.authentication;
+    const idToken = state.idToken;
+    const uid = state.uid;
+
+    const userProfileInfo = { email: input.email, bio: input.bio, displayName: input.displayName };
+
+    dispatch(userAction.updateUserProfile(userProfileInfo));
+
+    dispatch(
+      UIAction.setModalUIStatus({
+        show: true,
+        buttonText: "temp",
+        buttonPath: "/run",
+        status: "loading",
+        title: "Loading",
+        description: "Updating your user profile...",
+      })
+    );
+
+    await fetch(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/userProfile.json?auth=${idToken}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userProfileInfo),
+      }
+    );
+
+    dispatch(
+      UIAction.setModalUIStatus({
+        show: true,
+        buttonText: "close",
+        buttonPath: "/profile",
+        status: "success",
+        title: "Success!",
+        description: "Your profile has been updated!",
+      })
+    );
+  };
+};
+
+export function logout() {
+  return (dispatch) => {
+    document.cookie = `idToken=""; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+    document.cookie = `uid=""; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+    // document.cookie = null;
+    console.log(document.cookie);
+    dispatch(userAction.updateAuthentication({ idToken: null, uid: null }));
+  };
+}
 
 const store = configureStore({
   reducer: {

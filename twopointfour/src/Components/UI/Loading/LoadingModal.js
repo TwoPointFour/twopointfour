@@ -22,7 +22,7 @@ const LoadingModal = () => {
           <h3 className={styles.title}>{modalInfo.title}</h3>
           <p className={styles.description}>{modalInfo.description}</p>
           {modalInfo.status === "success" && (
-            <Link to="/run">
+            <Link to={modalInfo.buttonPath}>
               <Button
                 onClickHandler={() => {
                   dispatch(UIAction.showModal(false));
@@ -30,7 +30,7 @@ const LoadingModal = () => {
                 length="long"
                 color="yellow-fill"
               >
-                View Suggested Workout
+                {modalInfo.buttonText}
               </Button>
             </Link>
           )}

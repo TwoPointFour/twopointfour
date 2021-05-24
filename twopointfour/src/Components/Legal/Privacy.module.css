@@ -1,0 +1,12 @@
+.privacy {
+  overflow: scroll;
+  padding: 2rem;
+  max-height: 80vh;
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+}
+
+.privacy p {
+  text-align: justify;
+}

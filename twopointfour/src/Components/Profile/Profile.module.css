@@ -1,0 +1,76 @@
+.profile {
+  margin: 2rem 1.5rem 0rem 1.5rem;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.profile__info {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.profile__email {
+  color: var(--gray-400);
+  font-size: 1.3rem;
+}
+
+.profile__img {
+  height: 10rem;
+  width: 10rem;
+  border-radius: 50%;
+}
+
+.profile__edit {
+  width: 100%;
+  padding: 2rem;
+}
+
+.profile__update {
+  margin-top: 1rem;
+}
+
+.profile__bio {
+  color: var(--gray-900);
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.questionnaire {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  padding: 2rem;
+}
+
+.questionnaire p {
+  font-size: 1.2rem;
+}
+
+.warning {
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  background-color: var(--red-100);
+  color: var(--red-500);
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.questionnaire__button {
+  padding: 1.5rem;
+  width: 100%;
+  border-radius: 1rem;
+  margin-top: 1rem;
+  font-size: 1.6rem;
+}
+
+.logout {
+  width: 100%;
+  margin-bottom: 2rem;
+}

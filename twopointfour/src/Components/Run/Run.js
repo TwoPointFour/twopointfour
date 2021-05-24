@@ -5,11 +5,8 @@ import RunItem from "./RunItem";
 
 const Run = () => {
   const nextWorkout = useSelector((state) => state.workout.nextWorkout);
-  console.log(nextWorkout);
-  // const nextWorkout = false;
   return (
     <div className={styles.run}>
-      <h1>Upcoming Workouts</h1>
       <div className={styles.runWrapper}>
         {nextWorkout && <RunItem workoutInfo={nextWorkout} color="white" />}
         {!nextWorkout && (
