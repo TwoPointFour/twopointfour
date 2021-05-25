@@ -206,9 +206,14 @@ export const getTrainingPlan = (
 };
 
 export async function getJSON(url) {
-  const raw = await fetch(url);
-  const data = await raw.json();
-  return data;
+  try {
+    const raw = await fetch(url);
+    const data = await raw.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 }
 
 const testObj = {

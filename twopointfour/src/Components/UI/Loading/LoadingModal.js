@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { UIAction } from "../../../store/mainSlice";
 import Icons from "../../Assets/Icons";
 import Button from "../Button";
-import Card from "../Card";
+import Card from "../Card/Card";
 import Modal from "../Modal";
 import styles from "./LoadingModal.module.css";
 import Spinner from "./Spinner";

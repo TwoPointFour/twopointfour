@@ -23,6 +23,7 @@
   height: 10rem;
   width: 10rem;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .profile__edit {
@@ -73,4 +74,12 @@
 .logout {
   width: 100%;
   margin-bottom: 2rem;
+}
+
+.filler {
+  height: 10rem;
+  width: 10rem;
+  fill: var(--gray-400);
+  background-color: white;
+  border-radius: 50%;
 }

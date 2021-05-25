@@ -1,9 +1,9 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sendQuestionnaire, updateDatabase } from "../../store/mainSlice";
 import { primary, pyramid, secondary } from "../Helper/Workouts";
 import useInput from "../Hooks/use-input";
 import Button from "../UI/Button";
-import Card from "../UI/Card";
+import Card from "../UI/Card/Card";
 import Input from "../UI/Input/Input";
 import InputGroup from "../UI/Input/InputGroup";
 import InputGroupMulti from "../UI/Input/InputGroupMulti";

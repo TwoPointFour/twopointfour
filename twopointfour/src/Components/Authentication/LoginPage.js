@@ -4,6 +4,8 @@ import { Route, useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { userAction } from "../../store/mainSlice";
 import Icons from "../Assets/Icons";
+import { putHTTP } from "../Helper/Complementary";
+import { getJSON } from "../Helper/Helper";
 import Privacy from "../Legal/Privacy";
 import Terms from "../Legal/Terms";
 import Button from "../UI/Button";
@@ -70,20 +72,35 @@ const LoginPage = () => {
       if (response.ok && !isLogin) {
         //initializing the account
 
-        await fetch(
-          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${responseData.localId}/userProfile.json?auth=${responseData.idToken}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: responseData.email,
-              bio: "",
-              displayName: responseData.email.split("@")[0],
-            }),
-          }
+        const userDataInitialisation = {
+          userProfile: {
+            email: responseData.email,
+            bio: "",
+            displayName: responseData.email.split("@")[0],
+          },
+          questionnaire: {
+            distance: "temp",
+            duration: "temp",
+            experience: "temp",
+            frequency: "temp",
+            latest: "temp",
+            regular: "temp",
+            target: "temp",
+            workoutFrequency: "temp",
+          },
+          workouts: {
+            previousWorkout: "temp",
+            nextWorkout: "temp",
+            currentFitness: "temp",
+            logs: "temp",
+          },
+        };
+
+        await putHTTP(
+          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${responseData.localId}.json?auth=${responseData.idToken}`,
+          userDataInitialisation
         );
+
         setIsLogin(true);
         setSignedUp(true);
       }

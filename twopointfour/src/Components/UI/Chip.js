@@ -1,7 +1,11 @@
 import styles from "./Chip.module.css";
 
 const Chip = (props) => {
-  return <div className={`${styles.chip} ${styles[props.color]}`}>{props.children}</div>;
+  return (
+    <span className={`${styles.chip} ${styles[props.color]} ${styles[props.size]}`}>
+      {props.children}
+    </span>
+  );
 };
 
 export default Chip;

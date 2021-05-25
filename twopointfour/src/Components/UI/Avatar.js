@@ -1,7 +1,7 @@
 import styles from "./Avatar.module.css";
 
 const Avatar = (props) => {
-  return <figure className={styles.avatar}>{props.children}</figure>;
+  return <img className={`${styles.avatar} ${styles[props.size]}`} src={props.url}></img>;
 };
 
 export default Avatar;

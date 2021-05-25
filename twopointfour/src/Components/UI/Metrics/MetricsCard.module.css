@@ -6,17 +6,17 @@
   flex-flow: row;
   justify-content: flex-start;
   gap: 1rem;
-  background-image: linear-gradient(to top left, var(--yellow-100), var(--yellow-300));
+  background-color: var(--yellow-100);
 }
 
 .metrics__icon {
-  height: 1.5rem;
-  width: 1.5rem;
+  height: 2.5rem;
+  width: 2.5rem;
   margin: 0.5rem 0.5rem 0.5rem 0.5rem;
 }
 
 .metrics__icon svg {
-  fill: white;
+  fill: var(--yellow-400);
 }
 
 .metrics__details {

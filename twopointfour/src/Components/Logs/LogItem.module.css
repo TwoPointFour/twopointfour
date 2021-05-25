@@ -1,0 +1,78 @@
+.logs__card {
+  display: flex;
+  flex-flow: column;
+}
+
+.logs__card > * {
+  padding: 0.5rem 0rem;
+}
+
+.logs__name {
+  display: flex;
+  flex-flow: row;
+  gap: 1rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.logs__name .span {
+  font-weight: 500;
+  font-size: 1.4rem;
+  line-height: 1rem;
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+.logs__header {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.logs__datetime {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+}
+
+.name__info {
+  display: flex;
+  flex-flow: row;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.badges {
+  display: flex;
+  flex-flow: row;
+  overflow: scroll;
+  gap: 1rem;
+}
+
+.logs__datetime {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.workout__info {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  gap: 1rem;
+  align-items: center;
+}
+
+.workout__data {
+  display: grid;
+  grid-template-areas: "timing details" "timing target" "timing average";
+  grid-template-columns: minmax(4rem, 1fr);
+  gap: 1rem;
+  justify-content: center;
+  border-bottom: 1px solid var(--gray-300);
+}
+
+.workout__data > *:first-child {
+  grid-area: timing;
+}

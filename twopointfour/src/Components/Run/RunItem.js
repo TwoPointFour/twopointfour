@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import Icons from "../Assets/Icons";
 import Button from "../UI/Button";
-import Card from "../UI/Card";
-import CardNotFound from "../UI/CardNotFound";
+import Card from "../UI/Card/Card";
 import Chip from "../UI/Chip";
-import MetricsCard from "../UI/MetricsCard";
+import MetricsCard from "../UI/Metrics/MetricsCard";
 import styles from "./RunItem.module.css";
 
 const RunItem = (props) => {

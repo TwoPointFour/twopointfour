@@ -1,6 +1,6 @@
 import { useHistory } from "react-router";
 import Button from "../UI/Button";
-import Card from "../UI/Card";
+import Card from "../UI/Card/Card";
 import Modal from "../UI/Modal";
 import styles from "./Terms.module.css";
 

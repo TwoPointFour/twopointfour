@@ -1,12 +1,19 @@
 .avatar {
   border-radius: 50%;
-  background-color: white;
+  object-fit: cover;
+}
+
+.large {
+  height: 10rem;
+  width: 10rem;
+}
+
+.medium {
   height: 4rem;
   width: 4rem;
 }
 
-.avatar * {
-  height: 4rem;
-  width: 4rem;
-  border-radius: 50%;
+.small {
+  height: 2.5rem;
+  width: 2.5rem;
 }

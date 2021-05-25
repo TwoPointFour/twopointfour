@@ -1,0 +1,39 @@
+.metrics {
+  border-radius: 1rem;
+  padding: 0.5rem 1rem 1rem 1rem;
+  box-shadow: 0 1px 0.5rem 0 rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-start;
+  gap: 1rem;
+  background-color: white;
+}
+
+.metrics__details {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+}
+
+.metrics__title span {
+  font-weight: 400;
+  color: var(--yellow-900);
+}
+
+.digit {
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.number {
+  display: flex;
+  flex-flow: row;
+  align-items: flex-end;
+  color: var(--yellow-400);
+}
+
+.unit {
+  font-weight: 700;
+  font-size: 0.8rem;
+}

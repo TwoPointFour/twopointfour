@@ -1,0 +1,26 @@
+.button {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
+
+.button:hover {
+  background-color: var(--gray-100);
+}
+
+.button svg {
+  height: 2rem;
+  width: 2rem;
+  fill: var(--gray-500);
+  margin-right: 1rem;
+}
+
+.button span {
+  font-weight: 500;
+  color: var(--gray-500);
+}

@@ -1,5 +1,6 @@
 import { configureStore, createSlice, current } from "@reduxjs/toolkit";
 import { useHistory } from "react-router";
+import { postHTTP, putHTTP } from "../Components/Helper/Complementary";
 import { getJSON, getTrainingPlan } from "../Components/Helper/Helper";
 
 const initialUIState = {
@@ -44,6 +45,9 @@ export const UIAction = UISlice.actions;
 
 const initialWorkoutState = {
   nextWorkout: {},
+  previousWorkout: {},
+  logs: {},
+  currentFitness: null,
 };
 
 const workoutSlice = createSlice({
@@ -53,27 +57,20 @@ const workoutSlice = createSlice({
     setNextWorkout(state, action) {
       state.nextWorkout = action.payload;
     },
+    setCurrentFitness(state, action) {
+      state.currentFitness = action.payload;
+    },
+    setWorkoutData(state, action) {
+      state.nextWorkout = action.payload.nextWorkout;
+      state.previousWorkout = action.payload.previousWorkout;
+      state.logs = action.payload.logs;
+      state.currentFitness = action.payload.currentFitness;
+      console.log(current(state));
+    },
   },
 });
 
 export const workoutAction = workoutSlice.actions;
-
-export const initialiseData = () => {
-  return async (dispatch, getState) => {
-    const state = getState().user.authentication;
-    const idToken = state.idToken;
-    const uid = state.uid;
-    dispatch(UIAction.setMainUIStatus({ status: "loading" }));
-
-    const nextWorkout = await getJSON(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/nextWorkout.json?auth=${idToken}`
-    );
-
-    dispatch(workoutAction.setNextWorkout(nextWorkout));
-
-    dispatch(UIAction.setMainUIStatus({ status: "success" }));
-  };
-};
 
 const INTERVAL = 25;
 
@@ -271,6 +268,12 @@ const userSlice = createSlice({
       state.userProfile.email = action.payload.email;
       state.userProfile.displayName = action.payload.displayName;
       state.userProfile.bio = action.payload.bio;
+      state.userProfile.dp = action.payload.dp;
+      console.log(current(state));
+    },
+    updateQuestionnaire(state, action) {
+      state.questionnaire = action.payload;
+      console.log(current(state));
     },
   },
 });
@@ -292,15 +295,10 @@ export const sendQuestionnaire = (input) => {
         description: "Sending questionnaire responses to the server...",
       })
     );
-    await fetch(
+
+    await putHTTP(
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/questionnaire.json?auth=${idToken}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(input),
-      }
+      input
     );
 
     dispatch(
@@ -314,16 +312,14 @@ export const sendQuestionnaire = (input) => {
       })
     );
 
-    await fetch(
+    await putHTTP(
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/previousWorkout.json?auth=${idToken}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(""),
-      }
+      ""
     );
+
+    dispatch(userAction.updateQuestionnaire);
+
+    /////////////////////////////
 
     dispatch(
       UIAction.setModalUIStatus({
@@ -373,27 +369,16 @@ export const sendQuestionnaire = (input) => {
       })
     );
 
-    await fetch(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/currentFitness.json?auth=${idToken}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newFitness),
-      }
+    await putHTTP(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/currentFitness.json?auth=${idToken}`,
+      newFitness
+    );
+    await putHTTP(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/nextWorkout.json?auth=${idToken}`,
+      training
     );
 
-    await fetch(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/nextWorkout.json?auth=${idToken}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(training),
-      }
-    );
+    dispatch(workoutAction.setCurrentFitness(newFitness));
 
     dispatch(workoutAction.setNextWorkout(training));
 
@@ -413,6 +398,7 @@ export const sendQuestionnaire = (input) => {
 export const saveWorkout = (workout) => {
   return async (dispatch, getState) => {
     const state = getState().user.authentication;
+    const userProfile = getState().user.userProfile;
     const idToken = state.idToken;
     const uid = state.uid;
     dispatch(
@@ -426,15 +412,9 @@ export const saveWorkout = (workout) => {
       })
     );
 
-    await fetch(
+    await putHTTP(
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/previousWorkout.json?auth=${idToken}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(workout),
-      }
+      workout
     );
 
     dispatch(
@@ -448,23 +428,6 @@ export const saveWorkout = (workout) => {
       })
     );
 
-    let count = await getJSON(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/count.json?auth=${idToken}`
-    );
-
-    count++;
-
-    await fetch(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/count.json?auth=${idToken}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(count),
-      }
-    );
-
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
@@ -476,21 +439,27 @@ export const saveWorkout = (workout) => {
       })
     );
 
-    await fetch(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs/${
-        count - 1
-      }.json?auth=${idToken}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(workout),
-      }
+    const formattedWorkout = {
+      workout,
+      userProfile,
+    };
+
+    await postHTTP(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs.json?auth=${idToken}`,
+      formattedWorkout
     );
 
     ///////////////////////////////////////////////
 
+    dispatch(getNextTraining());
+  };
+};
+
+export const getNextTraining = () => {
+  return async (dispatch, getState) => {
+    const state = getState().user.authentication;
+    const idToken = state.idToken;
+    const uid = state.uid;
     dispatch(
       UIAction.setModalUIStatus({
         show: true,
@@ -502,27 +471,25 @@ export const saveWorkout = (workout) => {
       })
     );
 
-    const [primary, secondary, pyramid, questionnaire, previousWorkout, previousFitness] =
-      await Promise.all([
-        getJSON(
-          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/primary.json?auth=${idToken}`
-        ),
-        getJSON(
-          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/secondary.json?auth=${idToken}`
-        ),
-        getJSON(
-          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/pyramid.json?auth=${idToken}`
-        ),
-        getJSON(
-          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/questionnaire.json?auth=${idToken}`
-        ),
-        getJSON(
-          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/previousWorkout.json?auth=${idToken}`
-        ),
-        getJSON(
-          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/currentFitness.json?auth=${idToken}`
-        ),
-      ]);
+    const [primary, secondary, pyramid] = await Promise.all([
+      getJSON(
+        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/primary.json?auth=${idToken}`
+      ),
+      getJSON(
+        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/secondary.json?auth=${idToken}`
+      ),
+      getJSON(
+        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/pyramid.json?auth=${idToken}`
+      ),
+    ]);
+
+    const previousWorkout = getState().workout.previousWorkout;
+    const previousWorkoutAvailable = !!previousWorkout.segment;
+    const previousFitness = getState().workout.currentFitness;
+    const previousFitnessAvailable = !!previousFitness;
+    const questionnaire = getState().user.questionnaire;
+
+    console.log(previousFitnessAvailable && previousWorkout);
 
     dispatch(
       UIAction.setModalUIStatus({
@@ -540,35 +507,27 @@ export const saveWorkout = (workout) => {
       questionnaire,
       primary,
       secondary,
-      previousWorkout,
-      previousFitness
+      previousFitnessAvailable && previousWorkout,
+      previousFitnessAvailable && previousFitness
     );
 
-    await fetch(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/currentFitness.json?auth=${idToken}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newFitness),
-      }
+    await putHTTP(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/currentFitness.json?auth=${idToken}`,
+      newFitness
     );
+
+    dispatch(workoutAction.setCurrentFitness(newFitness));
 
     console.log("currentFitness sent!!!");
 
     console.log("Sending next training...");
 
-    await fetch(
+    await putHTTP(
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/nextWorkout.json?auth=${idToken}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(training),
-      }
+      training
     );
+
+    dispatch(workoutAction.setNextWorkout(training));
 
     dispatch(
       UIAction.setModalUIStatus({
@@ -580,8 +539,6 @@ export const saveWorkout = (workout) => {
         description: "Finding next training",
       })
     );
-
-    dispatch(workoutAction.setNextWorkout(training));
 
     dispatch(
       UIAction.setModalUIStatus({
@@ -623,7 +580,12 @@ export const updateUserProfileHTTP = (input) => {
     const idToken = state.idToken;
     const uid = state.uid;
 
-    const userProfileInfo = { email: input.email, bio: input.bio, displayName: input.displayName };
+    const userProfileInfo = {
+      email: input.email,
+      bio: input.bio,
+      displayName: input.displayName,
+      dp: input.dp,
+    };
 
     dispatch(userAction.updateUserProfile(userProfileInfo));
 
@@ -671,6 +633,29 @@ export function logout() {
     dispatch(userAction.updateAuthentication({ idToken: null, uid: null }));
   };
 }
+
+export const initialiseData = () => {
+  return async (dispatch, getState) => {
+    const state = getState().user.authentication;
+    const idToken = state.idToken;
+    const uid = state.uid;
+    dispatch(UIAction.setMainUIStatus({ status: "loading" }));
+
+    const userData = await getJSON(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}.json?auth=${idToken}`
+    );
+
+    console.log(userData);
+
+    dispatch(workoutAction.setWorkoutData(userData.workouts));
+
+    dispatch(userAction.updateUserProfile(userData.userProfile));
+
+    dispatch(userAction.updateQuestionnaire(userData.questionnaire));
+
+    dispatch(UIAction.setMainUIStatus({ status: "success" }));
+  };
+};
 
 const store = configureStore({
   reducer: {

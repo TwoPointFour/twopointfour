@@ -1,5 +1,5 @@
-import Icons from "../Assets/Icons";
-import IconCircular from "./IconCircular";
+import Icons from "../../Assets/Icons";
+import IconCircular from "../IconCircular";
 import styles from "./MetricsCard.module.css";
 import MetricsNumber from "./MetricsNumber";
 

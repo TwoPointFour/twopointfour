@@ -1,4 +1,4 @@
-import Card from "../Card";
+import Card from "../Card/Card";
 import styles from "./Spinner.module.css";
 
 const Spinner = (props) => {

@@ -23,8 +23,16 @@
   list-style: none;
 }
 
+.logo {
+  height: 4rem;
+  width: 4rem;
+  background-color: white;
+  border-radius: 50%;
+}
 .profile {
   height: 4rem;
   width: 4rem;
   fill: white;
+  background-color: var(--yellow-400);
+  border-radius: 50%;
 }

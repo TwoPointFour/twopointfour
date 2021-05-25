@@ -1,25 +1,28 @@
 import Avatar from "../UI/Avatar";
 import styles from "./Profile.module.css";
 import yihein from "../Assets/yihein.jpg";
-import Card from "../UI/Card";
+import Card from "../UI/Card/Card";
 import InputNoValidation from "../UI/Input/InputNoValidation";
 import { useRef } from "react";
 import Button from "../UI/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, updateUserProfileHTTP } from "../../store/mainSlice";
 import { Link } from "react-router-dom";
+import Icons from "../Assets/Icons";
 
 const Profile = () => {
   const displayNameRef = useRef();
   const userBioRef = useRef();
+  const userDp = useRef();
   const dispatch = useDispatch();
   const currentProfile = useSelector((state) => state.user.userProfile);
 
   function onProfileUpdate() {
     const userProfileInfo = {
-      email: "chaiyihein@gmail.com",
+      email: currentProfile.email,
       displayName: displayNameRef.current.inputData.value,
       bio: userBioRef.current.inputData.value,
+      dp: userDp.current.inputData.value,
     };
     dispatch(updateUserProfileHTTP(userProfileInfo));
   }
@@ -29,10 +32,16 @@ const Profile = () => {
     dispatch(logout());
   }
 
+  console.log(currentProfile.dp);
+
   return (
     <div className={styles.profile}>
       <Card parentClassName={styles["profile__info"]} color="white">
-        <img className={styles["profile__img"]} src={yihein}></img>
+        {currentProfile.dp ? (
+          <Avatar size="large" url={currentProfile.dp} />
+        ) : (
+          <figure className={styles.filler}>{Icons["profile"]}</figure>
+        )}
         {currentProfile.displayName ? <h3>{currentProfile.displayName}</h3> : ""}
         <p className={styles["profile__email"]}>{currentProfile.email}</p>
         {currentProfile.bio ? <p className={styles["profile__bio"]}>{currentProfile.bio}</p> : ""}
@@ -49,6 +58,12 @@ const Profile = () => {
           ref={userBioRef}
           floatText="Bio"
           name="bio"
+          type="text"
+        ></InputNoValidation>
+        <InputNoValidation
+          ref={userDp}
+          floatText="Profile Image URL"
+          name="profileDp"
           type="text"
         ></InputNoValidation>
         <Button

@@ -1,0 +1,54 @@
+.comment__item {
+  display: flex;
+  flex-flow: row;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.comment__text p {
+  font-size: 1.2rem;
+}
+.comment__text h5 {
+  font-weight: 600;
+}
+
+.comment__text {
+  border-radius: 1rem;
+  background-color: var(--yellow-50);
+  box-shadow: 0 1px 5px 0 rgba(120, 53, 15, 0.25);
+  padding: 1rem;
+
+  /* OPTION A */
+  /* grid-template-columns: minmax(10rem, 1fr); */
+  /* display: grid; */
+
+  /* OPTION B */
+  /* flex-shrink: 1; */
+  min-width: 1px;
+  display: flex;
+  flex-flow: column;
+  /* GOBACK - WHY DO I NEED TO SET MIN-WIDTH FOR IT TO WORK?*/
+}
+
+.comment__name {
+  white-space: nowrap;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.comment__header {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  gap: 0.5rem;
+  /* flex-shrink: 1; */
+}
+
+.badges {
+  display: flex;
+  flex-flow: row;
+  overflow: scroll;
+  white-space: nowrap;
+  gap: 0.5rem;
+  flex-shrink: 1;
+}
