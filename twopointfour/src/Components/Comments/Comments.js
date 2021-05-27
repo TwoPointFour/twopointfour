@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { sendPrivateComment } from "../../store/mainSlice";
+import { sendCommunityComment, sendPrivateComment } from "../../store/mainSlice";
 import Avatar from "../UI/Avatar";
 import Button from "../UI/Button";
 import InputNoValidation from "../UI/Input/InputNoValidation";
@@ -11,6 +11,11 @@ const Comments = (props) => {
   const commentsRef = useRef();
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.user.userProfile);
+  const communityWorkouts = useSelector((state) => state.community.workouts);
+  const communityPresent =
+    communityWorkouts &&
+    Object.keys(communityWorkouts).length !== 0 &&
+    communityWorkouts.constructor === Object;
   // commentsRef.current.inputData.value
   const commentList =
     props.commentData &&
@@ -35,6 +40,7 @@ const Comments = (props) => {
       userProfile,
     };
     dispatch(sendPrivateComment(commentData, props.workoutID));
+    communityPresent && dispatch(sendCommunityComment(commentData, props.workoutID));
     commentsRef.current.inputData.value = "";
     commentsRef.current.inputData.blur();
   }

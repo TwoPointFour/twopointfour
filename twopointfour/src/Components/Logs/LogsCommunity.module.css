@@ -1,0 +1,10 @@
+.logs {
+  margin: 1.5rem 1.5rem;
+  display: flex;
+  flex-flow: column;
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(35rem, 1fr));
+  gap: 2rem;
+  padding: 0;
+}

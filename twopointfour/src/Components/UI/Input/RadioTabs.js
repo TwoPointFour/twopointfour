@@ -1,36 +1,41 @@
-import { useState } from "react";
 import styles from "./RadioTabs.module.css";
 
-const RadioTabs = () => {
-  const [clicked, setClicked] = useState(false);
+const RadioTabs = (props) => {
   return (
     <div className={styles["radio__wrapper"]}>
       <div className={styles.radio}>
-        <div className={styles["radio__element"]}>
-          temp
-          <input
-            onClick={() => setClicked(false)}
-            className={styles["radio__input"]}
-            name="radioSelect"
-            id="option1"
-            type="radio"
-          ></input>
-          <label className={styles["radio__label"]} htmlFor="option1"></label>
-          <label className={styles["radio__text"]}>My Logs</label>
-        </div>
-        <div className={styles["radio__element"]}>
-          temp
-          <input
-            onClick={() => setClicked(true)}
-            className={styles["radio__input"]}
-            name="radioSelect"
-            id="option2"
-            type="radio"
-          ></input>
-          <label className={styles["radio__label"]} htmlFor="option2"></label>
-          <label className={styles["radio__text"]}>Community</label>
-        </div>
-        <div className={`${styles["radio__slider"]} ${clicked ? styles.clicked : ""}`}></div>
+        <input
+          className={styles["radio__input"]}
+          name="radioSelect"
+          id={props.options[0].name}
+          type="radio"
+          onChange={() => props.onChangeHandler(props.options[0].name)}
+        ></input>
+        <label
+          className={styles["radio__label"]}
+          style={{ gridColumn: "1/1" }}
+          htmlFor={props.options[0].name}
+        ></label>
+        <label style={{ gridColumn: "1/1" }} className={styles["radio__text"]}>
+          {props.options[0].title}
+        </label>
+        <input
+          className={styles["radio__input"]}
+          style={{ gridColumn: "2/2" }}
+          name="radioSelect"
+          id={props.options[1].name}
+          type="radio"
+          onChange={() => props.onChangeHandler(props.options[1].name)}
+        ></input>
+        <div className={styles["radio__slider"]}></div>
+        <label
+          style={{ gridColumn: "2/2" }}
+          className={styles["radio__label"]}
+          htmlFor={props.options[1].name}
+        ></label>
+        <label style={{ gridColumn: "2/2" }} className={styles["radio__text"]}>
+          {props.options[1].title}
+        </label>
       </div>
     </div>
   );

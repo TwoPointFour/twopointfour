@@ -211,7 +211,6 @@ export async function getJSON(url) {
     const data = await raw.json();
     return data;
   } catch (error) {
-    console.error(error);
     throw error;
   }
 }

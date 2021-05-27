@@ -33,7 +33,6 @@ const UISlice = createSlice({
       state.modal.description = action.payload.description;
       state.modal.buttonText = action.payload.buttonText;
       state.modal.buttonPath = action.payload.buttonPath;
-      console.log(current(state));
     },
     showModal(state, action) {
       state.modal.show = action.payload;
@@ -65,11 +64,9 @@ const workoutSlice = createSlice({
       state.previousWorkout = action.payload.previousWorkout;
       state.logs = action.payload.logs;
       state.currentFitness = action.payload.currentFitness;
-      console.log(current(state));
     },
     deleteComment(state, action) {
       delete state.logs[action.payload.workoutID].social.comments[action.payload.commentID];
-      console.log(current(state));
     },
     addComment(state, action) {
       state.logs[action.payload.workoutID].social.comments = {
@@ -78,7 +75,6 @@ const workoutSlice = createSlice({
           ...action.payload.commentData,
         },
       };
-      console.log(current(state));
     },
   },
 });
@@ -132,7 +128,6 @@ const timerSlice = createSlice({
   initialState: initialTimerState,
   reducers: {
     initialiseTimer(state, action) {
-      console.log("Timer initialised!");
       state.trainingDate = Date.now();
       state.permSetCount = action.payload.parts[0].sets;
       state.permDistance = action.payload.parts[0].distance;
@@ -154,7 +149,6 @@ const timerSlice = createSlice({
         action.payload.personalisedDifficultyMultiplier;
       state.workoutData.parts[0] = { ...action.payload.parts[0], timings: [] };
       state.workoutData.date = Date.now();
-      console.log(current(state));
     },
     updateSetTime(state) {
       if (state.setTime <= 0 && state.setCount < state.permSetCount) {
@@ -221,7 +215,6 @@ const timerSlice = createSlice({
       state.paceTime = 0;
       state.distance = state.paceCount * 100;
       state.rest = true;
-      console.log(current(state));
     },
   },
 });
@@ -277,7 +270,6 @@ const userSlice = createSlice({
     updateAuthentication(state, action) {
       state.authentication.idToken = action.payload.idToken;
       state.authentication.uid = action.payload.uid;
-      console.log(current(state));
     },
     updateUserProfile(state, action) {
       state.userProfile.email = action.payload.email;
@@ -285,16 +277,38 @@ const userSlice = createSlice({
       state.userProfile.bio = action.payload.bio;
       state.userProfile.dp = action.payload.dp;
       state.userProfile.uid = action.payload.uid;
-      console.log(current(state));
     },
     updateQuestionnaire(state, action) {
       state.questionnaire = action.payload;
-      console.log(current(state));
     },
   },
 });
 
 export const userAction = userSlice.actions;
+
+const initialCommunityState = {
+  workouts: {},
+};
+
+const communitySlice = createSlice({
+  name: "community",
+  initialState: initialCommunityState,
+  reducers: {
+    getCommunityWorkouts(state, action) {
+      state.workouts = action.payload;
+      console.log(current(state));
+    },
+    addComment(state, action) {
+      console.log(current(state));
+      state.workouts[action.payload.workoutID].social.comments = {
+        ...state.workouts[action.payload.workoutID].social.comments,
+        [action.payload.commentID]: action.payload.commentData,
+      };
+    },
+  },
+});
+
+export const communityAction = communitySlice.actions;
 
 export const sendQuestionnaire = (input) => {
   return async (dispatch, getState) => {
@@ -333,7 +347,7 @@ export const sendQuestionnaire = (input) => {
       ""
     );
 
-    dispatch(userAction.updateQuestionnaire);
+    dispatch(userAction.updateQuestionnaire(input));
 
     /////////////////////////////
 
@@ -494,8 +508,6 @@ export const saveWorkout = (workout) => {
       formattedWorkout
     );
 
-    console.log(workoutID);
-
     await putHTTP(
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/community/${workoutID.name}.json?auth=${idToken}`,
       formattedWorkout
@@ -536,12 +548,14 @@ export const getNextTraining = () => {
     ]);
 
     const previousWorkout = getState().workout.previousWorkout;
-    const previousWorkoutAvailable = !!previousWorkout.segment;
-    const previousFitness = getState().workout.currentFitness;
-    const previousFitnessAvailable = !!previousFitness;
-    const questionnaire = getState().user.questionnaire;
 
-    console.log(previousFitnessAvailable && previousWorkout);
+    const previousWorkoutAvailable = !!previousWorkout.segment;
+
+    const previousFitness = getState().workout.currentFitness;
+
+    const previousFitnessAvailable = !!previousFitness;
+
+    const questionnaire = getState().user.questionnaire;
 
     dispatch(
       UIAction.setModalUIStatus({
@@ -559,7 +573,7 @@ export const getNextTraining = () => {
       questionnaire,
       primary,
       secondary,
-      previousFitnessAvailable && previousWorkout,
+      previousWorkoutAvailable && previousWorkout,
       previousFitnessAvailable && previousFitness
     );
 
@@ -569,10 +583,6 @@ export const getNextTraining = () => {
     );
 
     // dispatch(workoutAction.setCurrentFitness(newFitness));
-
-    console.log("currentFitness sent!!!");
-
-    console.log("Sending next training...");
 
     await putHTTP(
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/nextWorkout.json?auth=${idToken}`,
@@ -617,7 +627,6 @@ export const updateDatabase = (input, path) => {
     const state = getState().user.authentication;
     const idToken = state.idToken;
     const uid = state.uid;
-    console.log("Sending Data...");
     await fetch(
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/${path}.json?auth=${idToken}`,
       {
@@ -628,7 +637,6 @@ export const updateDatabase = (input, path) => {
         body: JSON.stringify(input),
       }
     );
-    console.log("Data sent!");
   };
 };
 
@@ -688,7 +696,6 @@ export function logout() {
     document.cookie = `idToken=""; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
     document.cookie = `uid=""; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
     // document.cookie = null;
-    console.log(document.cookie);
     dispatch(userAction.updateAuthentication({ idToken: null, uid: null }));
   };
 }
@@ -704,8 +711,6 @@ export const initialiseData = () => {
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}.json?auth=${idToken}`
     );
 
-    console.log(userData);
-
     dispatch(workoutAction.setWorkoutData(userData.workouts));
 
     dispatch(userAction.updateUserProfile(userData.userProfile));
@@ -713,14 +718,11 @@ export const initialiseData = () => {
     dispatch(userAction.updateQuestionnaire(userData.questionnaire));
 
     dispatch(UIAction.setMainUIStatus({ status: "success" }));
-
-    console.log(getState());
   };
 };
 
 export const sendPrivateComment = (commentData, workoutID) => {
   return async (dispatch, getState) => {
-    console.log("Thunk activated!");
     const { idToken, uid } = getState().user.authentication;
 
     const { name: commentID } = await postHTTP(
@@ -729,14 +731,18 @@ export const sendPrivateComment = (commentData, workoutID) => {
     );
 
     dispatch(workoutAction.addComment({ workoutID, commentID, commentData }));
+  };
+};
+export const sendCommunityComment = (commentData, workoutID) => {
+  return async (dispatch, getState) => {
+    const { idToken, uid } = getState().user.authentication;
 
-    // const workoutData = await getJSON(
-    //   `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts.json?auth=${idToken}`
-    // );
+    const { name: commentID } = await postHTTP(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/community/${workoutID}/social/comments.json?auth=${idToken}`,
+      commentData
+    );
 
-    // console.log(workoutData);
-
-    // dispatch(workoutAction.setWorkoutData(workoutData));
+    dispatch(communityAction.addComment({ workoutID, commentID, commentData }));
   };
 };
 export const deleteComment = (workoutID, commentID) => {
@@ -747,7 +753,16 @@ export const deleteComment = (workoutID, commentID) => {
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs/${workoutID}/social/comments/${commentID}.json?auth=${idToken}`
     );
 
-    console.log(workoutID, commentID);
+    dispatch(workoutAction.deleteComment({ workoutID, commentID }));
+  };
+};
+export const deleteCommunityComment = (workoutID, commentID) => {
+  return async (dispatch, getState) => {
+    const { idToken } = getState().user.authentication;
+
+    await deleteHTTP(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/community/${workoutID}/social/comments/${commentID}.json?auth=${idToken}`
+    );
 
     dispatch(workoutAction.deleteComment({ workoutID, commentID }));
   };
@@ -776,12 +791,40 @@ export const shareWorkout = (workoutID, workoutInfo, shareStatus) => {
   };
 };
 
+export const initializeCommunityWorkouts = () => {
+  return async (dispatch, getState) => {
+    const { idToken, uid } = getState().user.authentication;
+
+    dispatch(
+      UIAction.setModalUIStatus({
+        show: true,
+        status: "loading",
+        title: "Loading",
+        description: "Retrieving community workouts...",
+      })
+    );
+
+    const communityWorkouts = await getJSON(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/community.json?auth=${idToken}`
+    );
+
+    dispatch(communityAction.getCommunityWorkouts(communityWorkouts));
+
+    dispatch(
+      UIAction.setModalUIStatus({
+        show: false,
+      })
+    );
+  };
+};
+
 const store = configureStore({
   reducer: {
     timer: timerSlice.reducer,
     user: userSlice.reducer,
     workout: workoutSlice.reducer,
     ui: UISlice.reducer,
+    community: communitySlice.reducer,
   },
 });
 

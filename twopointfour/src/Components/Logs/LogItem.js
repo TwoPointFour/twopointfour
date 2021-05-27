@@ -83,14 +83,17 @@ const LogItem = (props) => {
             </div>
           </div>
         </div>
-        <div className={styles["logs__share"]}>
-          <span className={styles["logs__share-label"]}>Share</span>
-          <Switch
-            onChangeHandler={onShareClick}
-            shareStatus={workoutInfo.social.share}
-            workoutID={workoutID}
-          ></Switch>
-        </div>
+
+        {!props.noShare && (
+          <div className={styles["logs__share"]}>
+            <span className={styles["logs__share-label"]}>Share</span>
+            <Switch
+              onChangeHandler={onShareClick}
+              shareStatus={workoutInfo.social.share}
+              workoutID={workoutID}
+            ></Switch>
+          </div>
+        )}
       </div>
       <div className={styles["workout__info"]}>
         <CardMini>Sets {sets}</CardMini>
@@ -108,8 +111,8 @@ const LogItem = (props) => {
         ></MetricsMini>
         <MetricsMini title="Average / set" units="min" number={msToMinS(averageTime)}></MetricsMini>
       </div>
-      <UIButton onClickHandler={onCommentClick} />
-      {toggleComment && (
+      {!props.noComments && <UIButton onClickHandler={onCommentClick} />}
+      {!props.noComments && toggleComment && (
         <Comments workoutID={workoutID} workoutUser={workoutUser} commentData={comments} />
       )}
     </Card>

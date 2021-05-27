@@ -1,30 +1,24 @@
 import { useSelector } from "react-redux";
+import { Route } from "react-router";
 import CardNotFound from "../UI/Card/CardNotFound";
+import RadioLinks from "../UI/Input/RadioLinks";
+import RadioTabs from "../UI/Input/RadioTabs";
 import LogItem from "./LogItem";
 import styles from "./Logs.module.css";
+import LogsCommunity from "./LogsCommunity";
+import LogsPersonal from "./LogsPersonal";
 
 const Logs = () => {
-  const logs = useSelector((state) => state.workout.logs);
-  const logsPresent = logs && Object.keys(logs).length !== 0 && logs.constructor === Object;
-  const logList =
-    logsPresent &&
-    Object.entries(logs).map((ele) => {
-      return <LogItem workoutData={[ele[0], ele[1]]} />;
-    });
-  console.log(logs, logsPresent);
-
   return (
-    <div className={styles.logs}>
-      {!logsPresent && (
-        <CardNotFound
-          title="No Workout Logs"
-          description="You have not previous workout logs stored in our database. Please start a workout to see your logs here."
-          button="Start a Workout"
-          path="/run"
-        />
-      )}
-      {logsPresent && logList}
-    </div>
+    <>
+      <RadioLinks />
+      <Route path="/logs/mylogs">
+        <LogsPersonal />
+      </Route>
+      <Route path="/logs/community">
+        <LogsCommunity />
+      </Route>
+    </>
   );
 };
 

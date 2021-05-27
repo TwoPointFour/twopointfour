@@ -38,7 +38,6 @@ const Main = () => {
             <Run></Run>
           </Route>
           <Route path="/logs">
-            <RadioTabs />
             <Logs></Logs>
           </Route>
           <Route path="/analytics">

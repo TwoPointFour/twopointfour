@@ -7,7 +7,7 @@ const Nav = () => {
     <nav>
       <ul className={styles.nav}>
         <li>
-          <NavLink to="/logs" activeClassName={styles.active}>
+          <NavLink to="/logs/mylogs" activeClassName={styles.active}>
             <NavItem variation="normal" name="logs" />
           </NavLink>
         </li>
