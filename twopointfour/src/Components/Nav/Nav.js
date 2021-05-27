@@ -17,8 +17,8 @@ const Nav = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/timer" activeClassName={styles.active}>
-            <NavItem variation="normal" name="stopwatch" />
+          <NavLink to="/analytics" activeClassName={styles.active}>
+            <NavItem variation="normal" name="analytics" />
           </NavLink>
         </li>
       </ul>

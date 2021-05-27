@@ -48,11 +48,24 @@
   color: var(--yellow-500);
 }
 
+.gray-fill {
+  background-color: var(--gray-100);
+  box-shadow: none;
+  border: none;
+}
+
 .circle {
   padding: 0rem;
   border-radius: 50%;
   width: 4rem;
   height: 4rem;
+}
+
+.circle-small {
+  padding: 0rem;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
 }
 
 .long {

@@ -22,29 +22,6 @@ const LoginPage = () => {
 
   const [errorMessage, setErrorMessage] = useState(null);
 
-  useEffect(() => {
-    const uid = document.cookie
-      .split("; ")
-      .find((ele) => ele.startsWith("uid"))
-      ?.split("=")[1];
-    const idToken = document.cookie
-      .split("; ")
-      .find((ele) => ele.startsWith("idToken"))
-      ?.split("=")[1];
-
-    console.log(uid, idToken);
-
-    if (uid && idToken) {
-      dispatch(
-        userAction.updateAuthentication({
-          idToken,
-          uid,
-        })
-      );
-      history.replace("/run");
-    }
-  }, []);
-
   async function onFormSubmit(event) {
     event.preventDefault();
     try {
@@ -75,8 +52,11 @@ const LoginPage = () => {
         const userDataInitialisation = {
           userProfile: {
             email: responseData.email,
-            bio: "",
+            bio: "No Bio",
             displayName: responseData.email.split("@")[0],
+            dp: "https://i.pinimg.com/originals/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.png",
+            badges: [null],
+            uid: responseData.localId,
           },
           questionnaire: {
             distance: "temp",
@@ -121,6 +101,17 @@ const LoginPage = () => {
     } catch (error) {
       setErrorMessage(error);
     }
+  }
+
+  async function onGoogleSubmit(event) {
+    event.preventDefault();
+    // await fetch(
+    //   "https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A//www.googleapis.com/auth/calendar.readonly&include_granted_scopes=true&response_type=token&state=state_parameter_passthrough_value&redirect_uri=http%3A//localhost:3000&client_id=920795690755-hlovqjae3k9s6p2j7n2n5pf0r3hm4agh.apps.googleusercontent.com",
+    //   { redirect: "follow" }
+    // );
+    window.location.replace(
+      "https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A//www.googleapis.com/auth/calendar.readonly&include_granted_scopes=true&response_type=token&state=state_parameter_passthrough_value&redirect_uri=http%3A//localhost:3000/authorized&client_id=920795690755-hlovqjae3k9s6p2j7n2n5pf0r3hm4agh.apps.googleusercontent.com"
+    );
   }
 
   return (
@@ -174,6 +165,14 @@ const LoginPage = () => {
         >
           <span className={styles["login__button-text"]}>{isLogin ? "Login" : "Sign Up"}</span>
         </Button>
+        {/* <Button
+        onClickHandler={onGoogleSubmit}
+        className={styles["login__button"]}
+        length="large"
+        color="yellow-fill"
+      >
+        <span className={styles["login__button-text"]}>Login with Google</span>
+      </Button> */}
         {isLogin && <span className={styles["login__forgot"]}>Forgot password?</span>}
       </form>
       <span className={styles["login__signup"]}>

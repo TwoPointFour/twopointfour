@@ -39,5 +39,5 @@ export function msToTime(ms) {
   return `${dateObj.getHours().toString().padStart(2, "0")}:${dateObj
     .getMinutes()
     .toString()
-    .padStart(2, "0")}hrs`;
+    .padStart(2, "0")} hrs`;
 }

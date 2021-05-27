@@ -23,6 +23,7 @@ const Profile = () => {
       displayName: displayNameRef.current.inputData.value,
       bio: userBioRef.current.inputData.value,
       dp: userDp.current.inputData.value,
+      uid: currentProfile.uid,
     };
     dispatch(updateUserProfileHTTP(userProfileInfo));
   }
@@ -31,8 +32,6 @@ const Profile = () => {
     console.log("Logout clicked!");
     dispatch(logout());
   }
-
-  console.log(currentProfile.dp);
 
   return (
     <div className={styles.profile}>

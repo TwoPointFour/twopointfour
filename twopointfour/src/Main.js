@@ -9,6 +9,7 @@ import { initialiseData } from "./store/mainSlice";
 import LoadingPage from "./Components/UI/Loading/LoadingPage";
 import LoadingModal from "./Components/UI/Loading/LoadingModal";
 import Profile from "./Components/Profile/Profile";
+import Analytics from "./Components/Analytics/Analytics";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,9 @@ const Main = () => {
           </Route>
           <Route path="/logs">
             <Logs></Logs>
+          </Route>
+          <Route path="/analytics">
+            <Analytics />
           </Route>
           <Route path="/questionnaire">
             <Questionnaire></Questionnaire>

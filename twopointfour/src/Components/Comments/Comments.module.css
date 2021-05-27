@@ -1,11 +1,26 @@
 .comments {
   display: flex;
   flex-flow: column;
-  gap: 1rem;
+  gap: 2rem;
   border-top: 1px solid var(--gray-300);
 }
 
 .comment__input {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.comment__list {
+  display: flex;
+  flex-flow: column;
+  gap: 1.5rem;
+  max-height: 20rem;
+  overflow: scroll;
+}
+
+.form {
   display: flex;
   flex-flow: row;
   align-items: center;
