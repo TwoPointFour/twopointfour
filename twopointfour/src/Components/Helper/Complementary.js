@@ -8,12 +8,24 @@ export async function putHTTP(url, input) {
   });
 }
 export async function postHTTP(url, input) {
-  await fetch(url, {
+  const response = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(input),
+  });
+
+  const data = await response.json();
+
+  return data;
+}
+export async function deleteHTTP(url, input) {
+  await fetch(url, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 }
 
@@ -41,3 +53,14 @@ export function msToTime(ms) {
     .toString()
     .padStart(2, "0")} hrs`;
 }
+
+// addComment(state, action) {
+//   const commentID = action.payload.commentID;
+
+//   state.logs[action.payload.workoutID].social.comments = {
+//     ...state.logs[action.payload.workoutID].social.comments,
+//     commentID: {
+//       ...action.payload.commentData,
+//     },
+//   };
+// },

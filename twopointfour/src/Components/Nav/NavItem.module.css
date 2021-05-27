@@ -14,7 +14,7 @@
 
 .pop {
   border-radius: 50%;
-  background-color: rgb(255, 196, 0);
+  background-color: var(--yellow-300);
   fill: white !important;
   height: 5rem;
   width: 5rem;

@@ -4,7 +4,7 @@
   flex-flow: row;
   gap: 1rem;
   background-color: var(--yellow-50);
-  /* border: 1px solid var(--yellow-400); */
+  /* border: 1px solid var(--yellow-300); */
   justify-content: flex-start;
   align-items: center;
   width: 10rem;
@@ -32,10 +32,10 @@
   height: 1.2rem;
   box-sizing: border-box;
   border: 3px solid var(--yellow-50);
-  background-color: var(--yellow-400);
+  background-color: var(--yellow-300);
 }
 .radioOption input[type="radio"]:checked + label {
-  background-color: var(--yellow-400);
+  background-color: var(--yellow-300);
   color: var(--yellow-50);
 }
 

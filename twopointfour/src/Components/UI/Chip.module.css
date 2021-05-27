@@ -16,7 +16,7 @@
 }
 
 .yellow {
-  border: 1px solid var(--yellow-400);
+  border: 1px solid var(--yellow-300);
   background-color: var(--yellow-50);
   color: var(--yellow-500);
 }

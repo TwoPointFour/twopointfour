@@ -16,7 +16,7 @@
 }
 
 .metrics__icon svg {
-  fill: var(--yellow-400);
+  fill: var(--yellow-300);
 }
 
 .metrics__details {

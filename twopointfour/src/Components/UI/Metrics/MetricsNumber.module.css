@@ -8,7 +8,7 @@
   display: flex;
   flex-flow: row;
   align-items: flex-end;
-  color: var(--yellow-400);
+  color: var(--yellow-300);
 }
 
 .unit {

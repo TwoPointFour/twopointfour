@@ -10,6 +10,7 @@ import LoadingPage from "./Components/UI/Loading/LoadingPage";
 import LoadingModal from "./Components/UI/Loading/LoadingModal";
 import Profile from "./Components/Profile/Profile";
 import Analytics from "./Components/Analytics/Analytics";
+import RadioTabs from "./Components/UI/Input/RadioTabs";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,7 @@ const Main = () => {
             <Run></Run>
           </Route>
           <Route path="/logs">
+            <RadioTabs />
             <Logs></Logs>
           </Route>
           <Route path="/analytics">

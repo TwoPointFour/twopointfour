@@ -29,7 +29,7 @@
 }
 
 .yellow-fill {
-  background-color: var(--yellow-400);
+  background-color: var(--yellow-300);
   border: none;
   color: var(--yellow-50);
 }

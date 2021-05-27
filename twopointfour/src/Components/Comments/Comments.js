@@ -12,13 +12,20 @@ const Comments = (props) => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state) => state.user.userProfile);
   // commentsRef.current.inputData.value
-  const commentList = Object.entries(props.commentData)
-    .sort((a, b) => a[1].time - b[1].time)
-    .map((ele) => {
-      return (
-        <CommentItem commentID={ele[0]} workoutUser={props.workoutUser} commentData={ele[1]} />
-      );
-    });
+  const commentList =
+    props.commentData &&
+    Object.entries(props.commentData)
+      .sort((a, b) => a[1].time - b[1].time)
+      .map((ele) => {
+        return (
+          <CommentItem
+            commentID={ele[0]}
+            workoutID={props.workoutID}
+            workoutUser={props.workoutUser}
+            commentData={ele[1]}
+          />
+        );
+      });
 
   function onSendClick(event) {
     event.preventDefault();

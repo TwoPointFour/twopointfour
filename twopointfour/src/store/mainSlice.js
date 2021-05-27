@@ -1,6 +1,6 @@
 import { configureStore, createSlice, current } from "@reduxjs/toolkit";
 import { useHistory } from "react-router";
-import { postHTTP, putHTTP } from "../Components/Helper/Complementary";
+import { postHTTP, putHTTP, deleteHTTP } from "../Components/Helper/Complementary";
 import { getJSON, getTrainingPlan } from "../Components/Helper/Helper";
 
 const initialUIState = {
@@ -65,6 +65,19 @@ const workoutSlice = createSlice({
       state.previousWorkout = action.payload.previousWorkout;
       state.logs = action.payload.logs;
       state.currentFitness = action.payload.currentFitness;
+      console.log(current(state));
+    },
+    deleteComment(state, action) {
+      delete state.logs[action.payload.workoutID].social.comments[action.payload.commentID];
+      console.log(current(state));
+    },
+    addComment(state, action) {
+      state.logs[action.payload.workoutID].social.comments = {
+        ...state.logs[action.payload.workoutID].social.comments,
+        [action.payload.commentID]: {
+          ...action.payload.commentData,
+        },
+      };
       console.log(current(state));
     },
   },
@@ -476,8 +489,15 @@ export const saveWorkout = (workout) => {
       social,
     };
 
-    await postHTTP(
+    const workoutID = await postHTTP(
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs.json?auth=${idToken}`,
+      formattedWorkout
+    );
+
+    console.log(workoutID);
+
+    await putHTTP(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/community/${workoutID.name}.json?auth=${idToken}`,
       formattedWorkout
     );
 
@@ -701,64 +721,58 @@ export const initialiseData = () => {
 export const sendPrivateComment = (commentData, workoutID) => {
   return async (dispatch, getState) => {
     console.log("Thunk activated!");
-    const state = getState().user.authentication;
-    const idToken = state.idToken;
-    const uid = state.uid;
+    const { idToken, uid } = getState().user.authentication;
 
-    await postHTTP(
+    const { name: commentID } = await postHTTP(
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs/${workoutID}/social/comments.json?auth=${idToken}`,
       commentData
     );
 
-    const workoutData = await getJSON(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts.json?auth=${idToken}`
-    );
+    dispatch(workoutAction.addComment({ workoutID, commentID, commentData }));
 
-    console.log(workoutData);
+    // const workoutData = await getJSON(
+    //   `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts.json?auth=${idToken}`
+    // );
 
-    dispatch(workoutAction.setWorkoutData(workoutData));
+    // console.log(workoutData);
+
+    // dispatch(workoutAction.setWorkoutData(workoutData));
   };
 };
-export const deleteComment = (commentData, workoutID, commentID) => {
-  return async (dispatch, getState) => {
-    const state = getState().user.authentication;
-    const idToken = state.idToken;
-    const uid = state.uid;
-
-    await postHTTP(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs/${workoutID}/comments.json?auth=${idToken}`,
-      commentData
-    );
-
-    const workoutData = await getJSON(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts.json?auth=${idToken}`
-    );
-
-    console.log(workoutData);
-
-    dispatch(workoutAction.setWorkoutData(workoutData));
-  };
-};
-
-export const shareWorkout = (workoutID, workoutInfo) => {
+export const deleteComment = (workoutID, commentID) => {
   return async (dispatch, getState) => {
     const { idToken, uid } = getState().user.authentication;
 
-    if (workoutInfo.social.share === true) {
+    await deleteHTTP(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs/${workoutID}/social/comments/${commentID}.json?auth=${idToken}`
+    );
+
+    console.log(workoutID, commentID);
+
+    dispatch(workoutAction.deleteComment({ workoutID, commentID }));
+  };
+};
+
+export const shareWorkout = (workoutID, workoutInfo, shareStatus) => {
+  return async (dispatch, getState) => {
+    const { idToken, uid } = getState().user.authentication;
+
+    if (shareStatus === true) {
       await putHTTP(
         `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/community/${workoutID}.json?auth=${idToken}`,
         workoutInfo
       );
-
-      await putHTTP(
-        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs/${workoutID}/share.json?auth=${idToken}`,
-        workoutInfo.social.share
+    }
+    if (shareStatus === false) {
+      await deleteHTTP(
+        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/community/${workoutID}.json?auth=${idToken}`
       );
     }
 
-    if (workoutInfo.social.share === false) {
-      await 
-    }
+    await putHTTP(
+      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs/${workoutID}/social/share.json?auth=${idToken}`,
+      shareStatus
+    );
   };
 };
 

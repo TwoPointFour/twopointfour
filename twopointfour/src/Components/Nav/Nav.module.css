@@ -16,5 +16,5 @@
 }
 
 .active button {
-  fill: #fbbf24;
+  fill: var(--yellow-300);
 }

@@ -1,4 +1,5 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteComment } from "../../store/mainSlice";
 import { msToMinS, msToTime } from "../Helper/Complementary";
 import Avatar from "../UI/Avatar";
 import Button from "../UI/Button";
@@ -6,6 +7,7 @@ import Chip from "../UI/Chip";
 import styles from "./CommentItem.module.css";
 
 const CommentItem = (props) => {
+  const dispatch = useDispatch();
   const {
     time,
     text,
@@ -22,7 +24,9 @@ const CommentItem = (props) => {
   const userID = useSelector((state) => state.user.userProfile.uid);
   const havePermission = userID === props.workoutUser || userID === uid;
 
-  function onCommentDelete() {}
+  function onCommentDelete() {
+    dispatch(deleteComment(props.workoutID, props.commentID));
+  }
 
   return (
     <div className={styles["comment__item"]}>
@@ -39,7 +43,7 @@ const CommentItem = (props) => {
       </div>
       {havePermission && (
         <Button
-          onClickHandler={() => console.log()}
+          onClickHandler={onCommentDelete}
           variation="circle-small"
           color="gray-fill"
           className={styles["comment__delete"]}

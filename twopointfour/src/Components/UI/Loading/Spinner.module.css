@@ -9,8 +9,8 @@
   width: 6.4rem;
   height: 6.4rem;
   border-radius: 50%;
-  border: 6px solid var(--yellow-400);
-  border-color: var(--yellow-400) var(--gray-200) var(--gray-200) var(--gray-200);
+  border: 6px solid var(--yellow-300);
+  border-color: var(--yellow-300) var(--gray-200) var(--gray-200) var(--gray-200);
   animation: spinner 0.8s linear infinite;
 }
 
@@ -22,8 +22,8 @@
 .large:after {
   width: 6.4rem;
   height: 6.4rem;
-  border: 10px solid var(--yellow-400);
-  border-color: var(--yellow-400) var(--gray-200) var(--gray-200) var(--gray-200);
+  border: 10px solid var(--yellow-300);
+  border-color: var(--yellow-300) var(--gray-200) var(--gray-200) var(--gray-200);
 }
 
 .medium {

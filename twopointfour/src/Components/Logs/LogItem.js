@@ -16,6 +16,7 @@ import styles from "./LogItem.module.css";
 
 const LogItem = (props) => {
   const [toggleComment, setToggleComment] = useState(false);
+  const dispatch = useDispatch();
   const workoutID = props.workoutData[0];
   const workoutInfo = props.workoutData[1];
   const comments = props.workoutData[1].social.comments;
@@ -35,7 +36,8 @@ const LogItem = (props) => {
   function onShareClick(input) {
     console.log("share clicked!");
     console.log(input);
-    // dispatch(shareWorkout(workoutID, workoutInfo));
+    const modifiedWorkoutInfo = { ...workoutInfo, social: { ...workoutInfo.social, share: input } };
+    dispatch(shareWorkout(workoutID, modifiedWorkoutInfo, input));
   }
 
   const date = msToDate(props.workoutData[1].workout.date);
