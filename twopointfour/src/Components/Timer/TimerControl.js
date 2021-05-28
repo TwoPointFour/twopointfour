@@ -5,7 +5,6 @@ import styles from "./TimerControl.module.css";
 
 const TimerControl = () => {
   const dispatch = useDispatch();
-  const pause = useSelector((state) => state.timer.pause);
 
   //   const updateCountdown = () => {
   //     dispatch(timerAction.updateSetTime());
@@ -27,7 +26,6 @@ const TimerControl = () => {
 
   return (
     <div className={styles["timer__control"]}>
-      <p>{pause}</p>
       <Button onClickHandler={timerStartHandler} color="green" variation="timer">
         Start
       </Button>

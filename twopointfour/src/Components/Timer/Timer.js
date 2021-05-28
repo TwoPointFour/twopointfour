@@ -13,6 +13,7 @@ const Timer = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(timerAction.initialiseTimer(workoutInfo));
+    console.log("Timer re-rendered!");
   }, [workoutInfo]);
 
   return (

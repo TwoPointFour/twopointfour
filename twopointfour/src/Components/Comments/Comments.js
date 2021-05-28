@@ -39,7 +39,6 @@ const Comments = (props) => {
       text: commentsRef.current.inputData.value,
       userProfile,
     };
-    dispatch(sendPrivateComment(commentData, props.workoutID));
     communityPresent && dispatch(sendCommunityComment(commentData, props.workoutID));
     commentsRef.current.inputData.value = "";
     commentsRef.current.inputData.blur();

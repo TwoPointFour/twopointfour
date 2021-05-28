@@ -37,3 +37,16 @@
   font-weight: 700;
   font-size: 0.8rem;
 }
+
+.large .metrics__title span {
+  font-size: 1.5rem;
+}
+
+.large .digit {
+  font-size: 2.5rem;
+  line-height: 3rem;
+}
+
+.large .unit {
+  font-size: 1.2rem;
+}

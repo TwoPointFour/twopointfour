@@ -1,7 +1,13 @@
 .timer__control {
   margin-top: 2rem;
-  display: flex;
-  flex-flow: row;
-  height: 20rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  flex-grow: 1;
   width: 100%;
+  gap: 1rem;
+}
+
+.timer__control * {
+  margin-left: 0;
+  margin-right: 0;
 }

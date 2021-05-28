@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { deleteComment } from "../../store/mainSlice";
+import { deleteComment, deleteCommunityComment } from "../../store/mainSlice";
 import { msToMinS, msToTime } from "../Helper/Complementary";
 import Avatar from "../UI/Avatar";
 import Button from "../UI/Button";
@@ -25,7 +25,7 @@ const CommentItem = (props) => {
   const havePermission = userID === props.workoutUser || userID === uid;
 
   function onCommentDelete() {
-    dispatch(deleteComment(props.workoutID, props.commentID));
+    dispatch(deleteCommunityComment(props.workoutID, props.commentID));
   }
 
   return (

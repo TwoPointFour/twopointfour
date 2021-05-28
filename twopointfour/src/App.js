@@ -11,10 +11,14 @@ import LoginPage from "./Components/Authentication/LoginPage";
 import { Redirect, Route, useHistory } from "react-router";
 import Authorized from "./Components/Authentication/Authorized";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const App = () => {
   const idToken = useSelector((state) => state.user.authentication.idToken);
   const uid = useSelector((state) => state.user.authentication.uid);
+  const location = useLocation();
+  const pathArray = location.pathname.split("/").slice(1);
+  const timerOn = pathArray.some((ele) => ele === "timer");
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -51,11 +55,19 @@ const App = () => {
       </Route>
       {idToken && (
         <>
-          <Header></Header>
-          <DummyHeader />
+          {!timerOn && (
+            <>
+              <Header></Header>
+              <DummyHeader />
+            </>
+          )}
           <Main></Main>
-          <Nav />
-          <DummyNav />
+          {!timerOn && (
+            <>
+              <DummyNav />
+              <Nav />
+            </>
+          )}
         </>
       )}
       {!idToken && (

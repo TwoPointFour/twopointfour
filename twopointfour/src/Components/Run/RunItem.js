@@ -24,7 +24,7 @@ const RunItem = (props) => {
         <MetricsCard title="Sets" number={info.sets} units="" />
         <MetricsCard title="Distance" number={info.distance} units="m" />
         <MetricsCard title="Rest" number={info.rest} units="s" />
-        <MetricsCard title="Pace" number={Math.floor(info.pace / 1000)} units="s/100m" />
+        <MetricsCard title="Pace" number={parseFloat(info.pace / 1000).toFixed(2)} units="s/100m" />
       </div>
       <Link to="/timer">
         <Button className={styles.button} length="long" color="yellow">

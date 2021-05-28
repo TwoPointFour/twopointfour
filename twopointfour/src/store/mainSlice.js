@@ -65,17 +65,6 @@ const workoutSlice = createSlice({
       state.logs = action.payload.logs;
       state.currentFitness = action.payload.currentFitness;
     },
-    deleteComment(state, action) {
-      delete state.logs[action.payload.workoutID].social.comments[action.payload.commentID];
-    },
-    addComment(state, action) {
-      state.logs[action.payload.workoutID].social.comments = {
-        ...state.logs[action.payload.workoutID].social.comments,
-        [action.payload.commentID]: {
-          ...action.payload.commentData,
-        },
-      };
-    },
   },
 });
 
@@ -141,6 +130,20 @@ const timerSlice = createSlice({
       state.setTime = 30000000;
       state.setTimeElpased = 0;
       state.setCount = 1;
+      state.rest = false;
+      state.bigTimeValue = {
+        tenSec: null,
+        oneSec: null,
+        tenMilli: null,
+        oneMilli: null,
+      };
+      state.smallTimeValue = {
+        tenMin: null,
+        oneMin: null,
+        tenSec: null,
+        oneSec: null,
+      };
+      state.pause = true;
       state.workoutData.workout_ID = action.payload.workout_ID;
       state.workoutData.type = action.payload.type;
       state.workoutData.segment = action.payload.segment;
@@ -304,6 +307,9 @@ const communitySlice = createSlice({
         ...state.workouts[action.payload.workoutID].social.comments,
         [action.payload.commentID]: action.payload.commentData,
       };
+    },
+    deleteComment(state, action) {
+      delete state.workouts[action.payload.workoutID].social.comments[action.payload.commentID];
     },
   },
 });
@@ -721,18 +727,6 @@ export const initialiseData = () => {
   };
 };
 
-export const sendPrivateComment = (commentData, workoutID) => {
-  return async (dispatch, getState) => {
-    const { idToken, uid } = getState().user.authentication;
-
-    const { name: commentID } = await postHTTP(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs/${workoutID}/social/comments.json?auth=${idToken}`,
-      commentData
-    );
-
-    dispatch(workoutAction.addComment({ workoutID, commentID, commentData }));
-  };
-};
 export const sendCommunityComment = (commentData, workoutID) => {
   return async (dispatch, getState) => {
     const { idToken, uid } = getState().user.authentication;
@@ -745,17 +739,7 @@ export const sendCommunityComment = (commentData, workoutID) => {
     dispatch(communityAction.addComment({ workoutID, commentID, commentData }));
   };
 };
-export const deleteComment = (workoutID, commentID) => {
-  return async (dispatch, getState) => {
-    const { idToken, uid } = getState().user.authentication;
 
-    await deleteHTTP(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/logs/${workoutID}/social/comments/${commentID}.json?auth=${idToken}`
-    );
-
-    dispatch(workoutAction.deleteComment({ workoutID, commentID }));
-  };
-};
 export const deleteCommunityComment = (workoutID, commentID) => {
   return async (dispatch, getState) => {
     const { idToken } = getState().user.authentication;
@@ -764,7 +748,7 @@ export const deleteCommunityComment = (workoutID, commentID) => {
       `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/community/${workoutID}/social/comments/${commentID}.json?auth=${idToken}`
     );
 
-    dispatch(workoutAction.deleteComment({ workoutID, commentID }));
+    dispatch(communityAction.deleteComment({ workoutID, commentID }));
   };
 };
 
