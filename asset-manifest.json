@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/twopointfour/static/css/main.92476d5e.chunk.css",
+    "main.js": "/twopointfour/static/js/main.50e3c44b.chunk.js",
+    "main.js.map": "/twopointfour/static/js/main.50e3c44b.chunk.js.map",
+    "runtime-main.js": "/twopointfour/static/js/runtime-main.6f26eea0.js",
+    "runtime-main.js.map": "/twopointfour/static/js/runtime-main.6f26eea0.js.map",
+    "static/js/2.c7b74ba6.chunk.js": "/twopointfour/static/js/2.c7b74ba6.chunk.js",
+    "static/js/2.c7b74ba6.chunk.js.map": "/twopointfour/static/js/2.c7b74ba6.chunk.js.map",
+    "index.html": "/twopointfour/index.html",
+    "static/css/main.92476d5e.chunk.css.map": "/twopointfour/static/css/main.92476d5e.chunk.css.map",
+    "static/js/2.c7b74ba6.chunk.js.LICENSE.txt": "/twopointfour/static/js/2.c7b74ba6.chunk.js.LICENSE.txt",
+    "static/media/100.de0e779f.mp3": "/twopointfour/static/media/100.de0e779f.mp3",
+    "static/media/audioenabled.529f86a1.mp3": "/twopointfour/static/media/audioenabled.529f86a1.mp3",
+    "static/media/yihein.957ada07.jpg": "/twopointfour/static/media/yihein.957ada07.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.6f26eea0.js",
+    "static/js/2.c7b74ba6.chunk.js",
+    "static/css/main.92476d5e.chunk.css",
+    "static/js/main.50e3c44b.chunk.js"
+  ]
+}
