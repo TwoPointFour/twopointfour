@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/twopointfour/static/css/main.92476d5e.chunk.css",
-    "main.js": "/twopointfour/static/js/main.20ca47ad.chunk.js",
-    "main.js.map": "/twopointfour/static/js/main.20ca47ad.chunk.js.map",
+    "main.js": "/twopointfour/static/js/main.50e3c44b.chunk.js",
+    "main.js.map": "/twopointfour/static/js/main.50e3c44b.chunk.js.map",
     "runtime-main.js": "/twopointfour/static/js/runtime-main.6f26eea0.js",
     "runtime-main.js.map": "/twopointfour/static/js/runtime-main.6f26eea0.js.map",
     "static/js/2.c7b74ba6.chunk.js": "/twopointfour/static/js/2.c7b74ba6.chunk.js",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.6f26eea0.js",
     "static/js/2.c7b74ba6.chunk.js",
     "static/css/main.92476d5e.chunk.css",
-    "static/js/main.20ca47ad.chunk.js"
+    "static/js/main.50e3c44b.chunk.js"
   ]
 }
