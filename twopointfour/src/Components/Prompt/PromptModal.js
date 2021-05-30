@@ -19,7 +19,7 @@ const PromptModal = (props) => {
   return (
     <Modal>
       <Card parentClassName={styles.prompt} color="white">
-        <h1>{props.title}</h1>
+        <h2>{props.title}</h2>
         {description}
         <div className={styles["prompt__controls"]}>
           <Button length="medium" onClickHandler={gobackPrevious} color="gray-borderless">

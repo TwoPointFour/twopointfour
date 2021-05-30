@@ -1,0 +1,51 @@
+.tutorial {
+  display: flex;
+  flex-flow: column;
+  gap: 1rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding: 2rem;
+  text-align: justify;
+  max-height: 55rem;
+  overflow: scroll;
+}
+
+.tutorial h4,
+.tutorial h5 {
+  font-weight: 500;
+}
+
+.tutorial p {
+  font-size: 1.2rem;
+}
+
+.tutorial__controls {
+  display: flex;
+  flex-flow: row;
+  gap: 2rem;
+}
+
+.tutorial__close {
+  height: 1.4rem;
+  width: 1.4rem;
+  fill: var(--gray-400);
+}
+
+.tutorial__img {
+  width: 100%;
+  max-width: 40rem;
+  border-radius: 1rem;
+  align-self: center;
+}
+
+.section {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section a {
+  height: 1.4rem;
+  width: 1.4rem;
+}

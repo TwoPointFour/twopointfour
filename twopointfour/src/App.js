@@ -12,6 +12,7 @@ import { Redirect, Route, useHistory } from "react-router";
 import Authorized from "./Components/Authentication/Authorized";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { postHTTP } from "./Components/Helper/Complementary";
 
 const App = () => {
   const idToken = useSelector((state) => state.user.authentication.idToken);
@@ -23,16 +24,28 @@ const App = () => {
   const history = useHistory();
 
   useEffect(() => {
-    const uid = document.cookie
-      .split("; ")
-      .find((ele) => ele.startsWith("uid"))
-      ?.split("=")[1];
-    const idToken = document.cookie
-      .split("; ")
-      .find((ele) => ele.startsWith("idToken"))
-      ?.split("=")[1];
+    // const uid = document.cookie
+    //   .split("; ")
+    //   .find((ele) => ele.startsWith("uid"))
+    //   ?.split("=")[1];
+    // const idToken = document.cookie
+    //   .split("; ")
+    //   .find((ele) => ele.startsWith("idToken"))
+    //   ?.split("=")[1];
 
-    console.log(uid, idToken);
+    //   const refreshTokenBody = {
+    //     token: idToken,
+    //     returnSecureToken: true,
+    //   }
+
+    //   async function getRefreshToken() {
+    //     return await postHTTP(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyAMxK4FTyqlPHYVPkzFE6i7yI_mHqCvKJg
+    //     `, refreshTokenBody)
+    //   }
+
+    //   document.cookie = `refreshToken=${getRefreshToken()}; max-age=31536000`;
+
+    // console.log(uid, idToken);
 
     if (uid && idToken) {
       dispatch(

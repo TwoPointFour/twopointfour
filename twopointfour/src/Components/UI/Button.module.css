@@ -25,6 +25,7 @@
 .yellow {
   background-color: var(--yellow-100);
   color: var(--yellow-500);
+  border: 1px solid var(--yellow-500);
 }
 
 .green-borderless {

@@ -48,7 +48,7 @@ const LogItem = (props) => {
 
   const paceSeconds = msToS(pace, 2);
 
-  const targetSetTime = sets * pace;
+  const targetSetTime = parseInt(distance / 100) * pace;
 
   const tableData = Array.from({ length: sets }, (x, i) => i).map((ele, i) => {
     if (timings[i] <= targetSetTime) return [msToMinS(timings[i]), "✅"];

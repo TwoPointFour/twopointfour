@@ -12,7 +12,7 @@ const Table = (props) => {
   });
 
   return (
-    <table className={styles.table}>
+    <table className={`${styles.table} ${styles[props.size]}`}>
       <thead>
         <tr>
           <th>Set</th>

@@ -7,45 +7,13 @@ import { Link, Route, useHistory } from "react-router-dom";
 import Modal from "../UI/Modal";
 import Card from "../UI/Card/Card";
 import PromptModal from "../Prompt/PromptModal";
-import { useRef } from "react";
-import audioenable from "../Assets/callouts/audioenabled.mp3";
-import _100 from "../Assets/callouts/100.mp3";
-// import _1 from "../Assets/callouts/1.mp3";
-// import _2 from "../Assets/callouts/100.mp3";
-// import _3 from "../Assets/callouts/100.mp3";
-// import _4 from "../Assets/callouts/100.mp3";
-// import _5 from "../Assets/callouts/100.mp3";
-// import _10 from "../Assets/callouts/100.mp3";
-// import _20 from "../Assets/callouts/100.mp3";
-// import _30 from "../Assets/callouts/100.mp3";
-// import _40 from "../Assets/callouts/100.mp3";
-// import _50 from "../Assets/callouts/100.mp3";
-// import _60 from "../Assets/callouts/100.mp3";
-// import _70 from "../Assets/callouts/100.mp3";
-// import _80 from "../Assets/callouts/100.mp3";
-// import _90 from "../Assets/callouts/100.mp3";
-// import _100 from "../Assets/callouts/100.mp3";
-// import _200 from "../Assets/callouts/100.mp3";
-// import _300 from "../Assets/callouts/100.mp3";
-// import _400 from "../Assets/callouts/100.mp3";
-// import _500 from "../Assets/callouts/100.mp3";
-// import _600 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
-// import _700 from "../Assets/callouts/100.mp3";
+import { useRef, useState } from "react";
+import AudioLibrary from "../Audio/AudioLibrary";
+import TimerLogs from "./TimerLogs";
 
 const TimerActions = () => {
   const audioEnableRef = useRef();
+  const [callAudio, setCallAudio] = useState(false);
   const _100Ref = useRef();
   const dispatch = useDispatch();
   const workout = useSelector((state) => state.timer.workoutData);
@@ -78,9 +46,7 @@ const TimerActions = () => {
   }
 
   function onAudioActivate() {
-    console.log(audioEnableRef.current);
-    audioEnableRef.current.play();
-    _100Ref.current.play();
+    setCallAudio(true);
   }
 
   return (
@@ -124,15 +90,20 @@ const TimerActions = () => {
           }}
         />
       </Route>
+      <Route path="/timer/logs">
+        <TimerLogs />
+      </Route>
       <div className={styles["timer__actions"]}>
         <Link to="/timer/exit">
           <Button length="circle" className={styles["action__item"]} color="red-fill">
             {Icons["close"]}
           </Button>
         </Link>
-        <Button length="circle" className={styles["action__item"]} color="yellow-fill">
-          {Icons["logs"]}
-        </Button>
+        <Link to="/timer/logs">
+          <Button length="circle" className={styles["action__item"]} color="yellow-fill">
+            {Icons["logs"]}
+          </Button>
+        </Link>
         <Button
           onClickHandler={onAudioActivate}
           length="circle"
@@ -151,12 +122,7 @@ const TimerActions = () => {
         </Button>
       </div>
       <div className={styles["audio__list"]}>
-        <audio ref={audioEnableRef}>
-          <source src={audioenable} />
-        </audio>
-        <audio ref={_100Ref}>
-          <source src={_100} />
-        </audio>
+        <AudioLibrary audioLinker={callAudio} />
       </div>
     </>
   );

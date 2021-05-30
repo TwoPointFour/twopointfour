@@ -2,6 +2,9 @@
   display: flex;
   flex-flow: column;
   gap: 1rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  padding: 2rem;
 }
 
 .prompt__controls {
