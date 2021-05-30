@@ -24,38 +24,63 @@ const App = () => {
   const history = useHistory();
 
   useEffect(() => {
-    // const uid = document.cookie
-    //   .split("; ")
-    //   .find((ele) => ele.startsWith("uid"))
-    //   ?.split("=")[1];
-    // const idToken = document.cookie
-    //   .split("; ")
-    //   .find((ele) => ele.startsWith("idToken"))
-    //   ?.split("=")[1];
+    async function autoLogin() {
+      const uid = document.cookie
+        .split("; ")
+        .find((ele) => ele.startsWith("uid"))
+        ?.split("=")[1];
+      // const idToken = document.cookie
+      //   .split("; ")
+      //   .find((ele) => ele.startsWith("idToken"))
+      //   ?.split("=")[1];
+      const refreshToken = document.cookie
+        .split("; ")
+        .find((ele) => ele.startsWith("refreshToken"))
+        ?.split("=")[1];
 
-    //   const refreshTokenBody = {
-    //     token: idToken,
-    //     returnSecureToken: true,
-    //   }
+      //   const refreshTokenBody = {
+      //     token: idToken,
+      //     returnSecureToken: true,
+      //   }
 
-    //   async function getRefreshToken() {
-    //     return await postHTTP(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyAMxK4FTyqlPHYVPkzFE6i7yI_mHqCvKJg
-    //     `, refreshTokenBody)
-    //   }
+      //   async function getRefreshToken() {
+      //     return await postHTTP(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyAMxK4FTyqlPHYVPkzFE6i7yI_mHqCvKJg
+      //     `, refreshTokenBody)
+      //   }
 
-    //   document.cookie = `refreshToken=${getRefreshToken()}; max-age=31536000`;
+      const idTokenBody = {
+        grant_type: "refresh_token",
+        refreshToken: refreshToken,
+      };
 
-    // console.log(uid, idToken);
+      async function getIDToken() {
+        const response = await postHTTP(
+          `https://securetoken.googleapis.com/v1/token?key=AIzaSyAMxK4FTyqlPHYVPkzFE6i7yI_mHqCvKJg`,
+          idTokenBody
+        );
+        return response["id_token"];
+      }
 
-    if (uid && idToken) {
-      dispatch(
-        userAction.updateAuthentication({
-          idToken,
-          uid,
-        })
-      );
-      history.replace("/run");
+      const idToken = await getIDToken();
+
+      //   document.cookie = `refreshToken=${getRefreshToken()}; max-age=31536000`;
+
+      // console.log(uid, idToken);
+
+      if (refreshToken) {
+        dispatch(userAction.updateRefreshToken(refreshToken));
+      }
+      if (uid && idToken) {
+        dispatch(
+          userAction.updateAuthentication({
+            idToken,
+            uid,
+          })
+        );
+        history.replace("/run");
+      }
     }
+    autoLogin();
   }, []);
 
   return (

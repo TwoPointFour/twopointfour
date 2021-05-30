@@ -247,6 +247,7 @@ const initialUserState = {
   authentication: {
     idToken: "",
     uid: "",
+    refreshToken: "",
   },
   userProfile: {
     email: "",
@@ -283,6 +284,9 @@ const userSlice = createSlice({
     },
     updateQuestionnaire(state, action) {
       state.questionnaire = action.payload;
+    },
+    updateRefreshToken(state, action) {
+      state.authentication.refreshToken = action.payload;
     },
   },
 });
@@ -701,8 +705,10 @@ export function logout() {
   return (dispatch) => {
     document.cookie = `idToken=""; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
     document.cookie = `uid=""; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+    document.cookie = `refreshToken=""; expires=Thu, 01 Jan 1970 00:00:01 GMT`;
     // document.cookie = null;
     dispatch(userAction.updateAuthentication({ idToken: null, uid: null }));
+    dispatch(userAction.updateRefreshToken(null));
   };
 }
 

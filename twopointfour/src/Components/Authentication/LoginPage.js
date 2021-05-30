@@ -4,7 +4,7 @@ import { Route, useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { userAction } from "../../store/mainSlice";
 import Icons from "../Assets/Icons";
-import { putHTTP } from "../Helper/Complementary";
+import { postHTTP, putHTTP } from "../Helper/Complementary";
 import { getJSON } from "../Helper/Helper";
 import Privacy from "../Legal/Privacy";
 import Terms from "../Legal/Terms";
@@ -86,6 +86,26 @@ const LoginPage = () => {
       }
 
       if (response.ok && isLogin) {
+        // const refreshTokenBody = {
+        //   token: responseData.idToken,
+        //   returnSecureToken: true,
+        // };
+
+        // async function getRefreshToken() {
+        //   const response = await postHTTP(
+        //     `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyAMxK4FTyqlPHYVPkzFE6i7yI_mHqCvKJg
+        // `,
+        //     refreshTokenBody
+        //   );
+        //   console.log(response);
+        //   return response.refreshToken;
+        // }
+
+        // const refreshToken = await getRefreshToken();
+        console.log(responseData.refreshToken);
+
+        dispatch(userAction.updateRefreshToken(responseData.refreshToken));
+
         dispatch(
           userAction.updateAuthentication({
             idToken: responseData.idToken,
@@ -93,8 +113,9 @@ const LoginPage = () => {
           })
         );
 
-        document.cookie = `idToken=${responseData.idToken}; max-age=31536000`;
+        // document.cookie = `idToken=${responseData.idToken}; max-age=31536000`;
         document.cookie = `uid=${responseData.localId}; max-age=31536000`;
+        document.cookie = `refreshToken=${responseData.refreshToken}; max-age=31536000`;
 
         history.replace("/run");
       }
