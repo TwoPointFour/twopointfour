@@ -1,0 +1,157 @@
+[ {
+  "date" : "unset",
+  "difficultyMultiplier" : 55.4,
+  "parts" : [ {
+    "distance" : 300,
+    "part_ID" : "2000_0",
+    "restMultiplier" : 2,
+    "sets" : 8,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2000"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 61.5,
+  "parts" : [ {
+    "distance" : 300,
+    "part_ID" : "2001_0",
+    "restMultiplier" : 2,
+    "sets" : 9,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2001"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 64.7,
+  "parts" : [ {
+    "distance" : 400,
+    "part_ID" : "2002_0",
+    "restMultiplier" : 2.33,
+    "sets" : 6,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2002"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 69,
+  "parts" : [ {
+    "distance" : 400,
+    "part_ID" : "2003_0",
+    "restMultiplier" : 2.33,
+    "sets" : 7,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2003"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 72.7,
+  "parts" : [ {
+    "distance" : 500,
+    "part_ID" : "2004_0",
+    "restMultiplier" : 2.6,
+    "sets" : 5,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2004"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 74.9,
+  "parts" : [ {
+    "distance" : 600,
+    "part_ID" : "2005_0",
+    "restMultiplier" : 2.8,
+    "sets" : 4,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2005"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 76.7,
+  "parts" : [ {
+    "distance" : 700,
+    "part_ID" : "2006_0",
+    "restMultiplier" : 3.2,
+    "sets" : 3,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2006"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 81.9,
+  "parts" : [ {
+    "distance" : 800,
+    "part_ID" : "2007_0",
+    "restMultiplier" : 4,
+    "sets" : 3,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2007"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 86,
+  "parts" : [ {
+    "distance" : 900,
+    "part_ID" : "2008_0",
+    "restMultiplier" : 4.25,
+    "sets" : 3,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2008"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 81.3,
+  "parts" : [ {
+    "distance" : 1100,
+    "part_ID" : "2009_0",
+    "restMultiplier" : 4.5,
+    "sets" : 2,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2009"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 83.7,
+  "parts" : [ {
+    "distance" : 1100,
+    "part_ID" : "2010_0",
+    "restMultiplier" : 4.75,
+    "sets" : 2,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2010"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 86,
+  "parts" : [ {
+    "distance" : 1200,
+    "part_ID" : "2011_0",
+    "restMultiplier" : 5,
+    "sets" : 2,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "secondary",
+  "type" : "Distance Interval",
+  "workout_ID" : "2011"
+} ]

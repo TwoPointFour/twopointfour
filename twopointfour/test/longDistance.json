@@ -1,0 +1,481 @@
+[ {
+  "alpha" : 0.2,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4000_0",
+    "runTime" : 20,
+    "weekAt" : "1"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4000"
+}, {
+  "alpha" : 0.2,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4001_0",
+    "runTime" : 23,
+    "weekAt" : "2"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4001"
+}, {
+  "alpha" : 0.2,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4002_0",
+    "runTime" : 26,
+    "weekAt" : "3"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4002"
+}, {
+  "alpha" : 0.2,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4003_0",
+    "runTime" : 29,
+    "weekAt" : "4"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4003"
+}, {
+  "alpha" : 0.2,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4004_0",
+    "runTime" : 32,
+    "weekAt" : "5"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4004"
+}, {
+  "alpha" : 0.2,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4005_0",
+    "runTime" : 35,
+    "weekAt" : "6"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4005"
+}, {
+  "alpha" : 0.2,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4006_0",
+    "runTime" : 38,
+    "weekAt" : "7"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4006"
+}, {
+  "alpha" : 0.2,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : true,
+    "part_ID" : "4007_0",
+    "runTime" : 40,
+    "weekAt" : "8"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4007"
+}, {
+  "alpha" : 0.4,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4008_0",
+    "runTime" : 25,
+    "weekAt" : "1"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4008"
+}, {
+  "alpha" : 0.4,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4009_0",
+    "runTime" : 28,
+    "weekAt" : "2"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4009"
+}, {
+  "alpha" : 0.4,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4010_0",
+    "runTime" : 31,
+    "weekAt" : "3"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4010"
+}, {
+  "alpha" : 0.4,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4011_0",
+    "runTime" : 34,
+    "weekAt" : "4"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4011"
+}, {
+  "alpha" : 0.4,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4012_0",
+    "runTime" : 37,
+    "weekAt" : "5"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4012"
+}, {
+  "alpha" : 0.4,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4013_0",
+    "runTime" : 40,
+    "weekAt" : "6"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4013"
+}, {
+  "alpha" : 0.4,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4014_0",
+    "runTime" : 43,
+    "weekAt" : "7"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4014"
+}, {
+  "alpha" : 0.4,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : true,
+    "part_ID" : "4015_0",
+    "runTime" : 46,
+    "weekAt" : "8"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4015"
+}, {
+  "alpha" : 0.6,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4016_0",
+    "runTime" : 30,
+    "weekAt" : "1"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4016"
+}, {
+  "alpha" : 0.6,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4017_0",
+    "runTime" : 32.5,
+    "weekAt" : "2"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4017"
+}, {
+  "alpha" : 0.6,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4018_0",
+    "runTime" : 35,
+    "weekAt" : "3"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4018"
+}, {
+  "alpha" : 0.6,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4019_0",
+    "runTime" : 37.5,
+    "weekAt" : "4"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4019"
+}, {
+  "alpha" : 0.6,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4020_0",
+    "runTime" : 40,
+    "weekAt" : "5"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4020"
+}, {
+  "alpha" : 0.6,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4021_0",
+    "runTime" : 42.5,
+    "weekAt" : "6"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4021"
+}, {
+  "alpha" : 0.6,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4022_0",
+    "runTime" : 45,
+    "weekAt" : "7"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4022"
+}, {
+  "alpha" : 0.6,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : true,
+    "part_ID" : "4023_0",
+    "runTime" : 47.5,
+    "weekAt" : "8"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4023"
+}, {
+  "alpha" : 0.8,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4024_0",
+    "runTime" : 36,
+    "weekAt" : "1"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4024"
+}, {
+  "alpha" : 0.8,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4025_0",
+    "runTime" : 38,
+    "weekAt" : "2"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4025"
+}, {
+  "alpha" : 0.8,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4026_0",
+    "runTime" : 40,
+    "weekAt" : "3"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4026"
+}, {
+  "alpha" : 0.8,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4027_0",
+    "runTime" : 42,
+    "weekAt" : "4"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4027"
+}, {
+  "alpha" : 0.8,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4028_0",
+    "runTime" : 44,
+    "weekAt" : "5"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4028"
+}, {
+  "alpha" : 0.8,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4029_0",
+    "runTime" : 46,
+    "weekAt" : "6"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4029"
+}, {
+  "alpha" : 0.8,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4030_0",
+    "runTime" : 48,
+    "weekAt" : "7"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4030"
+}, {
+  "alpha" : 0.8,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : true,
+    "part_ID" : "4031_0",
+    "runTime" : 50,
+    "weekAt" : "8"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4031"
+}, {
+  "alpha" : 1,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4032_0",
+    "runTime" : 40,
+    "weekAt" : "1"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4032"
+}, {
+  "alpha" : 1,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4033_0",
+    "runTime" : 42,
+    "weekAt" : "2"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4033"
+}, {
+  "alpha" : 1,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4034_0",
+    "runTime" : 44,
+    "weekAt" : "3"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4034"
+}, {
+  "alpha" : 1,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4035_0",
+    "runTime" : 46,
+    "weekAt" : "4"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4035"
+}, {
+  "alpha" : 1,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4036_0",
+    "runTime" : 48,
+    "weekAt" : "5"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4036"
+}, {
+  "alpha" : 1,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4037_0",
+    "runTime" : 50,
+    "weekAt" : "6"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4037"
+}, {
+  "alpha" : 1,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : false,
+    "part_ID" : "4038_0",
+    "runTime" : 52,
+    "weekAt" : "7"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4038"
+}, {
+  "alpha" : 1,
+  "date" : "unset",
+  "parts" : [ {
+    "end" : true,
+    "part_ID" : "4039_0",
+    "runTime" : 54,
+    "weekAt" : "8"
+  } ],
+  "segment" : "long distance",
+  "type" : "Filler Workout",
+  "workout_ID" : "4039"
+} ]

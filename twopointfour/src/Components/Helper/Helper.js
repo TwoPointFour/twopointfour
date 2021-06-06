@@ -7,20 +7,15 @@ const deltas = [0.41, 0.49, 0.55, 0.65, 0.73];
 
 const getPace = (time) => time / 2400;
 const convertSecToHour = (timeInSec) => timeInSec / (60 * 60);
-const getTargetPaces = (targetTime) => {
+export const getTargetPaces = (targetTime) => {
   const targetPace = getPace(targetTime);
   const displayPace = Math.floor(targetPace * 100 * 1000);
   return {targetPace, displayPace}
 }
 const convertToVelocity = (currentTime) => 2.4 / convertSecToHour(currentTime);
-const getPrescribedRest = (restMultiple, targetPace) => Math.round((restMultiple * targetPace * 100) / 5) * 5;
+export const getPrescribedRest = (restMultiple, targetPace) => Math.round((restMultiple * targetPace * 100) / 5) * 5;
 const restRatio = (restMultiple, targetPace) =>
     getPrescribedRest(restMultiple, targetPace) / (restMultiple * targetPace * 100);
-const addZeroSecNew = (numChange) => numChange.toString().padStart(2, "0");
-const toMinutesSeconds = (milliseconds) => {
-  const minutes = Math.floor(milliseconds / (1000 * 60))
-  return [minutes, Math.floor((milliseconds - minutes * 1000 * 60) / 1000)];
-}
 const restMultiplier = (workout) => 1 / Math.exp(0.0024 * restRatio(workout.parts[0]["restMultiplier"]));
 const convertToSeconds = (input) => {
   return input.split(":").reduce((acc, ele, i) => {
@@ -81,7 +76,7 @@ const getDiffs = (velocityToCompare, velocities, intermediateFunc, x = 1, differ
   return diffs;
 };
 
-const getSpeedDifficulty = (currentVelocity, targetVelocity, velocities) => {
+export const getSpeedDifficulty = (currentVelocity, targetVelocity, velocities) => {
   //todo why so many diffs. floating around? get rid of them
   const [teVelocity, ltVelocity, vVelocity, stVelocity] = velocities;
   const intermediateFunc = (delta, velocityOne, velocityTwo) =>
@@ -118,9 +113,9 @@ const getSpeedDifficulty = (currentVelocity, targetVelocity, velocities) => {
   return 0;
 };
 
-const generateConstants = (questionnaireData) => {
+export const generateConstants = (questionnaireData) => {
   //todo verify personalbests below
-  const beta = answers.personalBests ? 1 : 0.975;
+  const beta = questionnaireData.regular ? 1 : 0.975;
   const alpha = Math.max(
       0,
       Math.min(
@@ -153,22 +148,21 @@ const getBestTrainingPlan = (trainingPlanPrimary, trainingPlanSecondary) =>
     trainingPlanPrimary[1]["personalisedDifficultyMultiplier"] <
     trainingPlanSecondary[1]["personalisedDifficultyMultiplier"];
 
-function getUserInfo(questionnaireData, previousFitness) {
-  const userInfo = {
+export function getUserInfo(questionnaireData, previousFitness) {
+  //todo fix currentFitness
+  return {
     currentTime: convertToSeconds(questionnaireData.latest),
     targetTime: convertToSeconds(questionnaireData.target),
     weeks: questionnaireData.duration,
     currentFitness: previousFitness,
   };
-  //todo fix currentFitness
-  return userInfo;
 }
 
-const getVelocities =(targetPace, cNewbieGains) =>
+export const getVelocities =(targetPace, cNewbieGains) =>
     phi.map((phiValue, i) => targetPace * paceConstants[i] * cNewbieGains * phiValue).map((pace) => (1 / pace) * 3.6);
 
 //restMultiplier was passed in as arg previously
-const generateTrainingPlans = (speedDifficulty, targetPace, userInfo, primary, secondary, previousWorkout) => {
+export const generateTrainingPlans = (speedDifficulty, targetPace, userInfo, primary, secondary, previousWorkout) => {
   const { newFitness, targetDifficulty } = getOverallFitness(
       speedDifficulty,
       targetPace,
@@ -193,13 +187,12 @@ const generateTrainingPlans = (speedDifficulty, targetPace, userInfo, primary, s
   const secondaryIntervalsCopy = secondary.map(mapper);
   const trainingPlanPrimary = primaryIntervalsCopy.reduce(reducer, [10000]);
   const trainingPlanSecondary = secondaryIntervalsCopy.reduce(reducer, [trainingPlanPrimary[1]]);
-  //console.log('xxHamster', JSON.stringify(trainingPlanPrimary), JSON.stringify(trainingPlanSecondary))
   return {trainingPlanPrimary, trainingPlanSecondary, newFitness};
 }
 
 export const getTrainingPlan = (questionnaireData, workouts, previousWorkout = false, previousFitness = 100) => {
   const [primary, secondary, pyramid, longDistance, fartlek] = workouts
-  if (questionnaireData.personalBests) {
+  if (questionnaireData.regular) {
     //TBC logic
   }
   const userInfo = getUserInfo(questionnaireData, previousFitness);

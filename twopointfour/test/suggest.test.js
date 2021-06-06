@@ -1,41 +1,31 @@
 import {
     getTrainingPlan,
-    getInputValues,
     getUserInfo,
     generateConstants,
     getTargetPaces,
     getVelocities,
     getSpeedDifficulty,
-    getPrescribedRest
-} from '../src/Components/Helper/Helper';
+    getPrescribedRest,
+    generateTrainingPlans,
+    scoredWorkouts
+} from '../src/Components/Helper/Helper.js';
+
+const readJSON = async (name) => {
+    return fetch("./" + name + ".json")
+        .then(async response => {
+            return await response.json();
+        })
+}
 
 let assert = chai.assert
 
-const inputValues = getInputValues()
-const userInfo = getUserInfo(inputValues.currentMin, inputValues.currentSec, inputValues.targetMin, inputValues.targetSec, inputValues.weeks)
-const { cNewbieGains } = generateConstants(inputValues.answers)
+const questionnaireData = {frequency: 0, experience: 0, distance: 0, latest: "13:00", target: "12:00", duration: 8, regular: false}
+const userInfo = getUserInfo(questionnaireData, 100)
+const { cNewbieGains } = generateConstants(questionnaireData)
 const {targetPace} = getTargetPaces(userInfo.targetTime)
 const velocities = getVelocities(targetPace, cNewbieGains)
 const speedDifficulty = getSpeedDifficulty(11.076923076923077, 11.999999999999998, velocities)
 const prescribedRest = getPrescribedRest(4.5, targetPace)
-
-describe('#getInputValues()', function () {
-    it('Checking the user input values parsed', function () {
-        assert.isEmpty(inputValues.answers.runRegular)
-        assert(inputValues.weeks === 8, '')
-        assert(inputValues.answers.fFrequency === Number('0'), '')
-        assert(inputValues.answers.lMonths === Number('0'), '')
-        assert(inputValues.answers.personalBests.d800 === '', '')
-        assert(inputValues.answers.personalBests.d1500 === '', '')
-        assert(inputValues.answers.personalBests.d3000 === '', '')
-        assert(inputValues.answers.personalBests.d5000 === '', '')
-        assert(inputValues.answers.personalBests.d10000 === '', '')
-        assert(inputValues.currentMin === 13, '')
-        assert(inputValues.targetMin === 12, '')
-        assert(inputValues.currentSec === 0, '')
-        assert(inputValues.targetSec === 0, '')
-    });
-});
 
 describe('#getUserInfo', function () {
     it('Checking the user info returned', function () {
@@ -80,14 +70,18 @@ describe('#checkPriAndSecTrainingPlans', function() {
 })
 
 describe('#getTrainingPlan', function() {
-    it('Expected training plan', function () {
-        assert.deepEqual(getTrainingPlan(), [[3, 1000, 4.5]])
+    it('Expected training plan', async function () {
+        const primary = await readJSON('primary')
+        const secondary = await readJSON('secondary')
+        const pyramid = [{}]
+        const longDistance = await readJSON('longDistance')
+        const fartlek = await readJSON('fartlek')
+        const workouts = [primary, secondary, pyramid, longDistance, fartlek]
+        console.log(JSON.stringify(getTrainingPlan(questionnaireData, workouts, false, 100)))
+        const temp = (getTrainingPlan(questionnaireData, workouts, false, 100)).trainingPlan.parts[0].part_ID
+        assert.strictEqual(temp, "1006_0")
     })
 })
-
-/*
-DYNAMICALLY GENERATING TESTS
- */
 
 /*
 THE TEST/ DIRECTORY
