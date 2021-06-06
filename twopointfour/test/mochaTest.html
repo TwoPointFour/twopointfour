@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Mocha Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css"/>
+</head>
+<body>
+<div id="mocha"></div>
+<div hidden>
+    <div>
+        <input
+                type="email"
+                class="runRegular"
+                placeholder="2"
+        />
+        <label>mm:ss</label>
+    </div>
+    <div>
+        <input
+                type="email"
+                class="fFrequency"
+                placeholder="2"
+        />
+        <label>mm:ss</label>
+    </div><div>
+    <input
+            type="email"
+            class="dDistance"
+            placeholder="2"
+    />
+    <label>mm:ss</label>
+</div>
+    <div>
+        <input
+                type="email"
+                class="lMonths"
+                placeholder="2"
+        />
+        <label>mm:ss</label>
+    </div>
+    <div>
+        <input
+                type="email"
+                class="currentMin"
+                placeholder="2"
+        />
+        <label>mm:ss</label>
+    </div>
+    <div>
+        <input
+                type="email"
+                class="targetMin"
+                placeholder="2"
+        />
+        <label>mm:ss</label>
+    </div>
+    <div>
+        <input
+                type="email"
+                class="weeks"
+                placeholder="2"
+        />
+        <label>mm:ss</label>
+    </div>
+    <div>
+        <input
+                type="email"
+                class="d800"
+                placeholder="2"
+        />
+        <label>mm:ss</label>
+    </div>
+    <div>
+        <input
+                type="email"
+                class="d1500"
+                placeholder="2"
+        />
+        <label>mm:ss</label>
+    </div>
+    <div>
+        <input
+                type="email"
+                class="d3000"
+                placeholder="2"
+        />
+        <label>mm:ss</label>
+    </div>
+    <div>
+        <input
+                type="email"
+                class="d5000"
+                placeholder="2"
+        />
+        <label>mm:ss</label>
+    </div>
+    <div>
+        <input
+                type="email"
+                class="d10000"
+                placeholder="2"
+        />
+        <label>mm:ss</label>
+    </div>
+</div>
+<script>
+    document.querySelector(".runRegular").value = "false";
+    document.querySelector(".fFrequency").value = "0";
+    document.querySelector(".dDistance").value = "0";
+    document.querySelector(".lMonths").value = "0";
+    document.querySelector(".d800").value = "";
+    document.querySelector(".d1500").value = "";
+    document.querySelector(".d3000").value = "";
+    document.querySelector(".d5000").value = "";
+    document.querySelector(".d10000").value = "";
+    document.querySelector(".currentMin").value = "13:00";
+    document.querySelector(".targetMin").value = "12:00";
+    document.querySelector(".weeks").value = "8";
+</script>
+<script src="../node_modules/mocha/mocha.js"></script>
+<script src="../node_modules/chai/chai.js"></script>
+
+<script class="mocha-init">
+    mocha.setup('bdd');
+</script>
+<script type="module" src="suggest.test.js"></script>
+<script type="module" class="mocha-exec">
+    mocha.checkLeaks();
+    mocha.run();
+</script>
+</body>
+</html>

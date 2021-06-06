@@ -372,7 +372,7 @@ export const sendQuestionnaire = (input) => {
       })
     );
 
-    const [primary, secondary, pyramid] = await Promise.all([
+    const workouts = await Promise.all([
       getJSON(
         `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/primary.json?auth=${idToken}`
       ),
@@ -382,6 +382,12 @@ export const sendQuestionnaire = (input) => {
       getJSON(
         `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/pyramid.json?auth=${idToken}`
       ),
+      getJSON(
+          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/filler/longDistance.json?auth=${idToken}`
+      ),
+      getJSON(
+          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/filler/fartlek.json?auth=${idToken}`
+      )
     ]);
 
     dispatch(
@@ -396,7 +402,7 @@ export const sendQuestionnaire = (input) => {
       })
     );
 
-    const { newFitness, trainingPlan: training } = getTrainingPlan(input, primary, secondary);
+    const { newFitness, trainingPlan: training } = getTrainingPlan(input, workouts);
 
     dispatch(
       UIAction.setModalUIStatus({
@@ -545,7 +551,7 @@ export const getNextTraining = () => {
       })
     );
 
-    const [primary, secondary, pyramid] = await Promise.all([
+    const workouts = await Promise.all([
       getJSON(
         `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/primary.json?auth=${idToken}`
       ),
@@ -555,6 +561,12 @@ export const getNextTraining = () => {
       getJSON(
         `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/pyramid.json?auth=${idToken}`
       ),
+      getJSON(
+          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/filler/longDistance.json?auth=${idToken}`
+      ),
+      getJSON(
+          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/filler/fartlek.json?auth=${idToken}`
+      )
     ]);
 
     const previousWorkout = getState().workout.previousWorkout;
@@ -581,8 +593,7 @@ export const getNextTraining = () => {
 
     const { newFitness, trainingPlan: training } = getTrainingPlan(
       questionnaire,
-      primary,
-      secondary,
+      workouts,
       previousWorkoutAvailable && previousWorkout,
       previousFitnessAvailable && previousFitness
     );
