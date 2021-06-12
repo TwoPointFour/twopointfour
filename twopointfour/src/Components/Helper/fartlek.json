@@ -1,0 +1,524 @@
+[
+  {
+    "alpha": 0.4,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 75,
+        "jogPace": "return 0.75",
+        "part_ID": "5000_0",
+        "sprintDistance": 200,
+        "sprintPace": "return goalPace",
+        "sprintSets": 10,
+        "weekAt": "1"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5000"
+  },
+  {
+    "alpha": 0.4,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 70,
+        "jogPace": "return 0.7",
+        "part_ID": "5001_0",
+        "sprintDistance": 200,
+        "sprintPace": "return goalPace",
+        "sprintSets": 10,
+        "weekAt": "2"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5001"
+  },
+  {
+    "alpha": 0.4,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 65,
+        "jogPace": "return 0.65",
+        "part_ID": "5002_0",
+        "sprintDistance": 200,
+        "sprintPace": "return goalPace",
+        "sprintSets": 10,
+        "weekAt": "3"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5002"
+  },
+  {
+    "alpha": 0.4,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5003_0",
+        "sprintDistance": 200,
+        "sprintPace": "return goalPace",
+        "sprintSets": 10,
+        "weekAt": "4"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5003"
+  },
+  {
+    "alpha": 0.4,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5004_0",
+        "sprintDistance": 200,
+        "sprintPace": "return goalPace",
+        "sprintSets": 11,
+        "weekAt": "5"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5004"
+  },
+  {
+    "alpha": 0.4,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5005_0",
+        "sprintDistance": 200,
+        "sprintPace": "return goalPace",
+        "sprintSets": 12,
+        "weekAt": "6"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5005"
+  },
+  {
+    "alpha": 0.4,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5006_0",
+        "sprintDistance": 200,
+        "sprintPace": "return goalPace",
+        "sprintSets": 13,
+        "weekAt": "7"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5006"
+  },
+  {
+    "alpha": 0.6,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5007_0",
+        "sprintDistance": 200,
+        "sprintPace": "return goalPace",
+        "sprintSets": 10,
+        "weekAt": "1"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5007"
+  },
+  {
+    "alpha": 0.6,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5008_0",
+        "sprintDistance": 200,
+        "sprintPace": "return goalPace",
+        "sprintSets": 11,
+        "weekAt": "2"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5008"
+  },
+  {
+    "alpha": 0.6,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5009_0",
+        "sprintDistance": 200,
+        "sprintPace": "return goalPace",
+        "sprintSets": 12,
+        "weekAt": "3"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5009"
+  },
+  {
+    "alpha": 0.6,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5010_0",
+        "sprintDistance": 200,
+        "sprintPace": "return goalPace",
+        "sprintSets": 13,
+        "weekAt": "4"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5010"
+  },
+  {
+    "alpha": 0.6,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5011_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace",
+        "sprintSets": 8,
+        "weekAt": "5"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5011"
+  },
+  {
+    "alpha": 0.6,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5012_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace",
+        "sprintSets": 9,
+        "weekAt": "6"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5012"
+  },
+  {
+    "alpha": 0.6,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5013_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace",
+        "sprintSets": 10,
+        "weekAt": "7"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5013"
+  },
+  {
+    "alpha": 0.8,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5014_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 8,
+        "weekAt": "1"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5014"
+  },
+  {
+    "alpha": 0.8,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5015_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 9,
+        "weekAt": "2"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5015"
+  },
+  {
+    "alpha": 0.8,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.6",
+        "part_ID": "5016_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 10,
+        "weekAt": "3"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5016"
+  },
+  {
+    "alpha": 0.8,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 80,
+        "jogPace": "return 0.4",
+        "part_ID": "5017_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 10,
+        "weekAt": "4"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5017"
+  },
+  {
+    "alpha": 0.8,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 75,
+        "jogPace": "return 0.375",
+        "part_ID": "5018_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 10,
+        "weekAt": "5"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5018"
+  },
+  {
+    "alpha": 0.8,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 70,
+        "jogPace": "return 0.35",
+        "part_ID": "5019_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 10,
+        "weekAt": "6"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5019"
+  },
+  {
+    "alpha": 0.8,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 65,
+        "jogPace": "return 0.325",
+        "part_ID": "5020_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 10,
+        "weekAt": "7"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5020"
+  },
+  {
+    "alpha": 0.8,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByTime": 60,
+        "jogPace": "return 0.3",
+        "part_ID": "5021_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 10,
+        "weekAt": "8"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5021"
+  },
+  {
+    "alpha": 1,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByDistance": 200,
+        "jogPace": "return tempoPace + 0.025",
+        "part_ID": "5022_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 10,
+        "weekAt": "1"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5022"
+  },
+  {
+    "alpha": 1,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByDistance": 200,
+        "jogPace": "return tempoPace + 0.025",
+        "part_ID": "5023_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 10,
+        "weekAt": "2"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5023"
+  },
+  {
+    "alpha": 1,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByDistance": 200,
+        "jogPace": "return tempoPace + 0.025",
+        "part_ID": "5024_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 10,
+        "weekAt": "3"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5024"
+  },
+  {
+    "alpha": 1,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByDistance": 200,
+        "jogPace": "return tempoPace + 0.025",
+        "part_ID": "5025_0",
+        "sprintDistance": 300,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 10,
+        "weekAt": "4"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5025"
+  },
+  {
+    "alpha": 1,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByDistance": 200,
+        "jogPace": "return tempoPace + 0.025",
+        "part_ID": "5026_0",
+        "sprintDistance": 400,
+        "sprintPace": "return goalPace + 0.01",
+        "sprintSets": 8,
+        "weekAt": "5"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5026"
+  },
+  {
+    "alpha": 1,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByDistance": 200,
+        "jogPace": "return tempoPace + 0.025",
+        "part_ID": "5027_0",
+        "sprintDistance": 400,
+        "sprintPace": "return goalPace + 0.0075",
+        "sprintSets": 8,
+        "weekAt": "6"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5027"
+  },
+  {
+    "alpha": 1,
+    "date": "unset",
+    "parts": [
+      {
+        "jogByDistance": 200,
+        "jogPace": "return tempoPace + 0.025",
+        "part_ID": "5028_0",
+        "sprintDistance": 400,
+        "sprintPace": "return goalPace + 0.005",
+        "sprintSets": 8,
+        "weekAt": "7"
+      }
+    ],
+    "segment": "fartlek",
+    "type": "Filler Workout",
+    "workout_ID": "5028"
+  }
+]

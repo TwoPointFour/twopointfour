@@ -19,7 +19,7 @@ const readJSON = async (name) => {
 
 let assert = chai.assert
 
-const questionnaireData = {frequency: 0, experience: 0, distance: 0, latest: "13:00", target: "12:00", duration: 8, regular: false}
+const questionnaireData = {frequency: 0, experience: 0, distance: 0, latest: "13:00", workoutFrequency: 3, target: "12:00", duration: 8, regular: false}
 const userInfo = getUserInfo(questionnaireData, 100)
 const { cNewbieGains } = generateConstants(questionnaireData)
 const {targetPace} = getTargetPaces(userInfo.targetTime)
@@ -31,8 +31,9 @@ describe('#getUserInfo', function () {
     it('Checking the user info returned', function () {
         assert(userInfo.currentTime === 780, '')
         assert(userInfo.targetTime === 720, '')
-        assert(userInfo.weeks === 8, '')
+        assert(userInfo.duration === 8, '')
         assert(userInfo.currentFitness === 100, '')
+        assert(userInfo.workoutFrequency === 3, '')
     })
 })
 
@@ -64,8 +65,12 @@ describe('#getPrescribedRest', function() {
 })
 
 describe('#checkPriAndSecTrainingPlans', function() {
-    it('Verify the intermediate plans', function () {
-        assert.strictEqual(prescribedRest, 135)
+    it('Verify the intermediate plans', async function () {
+        const primary = await readJSON('primary')
+        const secondary = await readJSON('secondary')
+        const {trainingPlanPrimary, trainingPlanSecondary} = generateTrainingPlans(speedDifficulty, targetPace, userInfo, primary, secondary, false);
+        assert.strictEqual(parseInt(trainingPlanPrimary[1].workout_ID), 1005)
+        assert.strictEqual(parseInt(trainingPlanSecondary[1].workout_ID), 2008)
     })
 })
 
@@ -77,9 +82,9 @@ describe('#getTrainingPlan', function() {
         const longDistance = await readJSON('longDistance')
         const fartlek = await readJSON('fartlek')
         const workouts = [primary, secondary, pyramid, longDistance, fartlek]
-        console.log(JSON.stringify(getTrainingPlan(questionnaireData, workouts, false, 100)))
+        // console.log(JSON.stringify(getTrainingPlan(questionnaireData, workouts, false, 100)))
         const temp = (getTrainingPlan(questionnaireData, workouts, false, 100)).trainingPlan.parts[0].part_ID
-        assert.strictEqual(temp, "1006_0")
+        assert.strictEqual(temp, "1005_0")
     })
 })
 
