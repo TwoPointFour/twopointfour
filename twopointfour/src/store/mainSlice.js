@@ -2,6 +2,10 @@ import { configureStore, createSlice, current } from "@reduxjs/toolkit";
 import { useHistory } from "react-router";
 import { postHTTP, putHTTP, deleteHTTP } from "../Components/Helper/Complementary";
 import { getJSON, getTrainingPlan } from "../Components/Helper/Helper";
+import { API_ROOT_ENDPOINT } from "../Configurations/Config";
+import { createBrowserHistory } from "history";
+export const browserHistory = createBrowserHistory();
+// ...
 
 const initialUIState = {
   main: {
@@ -16,6 +20,9 @@ const initialUIState = {
     description: "Getting data... to do ownas;ldfjasl;dfjl workouts!!!",
     buttonText: "temp",
     buttonPath: "/run",
+  },
+  profile: {
+    show: false,
   },
 };
 
@@ -36,6 +43,10 @@ const UISlice = createSlice({
     },
     showModal(state, action) {
       state.modal.show = action.payload;
+    },
+    setProfileModalStatus(state, action) {
+      state.profile.show = action.payload;
+      console.log(current(state));
     },
   },
 });
@@ -64,6 +75,9 @@ const workoutSlice = createSlice({
       state.previousWorkout = action.payload.previousWorkout;
       state.logs = action.payload.logs;
       state.currentFitness = action.payload.currentFitness;
+    },
+    setWorkoutLogs(state, action) {
+      state.logs = action.payload.logs;
     },
   },
 });
@@ -247,6 +261,7 @@ const initialUserState = {
   authentication: {
     idToken: "",
     uid: "",
+    pid: "",
     refreshToken: "",
   },
   userProfile: {
@@ -255,6 +270,7 @@ const initialUserState = {
     bio: "",
     dp: "",
     uid: "",
+    coins: null,
   },
   questionnaire: {
     regular: "",
@@ -274,6 +290,9 @@ const userSlice = createSlice({
     updateAuthentication(state, action) {
       state.authentication.idToken = action.payload.idToken;
       state.authentication.uid = action.payload.uid;
+      state.authentication.refreshToken = action.payload.refreshToken;
+      state.authentication.pid = action.payload.pid;
+      console.log(current(state));
     },
     updateUserProfile(state, action) {
       state.userProfile.email = action.payload.email;
@@ -281,12 +300,25 @@ const userSlice = createSlice({
       state.userProfile.bio = action.payload.bio;
       state.userProfile.dp = action.payload.dp;
       state.userProfile.uid = action.payload.uid;
+      state.userProfile.coins = action.payload.coins;
     },
     updateQuestionnaire(state, action) {
       state.questionnaire = action.payload;
     },
     updateRefreshToken(state, action) {
       state.authentication.refreshToken = action.payload;
+    },
+    updateTokens(state, action) {
+      state.authentication.idToken = action.payload.idToken;
+      state.authentication.refreshToken = action.payload.refreshToken;
+      console.log(current(state));
+    },
+    updatePID(state, action) {
+      state.authentication.pid = action.payload;
+      console.log(current(state));
+    },
+    updateCoins(state, action) {
+      state.userProfile.coins = action.payload;
     },
   },
 });
@@ -336,91 +368,7 @@ export const sendQuestionnaire = (input) => {
       })
     );
 
-    await putHTTP(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/questionnaire.json?auth=${idToken}`,
-      input
-    );
-
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "temp",
-        buttonPath: "/run",
-        status: "loading",
-        title: "Loading...",
-        description: "Clearing any previous records...",
-      })
-    );
-
-    await putHTTP(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/previousWorkout.json?auth=${idToken}`,
-      ""
-    );
-
-    dispatch(userAction.updateQuestionnaire(input));
-
-    /////////////////////////////
-
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "temp",
-        buttonPath: "/run",
-        status: "loading",
-        title: "Loading...",
-        description: "Downloading available workouts...",
-      })
-    );
-
-    const [primary, secondary, pyramid] = await Promise.all([
-      getJSON(
-        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/primary.json?auth=${idToken}`
-      ),
-      getJSON(
-        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/secondary.json?auth=${idToken}`
-      ),
-      getJSON(
-        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/pyramid.json?auth=${idToken}`
-      ),
-    ]);
-
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "temp",
-        buttonPath: "/run",
-        status: "loading",
-        title: "Loading...",
-        description:
-          "Analysing your questionnaire responses and running our advanced workout suggestion algorithm...",
-      })
-    );
-
-    const { newFitness, trainingPlan: training } = getTrainingPlan(input, primary, secondary);
-
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "temp",
-        buttonPath: "/run",
-        status: "loading",
-        title: "Loading...",
-        description: "Updating the server...",
-      })
-    );
-
-    await putHTTP(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/currentFitness.json?auth=${idToken}`,
-      newFitness
-    );
-    await putHTTP(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/nextWorkout.json?auth=${idToken}`,
-      training
-    );
-
-    dispatch(workoutAction.setCurrentFitness(newFitness));
-
-    dispatch(workoutAction.setNextWorkout(training));
+    await postHTTP(`${API_ROOT_ENDPOINT}/questionnaire/create/`, idToken, input);
 
     dispatch(
       UIAction.setModalUIStatus({
@@ -429,7 +377,8 @@ export const sendQuestionnaire = (input) => {
         buttonPath: "/run",
         status: "success",
         title: "Success!",
-        description: "Personalised workout found! View your next workout now! 🏃‍♂️",
+        description:
+          "Your questionnaire has been submitted! You should see you suggested workout soon! 🏃‍♂️",
       })
     );
   };
@@ -650,54 +599,70 @@ export const updateDatabase = (input, path) => {
   };
 };
 
-export const updateUserProfileHTTP = (input) => {
+export const createUserProfileHTTP = (input) => {
   return async (dispatch, getState) => {
-    const state = getState().user.authentication;
-    const idToken = state.idToken;
-    const uid = state.uid;
+    const { idToken } = getState().user.authentication;
+    const request = await fetch(`${API_ROOT_ENDPOINT}/profile/new/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: JSON.stringify(input),
+    });
+    const response = await request.json();
 
-    const userProfileInfo = {
-      email: input.email,
-      bio: input.bio,
-      displayName: input.displayName,
-      dp: input.dp,
-      uid: input.uid,
-    };
+    dispatch(userAction.updatePID(response.id));
+    // browserHistory.push("/run");
+  };
+};
 
-    dispatch(userAction.updateUserProfile(userProfileInfo));
+export const updateUserProfileHTTP = (formInput) => {
+  return async (dispatch, getState) => {
+    try {
+      const { idToken } = getState().user.authentication;
 
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "temp",
-        buttonPath: "/run",
-        status: "loading",
-        title: "Loading",
-        description: "Updating your user profile...",
-      })
-    );
+      dispatch(
+        UIAction.setModalUIStatus({
+          show: true,
+          buttonText: "temp",
+          buttonPath: "/run",
+          status: "loading",
+          title: "Loading",
+          description: "Updating your user profile...",
+        })
+      );
 
-    await fetch(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/userProfile.json?auth=${idToken}`,
-      {
-        method: "PUT",
+      const request = await fetch(`${API_ROOT_ENDPOINT}/profile/update/`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
         },
-        body: JSON.stringify(userProfileInfo),
-      }
-    );
+        body: JSON.stringify(formInput),
+      });
 
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "close",
-        buttonPath: "/profile",
-        status: "success",
-        title: "Success!",
-        description: "Your profile has been updated!",
-      })
-    );
+      const response = await request.json();
+
+      if (!request.ok) throw new Error("No profile detected!");
+
+      const { profileFormatted } = await getProfileDjango(idToken);
+
+      dispatch(userAction.updateUserProfile(profileFormatted));
+
+      dispatch(
+        UIAction.setModalUIStatus({
+          show: true,
+          buttonText: "close",
+          buttonPath: "/profile",
+          status: "success",
+          title: "Success!",
+          description: "Your profile has been updated!",
+        })
+      );
+    } catch (error) {
+      dispatch(UIAction.setProfileModalStatus(true));
+    }
   };
 };
 
@@ -712,24 +677,88 @@ export function logout() {
   };
 }
 
+async function getProfileDjango(idToken) {
+  try {
+    const profile = await fetch(`${API_ROOT_ENDPOINT}/profile/initialize`, {
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+
+    const profileData = await profile.json();
+
+    const profileFormatted = {
+      email: profileData.user.email,
+      displayName: profileData.user.username,
+      bio: profileData.bio,
+      dp: profileData.profileImage,
+      uid: profileData.id,
+      coins: profileData.coins,
+    };
+
+    const workoutFormatted = {
+      logs: profileData.workoutlogs,
+      nextWorkout: profileData.workoutlogs[0],
+      previousWorkout: profileData.workoutlogs[1],
+      currentFitness: profileData.currentFitness,
+    };
+
+    const questionnaire = profileData.questionnaire;
+
+    return { profileFormatted, workoutFormatted };
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const initialiseData = () => {
   return async (dispatch, getState) => {
-    const state = getState().user.authentication;
-    const idToken = state.idToken;
-    const uid = state.uid;
-    dispatch(UIAction.setMainUIStatus({ status: "loading" }));
+    try {
+      const { idToken } = getState().user.authentication;
+      console.log(idToken);
+      console.log(getState());
+      dispatch(UIAction.setMainUIStatus({ status: "loading" }));
 
-    const userData = await getJSON(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}.json?auth=${idToken}`
-    );
+      const { profileFormatted, workoutFormatted, questionnaire } = await getProfileDjango(idToken);
 
-    dispatch(workoutAction.setWorkoutData(userData.workouts));
+      // const profile = await fetch(`${API_ROOT_ENDPOINT}/profile/initialize`, {
+      //   headers: {
+      //     Authorization: `Bearer ${idToken}`,
+      //   },
+      // });
 
-    dispatch(userAction.updateUserProfile(userData.userProfile));
+      // const profileData = await profile.json();
 
-    dispatch(userAction.updateQuestionnaire(userData.questionnaire));
+      // console.log(profileData);
+      // console.log(getState());
 
-    dispatch(UIAction.setMainUIStatus({ status: "success" }));
+      // const workoutFormatted = {
+      //   logs: profileData.workoutlogs,
+      //   nextWorkout: profileData.workoutlogs[0],
+      //   previousWorkout: profileData.workoutlogs[1],
+      //   currentFitness: profileData.currentFitness,
+      // };
+
+      // const profileFormatted = {
+      //   email: profileData.user.email,
+      //   displayName: profileData.user.username,
+      //   bio: profileData.bio,
+      //   dp: profileData.profileImage,
+      //   uid: profileData.id,
+      // };
+
+      dispatch(workoutAction.setWorkoutData(workoutFormatted));
+
+      dispatch(userAction.updateUserProfile(profileFormatted));
+      console.log(getState());
+
+      dispatch(userAction.updateQuestionnaire(questionnaire));
+
+      dispatch(UIAction.setMainUIStatus({ status: "success" }));
+    } catch {
+      console.log("UI ACTION ACTIVATED!!!");
+      dispatch(UIAction.setProfileModalStatus(true));
+    }
   };
 };
 
@@ -807,6 +836,17 @@ export const initializeCommunityWorkouts = () => {
     );
   };
 };
+export const addCoins = () => {
+  return async (dispatch, getState) => {
+    console.log("add coins activated!");
+    const { idToken, uid } = getState().user.authentication;
+    const response = await postHTTP(`${API_ROOT_ENDPOINT}/profile/update/`, idToken, {
+      user: { id: uid },
+      coins: 100,
+    });
+    dispatch(userAction.updateCoins(response.coins));
+  };
+};
 
 const store = configureStore({
   reducer: {
@@ -819,3 +859,326 @@ const store = configureStore({
 });
 
 export default store;
+
+const hi = [
+  {
+    date: "unset",
+    difficultyMultiplier: 85.3,
+    parts: [
+      {
+        distance: 800,
+        part_ID: "3000_0",
+        restMultiplier: 4,
+        sets: 3,
+        timings: ["temp"],
+      },
+      {
+        distance: 400,
+        part_ID: "3000_1",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3000",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 85.9,
+    parts: [
+      {
+        distance: 800,
+        part_ID: "3001_0",
+        restMultiplier: 4,
+        sets: 3,
+        timings: ["temp"],
+      },
+      {
+        distance: 500,
+        part_ID: "3001_1",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3001",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 86.5,
+    parts: [
+      {
+        distance: 800,
+        part_ID: "3002_0",
+        restMultiplier: 4,
+        sets: 3,
+        timings: ["temp"],
+      },
+      {
+        distance: 600,
+        part_ID: "3002_1",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3002",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 84.9,
+    parts: [
+      {
+        distance: 1000,
+        part_ID: "3003_0",
+        restMultiplier: 4.5,
+        sets: 2,
+        timings: ["temp"],
+      },
+      {
+        distance: 400,
+        part_ID: "3003_1",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3003",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 85.5,
+    parts: [
+      {
+        distance: 1000,
+        part_ID: "3004_0",
+        restMultiplier: 4.5,
+        sets: 2,
+        timings: ["temp"],
+      },
+      {
+        distance: 500,
+        part_ID: "3004_1",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3004",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 86.1,
+    parts: [
+      {
+        distance: 1000,
+        part_ID: "3005_0",
+        restMultiplier: 4.5,
+        sets: 2,
+        timings: ["temp"],
+      },
+      {
+        distance: 600,
+        part_ID: "3005_1",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3005",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 86.8,
+    parts: [
+      {
+        distance: 1000,
+        part_ID: "3006_0",
+        restMultiplier: 4.5,
+        sets: 2,
+        timings: ["temp"],
+      },
+      {
+        distance: 700,
+        part_ID: "3006_1",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3006",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 87.5,
+    parts: [
+      {
+        distance: 1000,
+        part_ID: "3007_0",
+        restMultiplier: 4.5,
+        sets: 2,
+        timings: ["temp"],
+      },
+      {
+        distance: 800,
+        part_ID: "3007_1",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3007",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 91.9,
+    parts: [
+      {
+        distance: 1200,
+        part_ID: "3008_0",
+        restMultiplier: 5,
+        sets: 2,
+        timings: ["temp"],
+      },
+      {
+        distance: 400,
+        part_ID: "3008_1",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3008",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 92.7,
+    parts: [
+      {
+        distance: 1200,
+        part_ID: "3009_0",
+        restMultiplier: 5,
+        sets: 2,
+        timings: ["temp"],
+      },
+      {
+        distance: 500,
+        part_ID: "3009_1",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3009",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 87.4,
+    parts: [
+      {
+        distance: 1200,
+        part_ID: "3010_0",
+        restMultiplier: 5,
+        sets: 1,
+        timings: ["temp"],
+      },
+      {
+        distance: 800,
+        part_ID: "3010_1",
+        restMultiplier: 4,
+        sets: 1,
+        timings: ["temp"],
+      },
+      {
+        distance: 400,
+        part_ID: "3010_2",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3010",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 88.5,
+    parts: [
+      {
+        distance: 1200,
+        part_ID: "3011_0",
+        restMultiplier: 5,
+        sets: 1,
+        timings: ["temp"],
+      },
+      {
+        distance: 800,
+        part_ID: "3011_1",
+        restMultiplier: 4,
+        sets: 1,
+        timings: ["temp"],
+      },
+      {
+        distance: 600,
+        part_ID: "3011_2",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3011",
+  },
+  {
+    date: "unset",
+    difficultyMultiplier: 81.1,
+    parts: [
+      {
+        distance: 400,
+        part_ID: "3012_0",
+        restMultiplier: 2,
+        sets: 1,
+        timings: ["temp"],
+      },
+      {
+        distance: 800,
+        part_ID: "3012_1",
+        restMultiplier: 4,
+        sets: 2,
+        timings: ["temp"],
+      },
+      {
+        distance: 400,
+        part_ID: "3012_2",
+        restMultiplier: 0,
+        sets: 1,
+        timings: ["temp"],
+      },
+    ],
+    segment: "pyramid",
+    type: "Distance Interval",
+    workout_ID: "3012",
+  },
+];

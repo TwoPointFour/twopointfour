@@ -7,19 +7,34 @@ export async function putHTTP(url, input) {
     body: JSON.stringify(input),
   });
 }
-export async function postHTTP(url, input) {
-  const response = await fetch(url, {
+export async function postHTTP(url, idToken, input) {
+  const request = await fetch(url, {
     method: "POST",
     headers: {
+      Authorization: `Bearer ${idToken}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(input),
   });
 
-  const data = await response.json();
+  const response = await request.json();
 
-  return data;
+  return response;
 }
+export async function postHTTPNoAuth(url, input) {
+  const request = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+
+  const response = await request.json();
+
+  return response;
+}
+
 export async function deleteHTTP(url, input) {
   await fetch(url, {
     method: "DELETE",

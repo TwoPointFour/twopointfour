@@ -11,6 +11,7 @@ import Terms from "../Legal/Terms";
 import Button from "../UI/Button";
 import InputNoValidation from "../UI/Input/InputNoValidation";
 import styles from "./LoginPage.module.css";
+import { API_ROOT_ENDPOINT } from "../../Configurations/Config";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const LoginPage = () => {
   const [signedUp, setSignedUp] = useState(false);
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+  const usernameInputRef = useRef();
 
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -26,101 +28,70 @@ const LoginPage = () => {
     event.preventDefault();
     try {
       setErrorMessage("");
-      const response = await fetch(
-        `https://identitytoolkit.googleapis.com/v1/accounts:${
-          isLogin ? "signInWithPassword" : "signUp"
-        }?key=AIzaSyAMxK4FTyqlPHYVPkzFE6i7yI_mHqCvKJg`,
-        {
+      let response;
+      if (!isLogin) {
+        response = await fetch(`${API_ROOT_ENDPOINT}/register/`, {
           method: "POST",
-          "Content-Type": "application/json",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             email: emailInputRef.current.inputData.value,
             password: passwordInputRef.current.inputData.value,
-            returnSecureToken: true,
+            username: emailInputRef.current.inputData.value.split("@")[0],
           }),
-        }
-      );
-      const responseData = await response.json();
+        });
+      }
+
+      if (isLogin) {
+        response = await fetch(`${API_ROOT_ENDPOINT}/token/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            password: passwordInputRef.current.inputData.value,
+            username: usernameInputRef.current.inputData.value,
+          }),
+        });
+      }
+
+      let responseData;
+
+      console.warn(response);
+      try {
+        responseData = await response.json();
+      } catch {
+        console.log("JSON Empty");
+      }
+
+      console.log(response);
+      console.log(responseData);
 
       if (!response.ok) {
-        throw responseData.error.message;
+        throw Object.values(responseData)[0];
       }
 
       if (response.ok && !isLogin) {
-        //initializing the account
-
-        const userDataInitialisation = {
-          userProfile: {
-            email: responseData.email,
-            bio: "No Bio",
-            displayName: responseData.email.split("@")[0],
-            dp: "https://i.pinimg.com/originals/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.png",
-            badges: [null],
-            uid: responseData.localId,
-          },
-          questionnaire: {
-            distance: "temp",
-            duration: "temp",
-            experience: "temp",
-            frequency: "temp",
-            latest: "temp",
-            regular: "temp",
-            target: "temp",
-            workoutFrequency: "temp",
-          },
-          workouts: {
-            previousWorkout: "temp",
-            nextWorkout: "temp",
-            currentFitness: "temp",
-            logs: "temp",
-          },
-        };
-
-        await putHTTP(
-          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${responseData.localId}.json?auth=${responseData.idToken}`,
-          userDataInitialisation
-        );
-
         setIsLogin(true);
         setSignedUp(true);
       }
 
       if (response.ok && isLogin) {
-        // const refreshTokenBody = {
-        //   token: responseData.idToken,
-        //   returnSecureToken: true,
-        // };
-
-        // async function getRefreshToken() {
-        //   const response = await postHTTP(
-        //     `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyAMxK4FTyqlPHYVPkzFE6i7yI_mHqCvKJg
-        // `,
-        //     refreshTokenBody
-        //   );
-        //   console.log(response);
-        //   return response.refreshToken;
-        // }
-
-        // const refreshToken = await getRefreshToken();
-        console.log(responseData.refreshToken);
-
-        dispatch(userAction.updateRefreshToken(responseData.refreshToken));
-
+        document.cookie = `refreshToken=${responseData.refresh}; max-age=31536000`;
         dispatch(
-          userAction.updateAuthentication({
-            idToken: responseData.idToken,
-            uid: responseData.localId,
+          userAction.updateTokens({
+            idToken: responseData.access,
+            refreshToken: responseData.refresh,
           })
         );
 
         // document.cookie = `idToken=${responseData.idToken}; max-age=31536000`;
-        document.cookie = `uid=${responseData.localId}; max-age=31536000`;
-        document.cookie = `refreshToken=${responseData.refreshToken}; max-age=31536000`;
 
         history.replace("/run");
       }
     } catch (error) {
-      setErrorMessage(error);
+      setErrorMessage(error.toString());
     }
   }
 
@@ -159,12 +130,23 @@ const LoginPage = () => {
       </div>
       <form className={styles["login__form"]}>
         <div className={styles["input__wrapper"]}>
-          <InputNoValidation
-            ref={emailInputRef}
-            floatText="Email"
-            name="email"
-            type="text"
-          ></InputNoValidation>
+          {!isLogin && (
+            <InputNoValidation
+              ref={emailInputRef}
+              floatText="Email"
+              name="email"
+              type="text"
+            ></InputNoValidation>
+          )}
+
+          {isLogin && (
+            <InputNoValidation
+              ref={usernameInputRef}
+              floatText="Username"
+              name="username"
+              type="text"
+            ></InputNoValidation>
+          )}
 
           <InputNoValidation
             ref={passwordInputRef}

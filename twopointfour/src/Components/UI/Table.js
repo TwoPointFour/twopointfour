@@ -1,6 +1,7 @@
 import styles from "./Table.module.css";
 
 const Table = (props) => {
+  console.log(props.data);
   const tableData = props.data.map((ele, i) => {
     return (
       <tr>

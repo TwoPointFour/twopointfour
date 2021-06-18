@@ -1,0 +1,6 @@
+.profile__create {
+  display: flex;
+  flex-flow: column;
+  width: 80vw;
+  gap: 1rem;
+}

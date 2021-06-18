@@ -11,13 +11,19 @@ import LoadingModal from "./Components/UI/Loading/LoadingModal";
 import Profile from "./Components/Profile/Profile";
 import Analytics from "./Components/Analytics/Analytics";
 import RadioTabs from "./Components/UI/Input/RadioTabs";
+import ProfileModal from "./Components/Profile/ProfileModal";
+import Shop from "./Components/Shop/Shop";
+import Map from "./Components/Map/Map";
 
 const Main = () => {
+  console.log("Main activated");
   const dispatch = useDispatch();
   const history = useHistory();
 
   useEffect(() => {
+    console.log("initializing data....");
     dispatch(initialiseData());
+    console.log("data initialized!");
   }, []);
 
   const status = useSelector((state) => state.ui.main.status);
@@ -48,6 +54,12 @@ const Main = () => {
           </Route>
           <Route path="/profile">
             <Profile />
+          </Route>
+          <Route path="/shop">
+            <Shop />
+          </Route>
+          <Route path="/map">
+            <Map />
           </Route>
         </>
       )}

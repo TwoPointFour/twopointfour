@@ -12,69 +12,65 @@ import { Redirect, Route, useHistory } from "react-router";
 import Authorized from "./Components/Authentication/Authorized";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { postHTTP } from "./Components/Helper/Complementary";
+import { postHTTP, postHTTPNoAuth } from "./Components/Helper/Complementary";
+import { API_ROOT_ENDPOINT } from "./Configurations/Config";
+import ProfileModal from "./Components/Profile/ProfileModal";
 
 const App = () => {
   const idToken = useSelector((state) => state.user.authentication.idToken);
-  const uid = useSelector((state) => state.user.authentication.uid);
+  const refreshToken = useSelector((state) => state.user.authentication.refreshToken);
   const location = useLocation();
   const pathArray = location.pathname.split("/").slice(1);
   const timerOn = pathArray.some((ele) => ele === "timer");
   const dispatch = useDispatch();
   const history = useHistory();
+  const profileModalVisible = useSelector((state) => state.ui.profile.show);
 
   useEffect(() => {
     async function autoLogin() {
-      const uid = document.cookie
-        .split("; ")
-        .find((ele) => ele.startsWith("uid"))
-        ?.split("=")[1];
-      // const idToken = document.cookie
-      //   .split("; ")
-      //   .find((ele) => ele.startsWith("idToken"))
-      //   ?.split("=")[1];
       const refreshToken = document.cookie
         .split("; ")
         .find((ele) => ele.startsWith("refreshToken"))
         ?.split("=")[1];
 
-      //   const refreshTokenBody = {
-      //     token: idToken,
-      //     returnSecureToken: true,
-      //   }
-
-      //   async function getRefreshToken() {
-      //     return await postHTTP(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyAMxK4FTyqlPHYVPkzFE6i7yI_mHqCvKJg
-      //     `, refreshTokenBody)
-      //   }
-
       const idTokenBody = {
-        grant_type: "refresh_token",
-        refreshToken: refreshToken,
+        refresh: refreshToken,
       };
 
+      console.log(refreshToken.slice(-10));
       async function getIDToken() {
-        const response = await postHTTP(
-          `https://securetoken.googleapis.com/v1/token?key=AIzaSyAMxK4FTyqlPHYVPkzFE6i7yI_mHqCvKJg`,
-          idTokenBody
-        );
-        return response["id_token"];
+        const response = await postHTTPNoAuth(`${API_ROOT_ENDPOINT}/token/refresh`, idTokenBody);
+        return response["access"];
       }
 
       const idToken = await getIDToken();
 
+      console.log(idToken.slice(-5));
       //   document.cookie = `refreshToken=${getRefreshToken()}; max-age=31536000`;
 
-      // console.log(uid, idToken);
+      async function getUserPK() {
+        const request = await fetch(`${API_ROOT_ENDPOINT}/user/`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
+        const data = await request.json();
+        return data["id"];
+      }
+
+      const uid = await getUserPK();
 
       if (refreshToken) {
         dispatch(userAction.updateRefreshToken(refreshToken));
       }
-      if (uid && idToken) {
+      if (refreshToken && idToken && uid) {
         dispatch(
           userAction.updateAuthentication({
             idToken,
+            refreshToken,
             uid,
+            pid: "",
           })
         );
         history.replace("/run");
@@ -99,6 +95,7 @@ const App = () => {
               <DummyHeader />
             </>
           )}
+          {profileModalVisible && <ProfileModal />}
           <Main></Main>
           {!timerOn && (
             <>
@@ -108,6 +105,11 @@ const App = () => {
           )}
         </>
       )}
+      {/* {refreshToken && !idToken && (
+        <Route path="*">
+          <Redirect to="/login"></Redirect>
+        </Route>
+      )} */}
       {!idToken && (
         <Route path="*">
           <Redirect to="/login"></Redirect>

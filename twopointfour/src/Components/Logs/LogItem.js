@@ -17,14 +17,14 @@ import styles from "./LogItem.module.css";
 const LogItem = (props) => {
   const [toggleComment, setToggleComment] = useState(false);
   const dispatch = useDispatch();
-  const workoutID = props.workoutData[0];
-  const workoutInfo = props.workoutData[1];
-  const comments = props.workoutData[1].social.comments;
-  const workoutUser = props.workoutData[1].userProfile.uid;
-  const userBadges = props.workoutData[1].userProfile.badges?.map((ele) => {
+  const workoutID = props.workoutData.id;
+  const workoutInfo = props.workoutData.workouts[0];
+  const comments = props.workoutData.comments;
+  const workoutUser = props.workoutData.profile;
+  const userBadges = workoutUser.shopItems?.map((ele) => {
     return (
       <Chip color="green" size="small">
-        {ele}
+        {ele.name}
       </Chip>
     );
   });
@@ -40,11 +40,13 @@ const LogItem = (props) => {
     dispatch(shareWorkout(workoutID, modifiedWorkoutInfo, input));
   }
 
-  const date = msToDate(props.workoutData[1].workout.date);
+  const date = msToDate(props.workoutData.datetime);
 
-  const time = msToTime(props.workoutData[1].workout.date);
+  const time = msToTime(props.workoutData.datetime);
 
-  const { distance, pace, rest, sets, timings } = props.workoutData[1].workout.parts[0];
+  const { distance, pace, rest, sets } = props.workoutData.workouts[0].workout;
+
+  const timings = props.workoutData.timings;
 
   const paceSeconds = msToS(pace, 2);
 
@@ -58,16 +60,16 @@ const LogItem = (props) => {
 
   const averageTime = timings.reduce((acc, ele, _, arr) => {
     return (acc += ele / arr.length);
-  });
+  }, 0);
 
   return (
     <Card parentClassName={styles["logs__card"]} color="white">
       <div className={styles["logs__name"]}>
         <div className={styles["header__wrapper"]}>
-          <Avatar size="medium" url={props.workoutData[1].userProfile.dp} />
+          <Avatar size="medium" url={workoutUser.profileImage} />
           <div className={styles["logs__header"]}>
             <div className={styles["name__info"]}>
-              <span className={styles.span}>{props.workoutData[1].userProfile.displayName}</span>
+              <span className={styles.span}>{workoutUser.user.username}</span>
               <div className={styles.badges}>{userBadges}</div>
             </div>
             <div className={styles["logs__datetime"]}>
@@ -89,7 +91,7 @@ const LogItem = (props) => {
             <span className={styles["logs__share-label"]}>Share</span>
             <Switch
               onChangeHandler={onShareClick}
-              shareStatus={workoutInfo.social.share}
+              shareStatus={true}
               workoutID={workoutID}
             ></Switch>
           </div>

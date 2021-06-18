@@ -5,7 +5,7 @@ import RunItem from "./RunItem";
 
 const Run = () => {
   const workoutInfo = useSelector((state) => state.workout.nextWorkout);
-  const workoutAvailable = workoutInfo.segment;
+  const workoutAvailable = workoutInfo?.id;
   console.log(workoutInfo, workoutAvailable);
   return (
     <div className={styles.run}>

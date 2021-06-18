@@ -118,14 +118,14 @@ const Questionnaire = () => {
     setWorkoutFrequencyTouched(true);
     if (formValid) {
       const formData = {
-        regular: regularValue,
-        frequency: frequencyValue,
-        distance: distanceValue,
-        experience: experienceValue,
+        regular: regularValue === "yes" ? true : false,
+        frequency: Number(frequencyValue),
+        distance: Number(distanceValue),
+        experience: Number(experienceValue),
         latest: latestValue,
         target: targetValue,
-        duration: durationValue,
-        workoutFrequency: workoutFrequencyValue,
+        duration: Number(durationValue),
+        workoutFrequency: Number(workoutFrequencyValue),
       };
       dispatch(sendQuestionnaire(formData));
       // dispatch(updateDatabase(0, "users/yihein/workouts/count"));
