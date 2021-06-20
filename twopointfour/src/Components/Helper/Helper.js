@@ -7,12 +7,6 @@ See how Yi Hein implemented the currentFitness or suggest the second workout log
 
 edge cases - 20 min current vs 10 target --> suggest easier workout in the sense that he does smaller distances --> add easier workouts <-- also set a hardcoded ceiling dlifficultyMultiplier that warns user that the workout is too hard, do the workout at their own risk
 
-if user is doing more than 3 workouts a week, and if misses one, we penalise him --> but assuming that we only penalise skipped distance interval workouts, the guy who was doing 2 distance intervals will have a lower fitness than someone who does only 1 distance interval a week and does it consistently
-
-if user skips workout, how much of fitness penalty to give --> a guy who does 3 workouts a week vs a guy who does a workout a week --> do we only penalise
-
-<-- actually just reward them for doing the workout, do not penalise them --> so we just change the currentfitness --> smaller bonus for completing filler workout --> if he doesn't do workout for a long time, degrade fitness --> reward the user for the number of sets completed per workout, do not penalise for missed
-<-- everything revolves around current fitness actually!
 cycles of 3
 
 convert Jlow's fillerworkout notes to unit tests
@@ -35,6 +29,7 @@ Save the date of the first interval workout, change number of weeks to specific 
 
 Basically we also need to regenerate the suggested workout everytime the user logs in, since the current date will change
 
+Upon previous filler workout success
  */
 
 // All constants below TBC
@@ -203,7 +198,6 @@ export function getUserInfo(questionnaireData, previousFitness) {
 export const getVelocities = (targetPace, cNewbieGains) =>
   phi.map((phiValue, i) => targetPace * paceConstants[i] * cNewbieGains * phiValue).map((pace) => (1 / pace) * 3.6);
 
-//restMultiplier was passed in as arg previously
 export const generateTrainingPlans = (speedDifficulty, targetPace, userInfo, primary, secondary, previousWorkout) => {
   const {newFitness, targetDifficulty} = getOverallFitness(
     speedDifficulty,
@@ -338,8 +332,34 @@ const getFartlekTrainingPlan = () => {
 
 }
 
-const getDate = () => {
-  //(!!(previousWorkout.workout_ID.match(/^4]/)[0])) buffer of 1 day --> also need to make sure that we don't keep on recommending workouts after he has already done 3 max for the week
+const getWeeksAndStartDate = (firstWorkoutTimestamp, currentDatestamp) => {
+  let numberOfWeeksElapsed = 0
+  let weekStartDatestamp = firstWorkoutTimestamp
+  while (weekStartDatestamp < currentDatestamp) {
+    numberOfWeeksElapsed++
+    weekStartDatestamp += (604800000 * numberOfWeeksElapsed)
+  }
+  return {numberOfWeeksElapsed, weekStartDatestamp}
+}
+
+const getNextDate = (dateToCompare, previousWorkoutDate) => {
+  if ((dateToCompare - sanitiseWeekDateStamp(previousWorkoutDate)) < 86400000) return dateToCompare + 86400000
+  return dateToCompare
+}
+
+const getSuggestedDate = (userInfo, previousWorkout) => {
+  const sanitisedCurrentDatestamp = sanitiseWeekDateStamp(Date.now())
+  const {ipptDatestamp} = userInfo
+  //todo shift below if condition to frontend, don't even run suggest function if close to IPPT date
+  if ((sanitiseWeekDateStamp(ipptDatestamp) - sanitisedCurrentDatestamp) < (86400000 * 2)) return null
+  if (!!(previousWorkout.workout_ID.match(/^4]/)[0])) {
+    const firstWorkoutTimestamp = parseInt('1622542227000')
+    const currentDatestamp = Date.now()
+    let {numberOfWeeksElapsed} = getWeeksAndStartDate(firstWorkoutTimestamp, currentDatestamp)
+    const nextWeekStart = sanitiseWeekDateStamp((604800000 * (numberOfWeeksElapsed + 1)) + firstWorkoutTimestamp)
+    return getNextDate(nextWeekStart, previousWorkout.date)
+  }
+  return getNextDate(sanitisedCurrentDatestamp, previousWorkout.date)
 }
 
 const getOneOfTHreeTrainingPlan = (targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace) => {
@@ -349,14 +369,9 @@ const getOneOfTHreeTrainingPlan = (targetPace, cNewbieGains, userInfo, primary, 
   userInfo.duration = 8//Math.floor(ipptDatestamp - currentDatestamp)
   const previousWorkoutDatestamp = previousWorkout.date
   console.log('in function oneOFthre', previousWorkout.workout_ID)
-  let numberOfWeeksElapsed = 0
-  let weekStartDatestamp = firstWorkoutTimestamp
-  while (weekStartDatestamp < currentDatestamp) {
-    numberOfWeeksElapsed++
-    weekStartDatestamp += (604800000 * numberOfWeeksElapsed)
-  }
+  let {numberOfWeeksElapsed, weekStartDatestamp} = getWeeksAndStartDate(firstWorkoutTimestamp, currentDatestamp)
   weekStartDatestamp = sanitiseWeekDateStamp(weekStartDatestamp)
-  const nextWeekStart = sanitiseWeekDateStamp((604800 * 1000 * (numberOfWeeksElapsed + 1)) + firstWorkoutTimestamp)
+  const nextWeekStart = sanitiseWeekDateStamp((604800000 * (numberOfWeeksElapsed + 1)) + firstWorkoutTimestamp)
   const isPreviousWorkoutIntervalWorkout = !!(previousWorkout.workout_ID.match(/^[123]/)[0])
   if ((ipptDatestamp - currentDatestamp) < 604800000) {
     if (isPreviousWorkoutIntervalWorkout) return getLongDistanceTrainingPlan()
@@ -385,11 +400,12 @@ export const getTrainingPlan = (questionnaireData, workouts, previousWorkout = {
   const {targetPace, displayPace} = getTargetPaces(userInfo.targetTime);
   // add logic here to decide if we're doing intervals
   console.log(previousWorkout.workout_ID)
+  const suggestedDate = getSuggestedDate(targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace)
   const {
     newFitness,
     trainingPlan
   } = getOneOfTHreeTrainingPlan(targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace);
-  return {newFitness, trainingPlan};
+  return {newFitness, trainingPlan, suggestedDate};
 };
 
 export async function getJSON(url) {
