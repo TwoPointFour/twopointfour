@@ -1,15 +1,26 @@
 /*
-Get tod0.txt from office Dell
 Also Jlow wants to implement a way to change the workout scorer and generator both if user chooses his own custom rest time
 Commitment per week - if it changes halfway through --> skip workout --> if workout skipped or if current date doesn't match the date the next workout was supposed to happen calculated from date when last workout was done, change currentFitness
-if user chooses 3 workouts per week, but if he only wants to do 1 or 2, suggest both to be distance intervals unless the number of days between the 2 workouts is 3 or less then suggest 1 distance interval and 1 filler workout
-See how Yi Hein implemented the currentFitness or suggest the second workout logic
+See how Yi Hein implemented the currentFitness or suggest the second workout logic - Fix the way we implement workout score, workout difficulty, current fitness and target fitness. Figure out how to update current fitness, whether we are using the proper target fitness calculated from deltaDiff + workoutScore or deltaDiff + workout_difficulty to suggest the next workout, do we need to save current or target fitness
 
-edge cases - 20 min current vs 10 target --> suggest easier workout in the sense that he does smaller distances --> add easier workouts <-- also set a hardcoded ceiling dlifficultyMultiplier that warns user that the workout is too hard, do the workout at their own risk
+Jlow said high standard deviation (uneven set times) should result in a higher workout score. See results of beta test
+
+Port over to Python
+
+Fitness degradation curve
+
+edge cases - 20 min current vs 10 target --> suggest easier workout in the sense that he does smaller distances --> add easier workouts <-- also set a hardcoded ceiling dlifficultyMultiplier that warns user that the workout is too hard, do the workout at their own risk <-- see long-ass WA discussion
 
 cycles of 3
 
 convert Jlow's fillerworkout notes to unit tests
+
+Some no-gos
+1. The average time is more than 5% off the goal pace but the workout score is more than 95
+2. The workout score exceeds 120(unless the values are ridiculous)
+3. The training times/variance are not a realistic number(like 90s SD for 500m trainings)
+
+Improve on overall fitness calculator
 
 suggest pyramid workout
 
@@ -30,6 +41,10 @@ Save the date of the first interval workout, change number of weeks to specific 
 Basically we also need to regenerate the suggested workout everytime the user logs in, since the current date will change
 
 Upon previous filler workout success
+
+In fartlek workouts, rename goalPace to targetPace
+
+Create endpoint for JLOW to upload file and test algorithm
  */
 
 // All constants below TBC
@@ -195,8 +210,8 @@ export function getUserInfo(questionnaireData, previousFitness) {
   };
 }
 
-export const getVelocities = (targetPace, cNewbieGains) =>
-  phi.map((phiValue, i) => targetPace * paceConstants[i] * cNewbieGains * phiValue).map((pace) => (1 / pace) * 3.6);
+const getPaces = (targetPace, cNewbieGains) => phi.map((phiValue, i) => targetPace * paceConstants[i] * cNewbieGains * phiValue)
+export const getVelocities = (targetPace, cNewbieGains) => getPaces(targetPace, cNewbieGains).map((pace) => (1 / pace) * 3.6);
 
 export const generateTrainingPlans = (speedDifficulty, targetPace, userInfo, primary, secondary, previousWorkout) => {
   const {newFitness, targetDifficulty} = getOverallFitness(
@@ -253,7 +268,7 @@ const readJSON = async (name) => {
 
 const getRoundedDistance = (time, tempoPace) => Math.ceil((time * 60 / tempoPace) / 0.5) * 0.5;
 
-const getFartlekWorkout = (fillerWorkout, tempoPace, goalPace) => {
+const getFartlekWorkout = (fillerWorkout, tempoPace, targetPace) => {
   let jogTime, jogDistance, jogPace
   const {sprintDistance} = fillerWorkout.parts[0]
   const jogPaceFunction = (jogPaceString) => new Function('tempoPace', jogPaceString)
@@ -266,8 +281,8 @@ const getFartlekWorkout = (fillerWorkout, tempoPace, goalPace) => {
     jogPace = jogPaceFunction(fillerWorkout.parts[0].jogPace)(tempoPace)
     jogTime = jogDistance * jogPace
   }
-  const sprintPaceFunction = (sprintPaceString) => new Function('goalPace', sprintPaceString)
-  const sprintPace = sprintPaceFunction(fillerWorkout.parts[0].sprintPace)(goalPace)
+  const sprintPaceFunction = (sprintPaceString) => new Function('targetPace', sprintPaceString)
+  const sprintPace = sprintPaceFunction(fillerWorkout.parts[0].sprintPace)(targetPace)
   return { //pace in s/m, distance in m, time in s
     sprintDistance,
     jogTime,
@@ -277,21 +292,21 @@ const getFartlekWorkout = (fillerWorkout, tempoPace, goalPace) => {
   }
 }
 
-const suggestFartlek = async (alpha, weekNumber, tempoPace, goalPace) => {
+const getFartlekTrainingPlan = async (alpha, weekNumber, tempoPace, targetPace) => {
   // const fartlek = require('./fartlek.json')
   const fartlek = await readJSON('fartlek')
   for (let i = 0; i < fartlek.length; i++) {
     const fillerWorkout = fartlek[i]
     if (alpha < parseFloat(fillerWorkout.alpha)) {
       if (weekNumber === parseFloat(fillerWorkout.parts[0].weekAt)) {
-        return {...getFartlekWorkout(fillerWorkout, tempoPace, goalPace), sprintSets: fillerWorkout.parts[0].sprintSets}
+        return {...getFartlekWorkout(fillerWorkout, tempoPace, targetPace), sprintSets: fillerWorkout.parts[0].sprintSets}
       }
       if (weekNumber > fillerWorkout.parts[0].weekAt && fillerWorkout.parts[0].end) {
         if (alpha < 0.8) {
           const sprintSets = fillerWorkout.parts[0].sprintSets + weekNumber - fillerWorkout.parts[0].weekAt
-          return {...getFartlekWorkout(fillerWorkout, tempoPace, goalPace), sprintSets}
+          return {...getFartlekWorkout(fillerWorkout, tempoPace, targetPace), sprintSets}
         }
-        const fartlekWorkout = getFartlekWorkout(fillerWorkout, tempoPace, goalPace)
+        const fartlekWorkout = getFartlekWorkout(fillerWorkout, tempoPace, targetPace)
         const newSprintPace = fartlekWorkout.sprintPace - (weekNumber - fillerWorkout.parts[0].weekAt) * 0.00250
         return {...fartlekWorkout, sprintPace: newSprintPace, sprintSets: fillerWorkout.parts[0].sprintSets}
       }
@@ -299,7 +314,7 @@ const suggestFartlek = async (alpha, weekNumber, tempoPace, goalPace) => {
   }
 }
 
-const suggestLongDistance = async (alpha, weekNumber, tempoPace) => {
+const getLongDistanceTrainingPlan = async (alpha, weekNumber, tempoPace) => {
   // const longDistance = require('./longDistance.json')
   const longDistance = await readJSON('longDistance')
   for (let i = 0; i < longDistance.length; i++) {
@@ -324,14 +339,6 @@ const suggestLongDistance = async (alpha, weekNumber, tempoPace) => {
   }
 }
 
-const getLongDistanceTrainingPlan = () => {
-
-}
-
-const getFartlekTrainingPlan = () => {
-
-}
-
 const getWeeksAndStartDate = (firstWorkoutTimestamp, currentDatestamp) => {
   let numberOfWeeksElapsed = 0
   let weekStartDatestamp = firstWorkoutTimestamp
@@ -350,7 +357,7 @@ const getNextDate = (dateToCompare, previousWorkoutDate) => {
 const getSuggestedDate = (userInfo, previousWorkout) => {
   const sanitisedCurrentDatestamp = sanitiseWeekDateStamp(Date.now())
   const {ipptDatestamp} = userInfo
-  //todo shift below if condition to frontend, don't even run suggest function if close to IPPT date
+  //below for if close to IPPT date
   if ((sanitiseWeekDateStamp(ipptDatestamp) - sanitisedCurrentDatestamp) < (86400000 * 2)) return null
   if (!!(previousWorkout.workout_ID.match(/^4]/)[0])) {
     const firstWorkoutTimestamp = parseInt('1622542227000')
@@ -362,20 +369,21 @@ const getSuggestedDate = (userInfo, previousWorkout) => {
   return getNextDate(sanitisedCurrentDatestamp, previousWorkout.date)
 }
 
-const getOneOfTHreeTrainingPlan = (targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace) => {
+const getOneOfTHreeTrainingPlan = (targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace, alpha) => {
   const firstWorkoutTimestamp = parseInt('1622542227000')
   const {workoutFrequency, ipptDatestamp} = userInfo
   const currentDatestamp = Date.now()
-  userInfo.duration = 8//Math.floor(ipptDatestamp - currentDatestamp)
+  userInfo.duration = 8//todo Math.floor(ipptDatestamp - currentDatestamp)
   const previousWorkoutDatestamp = previousWorkout.date
   console.log('in function oneOFthre', previousWorkout.workout_ID)
   let {numberOfWeeksElapsed, weekStartDatestamp} = getWeeksAndStartDate(firstWorkoutTimestamp, currentDatestamp)
   weekStartDatestamp = sanitiseWeekDateStamp(weekStartDatestamp)
   const nextWeekStart = sanitiseWeekDateStamp((604800000 * (numberOfWeeksElapsed + 1)) + firstWorkoutTimestamp)
+  const tempoPace = getPaces(targetPace, cNewbieGains)[0]
   const isPreviousWorkoutIntervalWorkout = !!(previousWorkout.workout_ID.match(/^[123]/)[0])
   if ((ipptDatestamp - currentDatestamp) < 604800000) {
-    if (isPreviousWorkoutIntervalWorkout) return getLongDistanceTrainingPlan()
-    return getFartlekTrainingPlan()
+    if (isPreviousWorkoutIntervalWorkout) return getLongDistanceTrainingPlan(alpha, numberOfWeeksElapsed, tempoPace)
+    return getFartlekTrainingPlan(alpha, numberOfWeeksElapsed, tempoPace, targetPace)
   }
   if (workoutFrequency === 1 || !(Object.keys(previousWorkout).length > 0)) return getIntervalTrainingPlan(targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace);
   if (workoutFrequency === 2) {
@@ -383,8 +391,8 @@ const getOneOfTHreeTrainingPlan = (targetPace, cNewbieGains, userInfo, primary, 
   }
   if (workoutFrequency === 3) {
     if (previousWorkoutDatestamp > weekStartDatestamp && currentDatestamp < nextWeekStart) {
-      if (isPreviousWorkoutIntervalWorkout) return getLongDistanceTrainingPlan()
-      return getFartlekTrainingPlan()
+      if (isPreviousWorkoutIntervalWorkout) return getLongDistanceTrainingPlan(alpha, numberOfWeeksElapsed, tempoPace)
+      return getFartlekTrainingPlan(alpha, numberOfWeeksElapsed, tempoPace, targetPace)
     }
   }
   return getIntervalTrainingPlan(targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace)
@@ -404,7 +412,7 @@ export const getTrainingPlan = (questionnaireData, workouts, previousWorkout = {
   const {
     newFitness,
     trainingPlan
-  } = getOneOfTHreeTrainingPlan(targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace);
+  } = getOneOfTHreeTrainingPlan(targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace, alpha);
   return {newFitness, trainingPlan, suggestedDate};
 };
 
