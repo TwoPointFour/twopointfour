@@ -307,6 +307,22 @@ export const pyramid = [
   },
 ];
 
+filler = [
+  {
+    date: "unset",
+    workout_ID: "4012",
+    type: "Filler",
+    alphaMax:
+    week: 
+    segment: "Fartlek",
+    difficultyMultiplier: 81.1,
+    scheduledDate: 1293472196,
+    parts: [
+      { part_ID: "3012_0", timings: ["temp"], restMultiplier: 2, sets: 1, distance: 400 },
+    ],
+  },
+]
+
 // function convertWorkouts() {
 //   const newIntervals = pyramidIntervals.map((ele, i) => {
 //     const workout_ID = "3" + `${i}`.padStart(3, "0");
