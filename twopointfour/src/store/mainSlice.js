@@ -102,8 +102,10 @@ const initialTimerState = {
   setTime: 30000000,
   setTimeElpased: 0,
   setCount: 1,
-  pause: false,
+  pause: true,
   rest: false,
+  gpsActiveData: [],
+  gpsStoredData: [],
   bigTimeValue: {
     tenSec: null,
     oneSec: null,
@@ -132,16 +134,16 @@ const timerSlice = createSlice({
   reducers: {
     initialiseTimer(state, action) {
       state.trainingDate = Date.now();
-      state.permSetCount = action.payload.parts[0].sets;
-      state.permDistance = action.payload.parts[0].distance;
-      state.permPaceTime = action.payload.parts[0].pace;
-      state.permSetTime = 30000000;
-      state.permRestTime = action.payload.parts[0].rest * 1000;
-      state.permPaceCount = parseInt(action.payload.parts[0].distance / 100);
+      state.permSetCount = action.payload.sets;
+      state.permDistance = action.payload.distance;
+      state.permPaceTime = action.payload.pace;
+      state.permSetTime = action.payload.setTime;
+      state.permRestTime = action.payload.rest;
+      state.permPaceCount = parseInt(action.payload.distance / 100);
       state.distance = 0;
-      state.paceTime = action.payload.parts[0].pace;
+      state.paceTime = action.payload.pace;
       state.paceCount = 0;
-      state.setTime = 30000000;
+      state.setTime = action.payload.setTime;
       state.setTimeElpased = 0;
       state.setCount = 1;
       state.rest = false;
@@ -158,14 +160,6 @@ const timerSlice = createSlice({
         oneSec: null,
       };
       state.pause = true;
-      state.workoutData.workout_ID = action.payload.workout_ID;
-      state.workoutData.type = action.payload.type;
-      state.workoutData.segment = action.payload.segment;
-      state.workoutData.difficultyMultiplier = action.payload.difficultyMultiplier;
-      state.workoutData.personalisedDifficultyMultiplier =
-        action.payload.personalisedDifficultyMultiplier;
-      state.workoutData.parts[0] = { ...action.payload.parts[0], timings: [] };
-      state.workoutData.date = Date.now();
     },
     updateSetTime(state) {
       if (state.setTime <= 0 && state.setCount < state.permSetCount) {
@@ -232,6 +226,13 @@ const timerSlice = createSlice({
       state.paceTime = 0;
       state.distance = state.paceCount * 100;
       state.rest = true;
+    },
+    updateActiveGPS(state, action) {
+      state.gpsActiveData = action.payload;
+    },
+    updateStoredGPS(state, action) {
+      state.gpsStoredData = [...state.gpsStoredData, action.payload];
+      console.log(current(state));
     },
   },
 });

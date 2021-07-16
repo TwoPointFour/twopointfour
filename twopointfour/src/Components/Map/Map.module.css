@@ -1,0 +1,81 @@
+.metrics {
+  /* position: fixed; */
+  /* bottom: 6rem;
+  left: 50%;
+  transform: translateX(-50%); */
+  display: grid;
+  /* width: 90vw; */
+  gap: 1.5rem;
+  z-index: 1;
+  grid-template-areas: "distance average_pace" "1km_pace 100m_pace" "actions actions";
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.metrics > *:first-child {
+  grid-area: distance;
+}
+
+.metrics > *:nth-child(2) {
+  grid-area: average_pace;
+}
+
+.metrics > *:nth-child(3) {
+  grid-area: 1km_pace;
+}
+
+.metrics > *:nth-child(4) {
+  grid-area: 100m_pace;
+}
+
+.action__item svg {
+  height: 2rem;
+  fill: white;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+}
+
+.action__item {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.timer__actions {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  margin: 1rem 0;
+  grid-area: actions;
+}
+
+.large__clock {
+  z-index: 1;
+}
+
+.small__clock {
+  z-index: 1;
+}
+
+.timer__interface {
+  display: flex;
+  flex-flow: column;
+  height: 85vh;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clock__group {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.map {
+  position: absolute;
+  height: 91vh;
+  width: 100vw;
+}
