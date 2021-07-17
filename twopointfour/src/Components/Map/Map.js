@@ -35,7 +35,7 @@ function Map() {
   const [sourceCoord, setSourceCoord] = useState();
   const sourceCoordRef = useRef();
   sourceCoordRef.current = sourceCoord;
-  const [totalDistance, setTotalDistance] = useState();
+  const [totalDistance, setTotalDistance] = useState(0);
   const [averagePace, setAveragePace] = useState();
   const [currentPace, setCurrentPace] = useState();
   const [watchPositionID, setWatchPositionID] = useState();
@@ -277,8 +277,8 @@ function Map() {
       <div className={styles["timer__interface"]}>
         <div className={styles["clock__group"]}>
           <LargeMeasurement>
-            {/* <DistanceGroup data={setDistance} /> */}
-            <DigitGroup data={[...Object.values(timerData.bigTimeValue)]} />
+            <DistanceGroup data={parseInt(totalDistance * 1000 - timerData.expectedDistance)} />
+            {/* <DigitGroup data={[...Object.values(timerData.bigTimeValue)]} /> */}
           </LargeMeasurement>
           <SmallClock className={styles["small__clock"]} />
         </div>

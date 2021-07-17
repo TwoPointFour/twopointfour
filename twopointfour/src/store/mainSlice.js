@@ -145,6 +145,7 @@ const timerSlice = createSlice({
       state.paceCount = 0;
       state.setTime = action.payload.setTime;
       state.setTimeElpased = 0;
+      state.expectedDistance = 0;
       state.setCount = 1;
       state.rest = false;
       state.bigTimeValue = {
@@ -160,6 +161,7 @@ const timerSlice = createSlice({
         oneSec: null,
       };
       state.pause = true;
+      console.log(current(state))
     },
     updateSetTime(state) {
       if (state.setTime <= 0 && state.setCount < state.permSetCount) {
@@ -186,6 +188,8 @@ const timerSlice = createSlice({
       state.smallTimeValue.oneMin = minutesPad[1];
       state.smallTimeValue.tenSec = secondsPad[0];
       state.smallTimeValue.oneSec = secondsPad[1];
+
+      state.expectedDistance = (state.setTimeElpased / state.permPaceTime) * 100;
     },
     updatePaceTime(state) {
       if (state.paceTime <= 0 && state.paceCount < state.permPaceCount) {
