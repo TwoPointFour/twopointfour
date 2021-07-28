@@ -1,0 +1,12 @@
+.icon {
+  height: 2rem;
+  width: 2rem;
+  fill: var(--green-500);
+}
+
+.start {
+  background-color: rgba(209, 250, 229, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--green-500);
+  flex: 1 1 0px;
+}

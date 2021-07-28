@@ -8,13 +8,13 @@ import MetricsCard from "../UI/Metrics/MetricsCard";
 import styles from "./RunItem.module.css";
 
 const RunItem = (props) => {
-  const { workout } = props.workoutInfo.workouts[0];
-  console.log(`Workout checker: ${workout}`);
+  // const { workout } = props.workoutInfo.workouts[0];
+  // console.log(`Workout checker: ${workout}`);
 
   return (
     <>
       <TutorialRun />
-      <Card color="white" parentClassName={styles.workout}>
+      {/* <Card color="white" parentClassName={styles.workout}>
         <div className={styles.header}>
           <div className={styles["header__chips"]}>
             <Chip color="yellow">Distance Interval</Chip>
@@ -39,7 +39,7 @@ const RunItem = (props) => {
             <h5>Start Workout Now</h5>
           </Button>
         </Link>
-      </Card>
+      </Card> */}
     </>
   );
 };

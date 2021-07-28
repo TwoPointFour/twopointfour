@@ -14,6 +14,7 @@ import RadioTabs from "./Components/UI/Input/RadioTabs";
 import ProfileModal from "./Components/Profile/ProfileModal";
 import Shop from "./Components/Shop/Shop";
 import Map from "./Components/Map/Map";
+import TimervTvR from "./Components/Timer/CustomTimers/TimervTvR";
 
 const Main = () => {
   console.log("Main activated");
@@ -38,7 +39,8 @@ const Main = () => {
             <Redirect to="/login"></Redirect>
           </Route>
           <Route path="/timer">
-            <Timer></Timer>
+            {/* <Timer></Timer> */}
+            <TimervTvR />
           </Route>
           <Route path="/run">
             <Run></Run>
@@ -59,7 +61,7 @@ const Main = () => {
             <Shop />
           </Route>
           <Route path="/map">
-            <Map />
+            <TimervTvR />
           </Route>
         </>
       )}

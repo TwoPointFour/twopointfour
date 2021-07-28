@@ -41,7 +41,7 @@ const Header = () => {
           <Link to="/shop">
             <div className={styles["shop__icon"]}>{Icons["shop"]}</div>
           </Link>
-          <Link to="/map">
+          <Link to="/timer">
             <div className={styles["shop__icon"]}>{Icons["shop"]}</div>
           </Link>
         </li>

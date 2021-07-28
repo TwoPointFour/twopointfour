@@ -4,6 +4,7 @@ import { postHTTP, putHTTP, deleteHTTP } from "../Components/Helper/Complementar
 import { getJSON, getTrainingPlan } from "../Components/Helper/Helper";
 import { API_ROOT_ENDPOINT } from "../Configurations/Config";
 import { createBrowserHistory } from "history";
+import { vTvRSlice } from "./vTvRSlice";
 export const browserHistory = createBrowserHistory();
 // ...
 
@@ -84,183 +85,107 @@ const workoutSlice = createSlice({
 
 export const workoutAction = workoutSlice.actions;
 
-const INTERVAL = 25;
+export const INTERVAL = 25;
 
-const initialTimerState = {
-  trainingDate: "unset",
+export const initialTimerState = {
   timerUpdateInterval: INTERVAL,
   expectedFunctionExecutionTime: null,
-  permSetCount: 5,
-  permDistance: 500,
-  permPaceTime: 3000,
-  permSetTime: 30000000,
-  permRestTime: 10000,
-  permPaceCount: 5,
-  distance: 0,
-  paceTime: 3000,
-  paceCount: 0,
-  setTime: 30000000,
-  setTimeElpased: 0,
+  trainingDate: "",
+  permSetCount: 0,
   setCount: 1,
-  pause: true,
+  permDistance: 0,
+  permRestTime: 0,
+  restTime: 0,
+  restElapsed: 0,
+  permSetTime: 0,
+  setTime: 0,
+  setElapsed: 0,
+  expectedDistance: 0,
   rest: false,
+  pause: true,
   gpsActiveData: [],
   gpsStoredData: [],
-  bigTimeValue: {
-    tenSec: null,
-    oneSec: null,
-    tenMilli: null,
-    oneMilli: null,
-  },
-  smallTimeValue: {
-    tenMin: null,
-    oneMin: null,
-    tenSec: null,
-    oneSec: null,
-  },
-  workoutData: {
-    workout_ID: "1000",
-    type: "Distance Interval",
-    segment: "primary",
-    difficultyMultiplier: 66.8,
-    personalisedDifficultyMultiplier: 110,
-    parts: [{ part_ID: "1000_0", timings: ["temp"], restMultiplier: 2, sets: 10, distance: 300 }],
-  },
 };
 
-const timerSlice = createSlice({
-  name: "timer",
-  initialState: initialTimerState,
-  reducers: {
-    initialiseTimer(state, action) {
-      state.trainingDate = Date.now();
-      state.permSetCount = action.payload.sets;
-      state.permDistance = action.payload.distance;
-      state.permPaceTime = action.payload.pace;
-      state.permSetTime = action.payload.setTime;
-      state.permRestTime = action.payload.rest;
-      state.permPaceCount = parseInt(action.payload.distance / 100);
-      state.distance = 0;
-      state.paceTime = action.payload.pace;
-      state.paceCount = 0;
-      state.setTime = action.payload.setTime;
-      state.setTimeElpased = 0;
-      state.expectedDistance = 0;
-      state.setCount = 1;
-      state.rest = false;
-      state.bigTimeValue = {
-        tenSec: null,
-        oneSec: null,
-        tenMilli: null,
-        oneMilli: null,
-      };
-      state.smallTimeValue = {
-        tenMin: null,
-        oneMin: null,
-        tenSec: null,
-        oneSec: null,
-      };
-      state.pause = true;
-      console.log(current(state))
-    },
-    updateSetTime(state) {
-      if (state.setTime <= 0 && state.setCount < state.permSetCount) {
-        state.paceCount = 0;
-        state.paceTime = state.permPaceTime - state.timerUpdateInterval;
-        state.setTime = state.permSetTime - state.timerUpdateInterval;
-        state.setTimeElpased = state.permSetTime - state.setTime;
-        state.rest = false;
-        state.setCount++;
-      } else if (state.setCount >= state.permSetCount && state.setTime <= 0) {
-        state.setTime = 0;
-      } else {
-        state.setTime -= state.timerUpdateInterval;
-        state.setTimeElpased = state.permSetTime - state.setTime;
-      }
+// const timerSlice = createSlice({
+//   name: "timer",
+//   initialState: initialTimerState,
+//   reducers: {
+//     initialiseTimer(state, action) {
+//       state.trainingDate = Date.now();
+//       state.permSetCount = action.payload.sets;
+//       state.setCount = 1;
+//       state.permDistance = action.payload.distance;
+//       state.permRestTime = action.payload.restTime;
+//       state.restTime = action.payload.restTime;
+//       state.restElapsed = 0;
+//       state.permSetTime = action.payload.setTime;
+//       state.setTime = action.payload.setTime;
+//       state.setElapsed = 0;
+//       state.pace = action.payload.pace;
+//       state.expectedDistance = 0;
+//       state.rest = false;
+//       state.pause = true;
+//     },
+//     updateSetTime(state) {
+//       if (state.setCount > state.permSetCount) return;
+//       if (state.rest === false) {
+//         state.setElapsed += INTERVAL;
+//         state.setTime -= INTERVAL;
+//       } else if (state.rest === true && state.restTime > 0) {
+//         state.restTime -= INTERVAL;
+//         state.restElapsed += INTERVAL;
+//       } else {
+//         state.rest = false;
+//         state.setCount += 1;
+//         state.setElapsed = INTERVAL;
+//         state.setTime = state.permSetTime - INTERVAL;
+//       }
 
-      const displayedTime = state.rest ? state.setTime : state.setTimeElpased;
+//       state.expectedDistance = (state.setTimeElpased / state.permPaceTime) * 100;
+//     },
+//     pauseTimer(state, action) {
+//       state.pause = action.payload;
+//     },
+//     initialExecutionTime(state) {
+//       state.expectedFunctionExecutionTime = Date.now() + state.timerUpdateInterval;
+//     },
+//     updateExecutionTime(state, action) {
+//       state.expectedFunctionExecutionTime += action.payload;
+//     },
+//     splitTimer(state) {
+//       state.restTime = state.setTime - state.setTimeElpased;
+//       state.rest = true;
+//     },
+//     updateActiveGPS(state, action) {
+//       state.gpsActiveData = action.payload;
+//     },
+//     updateStoredGPS(state, action) {
+//       state.gpsStoredData = [...state.gpsStoredData, action.payload];
+//       console.log(current(state));
+//     },
+//   },
+// });
 
-      const minutes = Math.floor(displayedTime / (1000 * 60));
-      const seconds = Math.floor((displayedTime - minutes * 1000 * 60) / 1000);
-      const minutesPad = minutes.toString().padStart(2, "0");
-      const secondsPad = seconds.toString().padStart(2, "0");
-      state.smallTimeValue.tenMin = minutesPad[0];
-      state.smallTimeValue.oneMin = minutesPad[1];
-      state.smallTimeValue.tenSec = secondsPad[0];
-      state.smallTimeValue.oneSec = secondsPad[1];
+// export const timerAction = timerSlice.actions;
 
-      state.expectedDistance = (state.setTimeElpased / state.permPaceTime) * 100;
-    },
-    updatePaceTime(state) {
-      if (state.paceTime <= 0 && state.paceCount < state.permPaceCount) {
-        // starttimepace = Date.now();
-        // Callouts for Pace
-        state.paceCount++;
-        state.distance = state.paceCount * 100;
-        // callCallout(`callouts/${state.paceCount * 100}`);
-        state.paceTime = state.permPaceTime - state.timerUpdateInterval;
-      } else if (state.paceCount >= state.permPaceCount) {
-        state.paceTime = 0;
-      } else {
-        state.paceTime -= state.timerUpdateInterval;
-      }
-
-      const seconds = Math.floor(state.paceTime / 1000);
-      const milliseconds = state.paceTime - seconds * 1000;
-      const secondsPad = seconds.toString().padStart(2, "0");
-      const milliPad = milliseconds.toString().padStart(3, "0");
-      state.bigTimeValue.tenSec = secondsPad[0];
-      state.bigTimeValue.oneSec = secondsPad[1];
-      state.bigTimeValue.tenMilli = milliPad[0];
-      state.bigTimeValue.oneMilli = milliPad[1];
-    },
-    pauseTimer(state, action) {
-      state.pause = action.payload;
-    },
-    initialExecutionTime(state) {
-      state.expectedFunctionExecutionTime = Date.now() + state.timerUpdateInterval;
-    },
-    updateExecutionTime(state, action) {
-      state.expectedFunctionExecutionTime += action.payload;
-    },
-    splitTimer(state) {
-      state.workoutData.parts[0].timings.push(state.setTimeElpased);
-      state.setTime = state.permRestTime;
-      state.paceCount = state.permPaceCount;
-      state.paceTime = 0;
-      state.distance = state.paceCount * 100;
-      state.rest = true;
-    },
-    updateActiveGPS(state, action) {
-      state.gpsActiveData = action.payload;
-    },
-    updateStoredGPS(state, action) {
-      state.gpsStoredData = [...state.gpsStoredData, action.payload];
-      console.log(current(state));
-    },
-  },
-});
-
-export const timerAction = timerSlice.actions;
-
-export const startTimer = () => {
-  return (dispatch, getState) => {
-    function updateCountdown() {
-      const state = getState();
-      const lagTime = Date.now() - state.timer.expectedFunctionExecutionTime;
-      dispatch(timerAction.updateSetTime());
-      dispatch(timerAction.updatePaceTime());
-      dispatch(timerAction.updateExecutionTime(state.timer.timerUpdateInterval));
-      if (!state.timer.pause) {
-        setTimeout(updateCountdown, Math.max(0, state.timer.timerUpdateInterval - lagTime));
-      }
-    }
-    const state = getState();
-    dispatch(timerAction.pauseTimer(false));
-    dispatch(timerAction.initialExecutionTime());
-    setTimeout(updateCountdown, state.timer.timerUpdateInterval);
-  };
-};
+// export const startTimer = () => {
+//   return (dispatch, getState) => {
+//     function updateCountdown() {
+//       const state = getState();
+//       const lagTime = Date.now() - state.timer.expectedFunctionExecutionTime;
+//       dispatch(timerAction.updateSetTime());
+//       dispatch(timerAction.updateExecutionTime(state.timer.timerUpdateInterval));
+//       if (!state.timer.pause) {
+//         setTimeout(updateCountdown, Math.max(0, state.timer.timerUpdateInterval - lagTime));
+//       }
+//     }
+//     const state = getState();
+//     dispatch(timerAction.pauseTimer(false));
+//     dispatch(timerAction.initialExecutionTime());
+//     setTimeout(updateCountdown, state.timer.timerUpdateInterval);
+//   };
+// };
 
 const initialUserState = {
   authentication: {
@@ -855,7 +780,11 @@ export const addCoins = () => {
 
 const store = configureStore({
   reducer: {
-    timer: timerSlice.reducer,
+    // timer: timerSlice.reducer,
+    // vTfR: vTfRSlice.reducer,
+    vTvR: vTvRSlice.reducer,
+    // fTfR: fTfRSlice.reducer,
+    // fTvR: fTvRSlice.reducer,
     user: userSlice.reducer,
     workout: workoutSlice.reducer,
     ui: UISlice.reducer,

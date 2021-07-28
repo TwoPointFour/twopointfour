@@ -1,3 +1,19 @@
+// AJAX Functions
+
+import { userAction } from "../../store/mainSlice";
+
+export async function getHTTP(url, idToken) {
+  const request = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  });
+
+  const data = await request.json();
+  return data;
+}
+
 export async function putHTTP(url, input) {
   await fetch(url, {
     method: "PUT",
@@ -44,8 +60,73 @@ export async function deleteHTTP(url, input) {
   });
 }
 
+// END AJAX Functions
+
+// Authentication Functions
+export function getRefreshToken() {
+  const refreshToken = document.cookie
+    .split("; ")
+    .find((ele) => ele.startsWith("refreshToken"))
+    ?.split("=")[1];
+  return refreshToken;
+}
+
+export async function getIDToken(API_ROOT_ENDPOINT, refreshToken) {
+  const idTokenBody = {
+    refresh: refreshToken,
+  };
+  const response = await postHTTPNoAuth(`${API_ROOT_ENDPOINT}/token/refresh`, idTokenBody);
+  return response["access"];
+}
+
+export async function getUserIDProfileID(API_ROOT_ENDPOINT, idToken) {
+  const userData = await getHTTP(`${API_ROOT_ENDPOINT}/user/`, idToken);
+  const userID = userData["id"];
+  const profileID = userData.profile.id;
+  return [userID, profileID];
+}
+
+export function updateLocalStateAuthentication(refreshToken, idToken, uid, pid) {
+  return (dispatch) => {
+    if (refreshToken && idToken && uid) {
+      dispatch(
+        userAction.updateAuthentication({
+          idToken,
+          refreshToken,
+          uid,
+          pid,
+        })
+      );
+    } else if (refreshToken) {
+      dispatch(userAction.updateRefreshToken(refreshToken));
+    }
+  };
+}
+
+export async function autoLogin(API_ROOT_ENDPOINT, history) {
+  const refreshToken = getRefreshToken();
+  const idToken = await getIDToken(API_ROOT_ENDPOINT, refreshToken);
+  const [uid, pid] = await getUserIDProfileID(API_ROOT_ENDPOINT, idToken);
+  updateLocalStateAuthentication(refreshToken, idToken, uid, pid);
+  history.replace("/run");
+}
+
+// END of Authentication Functions
+
+// Mathematical Functions //
+
 export function msToS(ms, float) {
   return parseFloat(ms / 1000).toFixed(float);
+}
+
+export function msToSMsArray(ms, float) {
+  const seconds = Math.floor(ms / 1000)
+    .toString()
+    .padStart(2, "0");
+  const milliseconds = Math.floor((ms - seconds * 1000) / 10)
+    .toString()
+    .padStart(2, "0");
+  return [...seconds, ...milliseconds];
 }
 
 export function msToMinS(ms) {
@@ -116,6 +197,8 @@ export function findCurrentBearing(startLat, startLng, destLat, destLng) {
   brng = toDegrees(brng);
   return (brng + 360) % 360;
 }
+
+// END of Mathematical Functions //
 
 // addComment(state, action) {
 //   const commentID = action.payload.commentID;

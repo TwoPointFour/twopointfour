@@ -7,6 +7,7 @@
   justify-content: flex-start;
   gap: 1rem;
   background-color: white;
+  position: relative;
 }
 
 .metrics__icon {
@@ -28,4 +29,31 @@
 .metrics__title h5 {
   font-weight: 400;
   color: var(--yellow-900);
+}
+
+.metrics__description {
+  display: flex;
+  flex-flow: row;
+  border-radius: 2rem;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0rem;
+  left: 50%;
+  transform: translateY(70%) translateX(-50%);
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  background-color: var(--green-100);
+  padding: 0rem 1rem;
+}
+
+.metrics__description-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: var(--green-400);
+}
+
+.metrics__description-text {
+  color: var(--green-400);
+  font-size: 1.5rem;
 }

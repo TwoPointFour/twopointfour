@@ -12,7 +12,7 @@ import { Redirect, Route, useHistory } from "react-router";
 import Authorized from "./Components/Authentication/Authorized";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { postHTTP, postHTTPNoAuth } from "./Components/Helper/Complementary";
+import { autoLogin } from "./Components/Helper/Complementary";
 import { API_ROOT_ENDPOINT } from "./Configurations/Config";
 import ProfileModal from "./Components/Profile/ProfileModal";
 
@@ -27,56 +27,7 @@ const App = () => {
   const profileModalVisible = useSelector((state) => state.ui.profile.show);
 
   useEffect(() => {
-    async function autoLogin() {
-      const refreshToken = document.cookie
-        .split("; ")
-        .find((ele) => ele.startsWith("refreshToken"))
-        ?.split("=")[1];
-
-      const idTokenBody = {
-        refresh: refreshToken,
-      };
-
-      console.log(refreshToken.slice(-10));
-      async function getIDToken() {
-        const response = await postHTTPNoAuth(`${API_ROOT_ENDPOINT}/token/refresh`, idTokenBody);
-        return response["access"];
-      }
-
-      const idToken = await getIDToken();
-
-      console.log(idToken.slice(-5));
-      //   document.cookie = `refreshToken=${getRefreshToken()}; max-age=31536000`;
-
-      async function getUserPK() {
-        const request = await fetch(`${API_ROOT_ENDPOINT}/user/`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${idToken}`,
-          },
-        });
-        const data = await request.json();
-        return data["id"];
-      }
-
-      const uid = await getUserPK();
-
-      if (refreshToken) {
-        dispatch(userAction.updateRefreshToken(refreshToken));
-      }
-      if (refreshToken && idToken && uid) {
-        dispatch(
-          userAction.updateAuthentication({
-            idToken,
-            refreshToken,
-            uid,
-            pid: "",
-          })
-        );
-        history.replace("/run");
-      }
-    }
-    autoLogin();
+    autoLogin(API_ROOT_ENDPOINT, history);
   }, []);
 
   return (
@@ -95,7 +46,6 @@ const App = () => {
               <DummyHeader />
             </>
           )}
-          {profileModalVisible && <ProfileModal />}
           <Main></Main>
           {!timerOn && (
             <>
@@ -105,11 +55,6 @@ const App = () => {
           )}
         </>
       )}
-      {/* {refreshToken && !idToken && (
-        <Route path="*">
-          <Redirect to="/login"></Redirect>
-        </Route>
-      )} */}
       {!idToken && (
         <Route path="*">
           <Redirect to="/login"></Redirect>
