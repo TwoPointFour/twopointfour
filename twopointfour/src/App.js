@@ -10,15 +10,15 @@ import Spinner from "./Components/UI/Loading/Spinner";
 import LoginPage from "./Components/Authentication/LoginPage";
 import { Redirect, Route, useHistory } from "react-router";
 import Authorized from "./Components/Authentication/Authorized";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { autoLogin } from "./Components/Helper/Complementary";
 import { API_ROOT_ENDPOINT } from "./Configurations/Config";
 import ProfileModal from "./Components/Profile/ProfileModal";
 
 const App = () => {
-  const idToken = useSelector((state) => state.user.authentication.idToken);
-  const refreshToken = useSelector((state) => state.user.authentication.refreshToken);
+  const { idToken, refreshToken } = useSelector((state) => state.user.authentication);
+  const state = useSelector((state) => state);
   const location = useLocation();
   const pathArray = location.pathname.split("/").slice(1);
   const timerOn = pathArray.some((ele) => ele === "timer");
@@ -27,39 +27,42 @@ const App = () => {
   const profileModalVisible = useSelector((state) => state.ui.profile.show);
 
   useEffect(() => {
-    autoLogin(API_ROOT_ENDPOINT, history);
+    autoLogin(API_ROOT_ENDPOINT, history, dispatch);
+    console.log(idToken, refreshToken, state);
   }, []);
+
+  const header = !timerOn && (
+    <>
+      <Header></Header>
+      <DummyHeader />
+    </>
+  );
+
+  const footer = !timerOn && (
+    <>
+      <DummyNav />
+      <Nav />
+    </>
+  );
+
+  const main = idToken ? (
+    <>
+      {header}
+      <Main></Main>
+      {footer}
+    </>
+  ) : (
+    <Route path="*">
+      <Redirect to="/login"></Redirect>
+    </Route>
+  );
 
   return (
     <>
-      <Route path="/authorized">
-        <Authorized />
-      </Route>
       <Route path="/login">
         <LoginPage></LoginPage>
       </Route>
-      {idToken && (
-        <>
-          {!timerOn && (
-            <>
-              <Header></Header>
-              <DummyHeader />
-            </>
-          )}
-          <Main></Main>
-          {!timerOn && (
-            <>
-              <DummyNav />
-              <Nav />
-            </>
-          )}
-        </>
-      )}
-      {!idToken && (
-        <Route path="*">
-          <Redirect to="/login"></Redirect>
-        </Route>
-      )}
+      {main}
     </>
   );
 };

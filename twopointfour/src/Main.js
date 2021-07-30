@@ -17,14 +17,11 @@ import Map from "./Components/Map/Map";
 import TimervTvR from "./Components/Timer/CustomTimers/TimervTvR";
 
 const Main = () => {
-  console.log("Main activated");
   const dispatch = useDispatch();
   const history = useHistory();
 
   useEffect(() => {
-    console.log("initializing data....");
     dispatch(initialiseData());
-    console.log("data initialized!");
   }, []);
 
   const status = useSelector((state) => state.ui.main.status);

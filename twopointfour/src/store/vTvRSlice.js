@@ -147,10 +147,8 @@ export const startvTvR = () => {
 export const savevTvR = () => {
   return async (dispatch, getState) => {
     const state = getState();
-    const idToken = state.user.authentication.idToken;
-    const uid = state.user.authentication.uid;
-
-    console.log(idToken);
+    const { idToken, uid, pid } = state.user.authentication;
+    const { gpsStoredData, workoutTimings, workoutSetDistances, workoutRestDistances } = state.vTvR;
 
     dispatch(
       UIAction.setModalUIStatus({
@@ -164,12 +162,12 @@ export const savevTvR = () => {
     );
 
     const input = {
-      profile_id: 1,
+      profile_id: pid,
       workout_id: 1002,
-      timings: [12312, 123123, 123, 12312],
-      run_distance: [1, 2, 3, 4, 5],
-      rest_distance: [1, 1, 1, 1, 1],
-      gps_data: [{ from: 5, to: 6 }],
+      timings: workoutTimings,
+      run_distance: workoutSetDistances,
+      rest_distance: workoutRestDistances,
+      gps_data: gpsStoredData,
       datetime: Date.now(),
     };
 

@@ -2,8 +2,6 @@ import GPS from "../../GPS/GPS";
 import Map from "../../Map/Map";
 import MetricsCard from "../../UI/Metrics/MetricsCard";
 import styles from "./TimervTvR.module.css";
-import Button from "../../UI/Button";
-import Icons from "../../Assets/Icons";
 import SmallClock from "../../Timer/SmallClock";
 import LargeMeasurement from "../../UI/Measurement/LargeMeasurement";
 import DigitGroup from "../../UI/Measurement/DigitGroup";
@@ -11,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { savevTvR, startvTvR, vTvRAction } from "../../../store/vTvRSlice";
 import { msToMinS, msToMinSArray, msToSMsArray } from "../../Helper/Complementary";
 import { useEffect, useState } from "react";
-import ActionButton from "../../UI/Button/ActionButton";
 import StartActionButton from "../../UI/Button/StartActionButton";
 import SplitActionButton from "../../UI/Button/SplitActionButton";
 import PauseActionButton from "../../UI/Button/PauseActionButton";
@@ -105,33 +102,7 @@ const TimervTvR = () => {
           />
         </div>
         <div className={styles.metrics}>
-          <div className={styles["timer__actions"]}>
-            {timerActionButtons}
-            {/* <Button
-              onClickHandler={timerSplitHandler}
-              length="circle"
-              className={styles["action__item"]}
-              color="red-fill"
-            >
-              {Icons["close"]}
-            </Button>
-            <Button
-              length="circle"
-              onClickHandler={timerStartHandler}
-              className={styles["action__item"]}
-              color="green-fill"
-            >
-              {Icons["play"]}
-            </Button>
-            <Button
-              length="circle"
-              onClickHandler={timerPauseHandler}
-              className={styles["action__item"]}
-              color="yellow-fill"
-            >
-              {Icons["pause"]}
-            </Button> */}
-          </div>
+          <div className={styles["timer__actions"]}>{timerActionButtons}</div>
           <MetricsCard
             title="Previous Set"
             id="previous_set"

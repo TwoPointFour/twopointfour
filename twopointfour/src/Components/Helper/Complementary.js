@@ -87,7 +87,7 @@ export async function getUserIDProfileID(API_ROOT_ENDPOINT, idToken) {
 }
 
 export function updateLocalStateAuthentication(refreshToken, idToken, uid, pid) {
-  return (dispatch) => {
+  return function (dispatch) {
     if (refreshToken && idToken && uid) {
       dispatch(
         userAction.updateAuthentication({
@@ -103,11 +103,11 @@ export function updateLocalStateAuthentication(refreshToken, idToken, uid, pid) 
   };
 }
 
-export async function autoLogin(API_ROOT_ENDPOINT, history) {
+export async function autoLogin(API_ROOT_ENDPOINT, history, dispatch) {
   const refreshToken = getRefreshToken();
   const idToken = await getIDToken(API_ROOT_ENDPOINT, refreshToken);
   const [uid, pid] = await getUserIDProfileID(API_ROOT_ENDPOINT, idToken);
-  updateLocalStateAuthentication(refreshToken, idToken, uid, pid);
+  dispatch(updateLocalStateAuthentication(refreshToken, idToken, uid, pid));
   history.replace("/run");
 }
 
