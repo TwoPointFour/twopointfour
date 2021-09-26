@@ -1,0 +1,92 @@
+[ {
+  "date" : "unset",
+  "difficultyMultiplier" : 66.8,
+  "parts" : [ {
+    "distance" : 300,
+    "part_ID" : "1000_0",
+    "restMultiplier" : 2,
+    "sets" : 10,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "primary",
+  "type" : "Distance Interval",
+  "workout_ID" : "1000"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 73.1,
+  "parts" : [ {
+    "distance" : 400,
+    "part_ID" : "1001_0",
+    "restMultiplier" : 2.33,
+    "sets" : 8,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "primary",
+  "type" : "Distance Interval",
+  "workout_ID" : "1001"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 76.7,
+  "parts" : [ {
+    "distance" : 500,
+    "part_ID" : "1002_0",
+    "restMultiplier" : 2.6,
+    "sets" : 6,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "primary",
+  "type" : "Distance Interval",
+  "workout_ID" : "1002"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 79.1,
+  "parts" : [ {
+    "distance" : 600,
+    "part_ID" : "1003_0",
+    "restMultiplier" : 2.8,
+    "sets" : 5,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "primary",
+  "type" : "Distance Interval",
+  "workout_ID" : "1003"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 81.8,
+  "parts" : [ {
+    "distance" : 700,
+    "part_ID" : "1004_0",
+    "restMultiplier" : 3.2,
+    "sets" : 4,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "primary",
+  "type" : "Distance Interval",
+  "workout_ID" : "1004"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 88.1,
+  "parts" : [ {
+    "distance" : 800,
+    "part_ID" : "1005_0",
+    "restMultiplier" : 4,
+    "sets" : 4,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "primary",
+  "type" : "Distance Interval",
+  "workout_ID" : "1005"
+}, {
+  "date" : "unset",
+  "difficultyMultiplier" : 91,
+  "parts" : [ {
+    "distance" : 1000,
+    "part_ID" : "1006_0",
+    "restMultiplier" : 4.5,
+    "sets" : 3,
+    "timings" : [ "temp" ]
+  } ],
+  "segment" : "primary",
+  "type" : "Distance Interval",
+  "workout_ID" : "1006"
+} ]

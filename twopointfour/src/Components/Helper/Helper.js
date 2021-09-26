@@ -1,11 +1,9 @@
 /*
 Also Jlow wants to implement a way to change the workout scorer and generator both if user chooses his own custom rest time
 Commitment per week - if it changes halfway through --> skip workout --> if workout skipped or if current date doesn't match the date the next workout was supposed to happen calculated from date when last workout was done, change currentFitness
-See how Yi Hein implemented the currentFitness or suggest the second workout logic - Fix the way we implement workout score, workout difficulty, current fitness and target fitness. Figure out how to update current fitness, whether we are using the proper target fitness calculated from deltaDiff + workoutScore or deltaDiff + workout_difficulty to suggest the next workout, do we need to save current or target fitness
+Fix the logic to suggest the second workout - Fix the way we implement workout score, workout difficulty, current fitness and target fitness. Figure out how to update current fitness, whether we are using the proper target fitness calculated from deltaDiff + workoutScore or deltaDiff + workout_difficulty to suggest the next workout, do we need to save current or target fitness
 
 Jlow said high standard deviation (uneven set times) should result in a higher workout score. See results of beta test
-
-Port over to Python
 
 Fitness degradation curve
 
@@ -43,16 +41,17 @@ Basically we also need to regenerate the suggested workout everytime the user lo
 Upon previous filler workout success
 
 In fartlek workouts, rename goalPace to targetPace
-
-Create endpoint for JLOW to upload file and test algorithm
  */
 
+import {scoredWorkouts} from "./workoutScorer.js";
+
 // All constants below TBC
+
 const rho = 7.0;
 // tePace, ltPace, vPace, stPace
 const phi = [1, 1, 1, 1];
 const paceConstants = [1.243, 1.19, 1.057, 0.89];
-const deltas = [0.41, 0.49, 0.55, 0.65, 0.73];
+export const deltas = [0.41, 0.49, 0.55, 0.65, 0.73];
 
 const getPace = (time) => time / 2400;
 const convertSecToHour = (timeInSec) => timeInSec / (60 * 60);
@@ -61,7 +60,7 @@ export const getTargetPaces = (targetTime) => {
   const displayPace = Math.floor(targetPace * 100 * 1000);
   return {targetPace, displayPace}
 }
-const convertToVelocity = (currentTime) => 2.4 / convertSecToHour(currentTime);
+export const convertToVelocity = (currentTime) => 2.4 / convertSecToHour(currentTime);
 export const getPrescribedRest = (restMultiple, targetPace) => Math.round((restMultiple * targetPace * 100) / 5) * 5;
 const restRatio = (restMultiple, targetPace) =>
   getPrescribedRest(restMultiple, targetPace) / (restMultiple * targetPace * 100);
@@ -74,8 +73,15 @@ const convertToSeconds = (input) => {
   }, 0);
 }
 const sanitiseWeekDateStamp = (timestamp) => timestamp - (timestamp % 86400000)
+export const getPaces = (targetPace, cNewbieGains) =>
+    phi.map((phiValue, i) => targetPace * paceConstants[i] * cNewbieGains * phiValue)
+export const getVelocities = (paces) =>
+    paces.map((pace) => (1 / pace) * 3.6);
 
-const getOverallFitness = (speedDifficulty, targetPace, duration, currentFitness, previousWorkout) => {
+const intermediateFunc = (delta, velocityOne, velocityTwo) =>
+    delta * velocityOne * Math.exp(velocityTwo - velocityOne);
+
+export const getOverallFitness = (speedDifficulty, duration, currentFitness, previousWorkout) => {
   const deltaDifficulty = speedDifficulty - 100;
   const deltaDifficultyPerWeek = deltaDifficulty / duration;
   if (Object.keys(previousWorkout).length < 1) return {newFitness: 100, targetDifficulty: 100 + deltaDifficultyPerWeek};
@@ -91,6 +97,7 @@ const getOverallFitness = (speedDifficulty, targetPace, duration, currentFitness
   };
 };
 
+/// for the first time we are calling get_diffs, we use 100. For the second stage, we use the calculated diff
 const checkDiff = (diffs, diff) => {
   if (diffs[diff]) {
     return diffs[diff];
@@ -126,11 +133,8 @@ const getDiffs = (velocityToCompare, velocities, intermediateFunc, x = 1, differ
   return diffs;
 };
 
-export const getSpeedDifficulty = (currentVelocity, targetVelocity, velocities) => {
-  //todo why so many diffs. floating around? get rid of them
+export const calculateDifficulties = (velocities, currentVelocity) => {
   const [teVelocity, ltVelocity, vVelocity, stVelocity] = velocities;
-  const intermediateFunc = (delta, velocityOne, velocityTwo) =>
-    delta * velocityOne * Math.exp(velocityTwo - velocityOne);
   const diffs = getDiffs(currentVelocity, velocities, intermediateFunc);
   while (Object.keys(diffs).length < 4) {
     if (diffs.teDiff && !diffs.ltDiff) {
@@ -156,6 +160,12 @@ export const getSpeedDifficulty = (currentVelocity, targetVelocity, velocities) 
       diffs.vDiff = diffs.stDiff - intermediateFunc(deltas[3], vVelocity, stVelocity);
     }
   }
+  return diffs;
+}
+
+export const getSpeedDifficulty = (currentVelocity, targetVelocity, velocities) => {
+  //todo why so many diffs. floating around? get rid of them
+  const diffs = calculateDifficulties(velocities, currentVelocity);
   const finalDiffs = getDiffs(targetVelocity, velocities, intermediateFunc, -1, diffs);
   if (Object.values(finalDiffs).length === 1) {
     return Object.values(finalDiffs)[0];
@@ -192,11 +202,12 @@ export const generateConstants = (questionnaireData) => {
   return {alpha, beta, cNewbieGains};
 };
 
+// todo edit this again
 const getBestTrainingPlan = (trainingPlanPrimary, trainingPlanSecondary) =>
-  trainingPlanPrimary[0] > trainingPlanSecondary[0] &&
+  trainingPlanPrimary[0] > trainingPlanSecondary[0] /*&&
   trainingPlanPrimary[0] - trainingPlanSecondary[0] < 3 &&
   trainingPlanPrimary[1]["personalisedDifficultyMultiplier"] <
-  trainingPlanSecondary[1]["personalisedDifficultyMultiplier"];
+  trainingPlanSecondary[1]["personalisedDifficultyMultiplier"];*/
 
 export function getUserInfo(questionnaireData, previousFitness) {
   const {duration, workoutFrequency} = questionnaireData
@@ -210,18 +221,14 @@ export function getUserInfo(questionnaireData, previousFitness) {
   };
 }
 
-const getPaces = (targetPace, cNewbieGains) => phi.map((phiValue, i) => targetPace * paceConstants[i] * cNewbieGains * phiValue)
-export const getVelocities = (targetPace, cNewbieGains) => getPaces(targetPace, cNewbieGains).map((pace) => (1 / pace) * 3.6);
-
 export const generateTrainingPlans = (speedDifficulty, targetPace, userInfo, primary, secondary, previousWorkout) => {
   const {newFitness, targetDifficulty} = getOverallFitness(
     speedDifficulty,
-    targetPace,
     userInfo.duration,
     userInfo.currentFitness,
     previousWorkout,
   );
-  const mapper = (workout) => {
+  const getPersonalisedDifficulty = (workout) => {
     const temp = JSON.parse(JSON.stringify(workout));
     temp.personalisedDifficultyMultiplier =
       (speedDifficulty / 100) * workout.difficultyMultiplier * restMultiplier(workout, targetPace); // * 100
@@ -234,15 +241,15 @@ export const generateTrainingPlans = (speedDifficulty, targetPace, userInfo, pri
     }
     return [workoutVariance, workout]; //return [workoutVariance, ...workout];
   };
-  const primaryIntervalsCopy = primary.map(mapper);
-  const secondaryIntervalsCopy = secondary.map(mapper);
+  const primaryIntervalsCopy = primary.map(getPersonalisedDifficulty);
+  const secondaryIntervalsCopy = secondary.map(getPersonalisedDifficulty);
   const trainingPlanPrimary = primaryIntervalsCopy.reduce(reducer, [10000]);
   const trainingPlanSecondary = secondaryIntervalsCopy.reduce(reducer, [trainingPlanPrimary[1]]);
   return {trainingPlanPrimary, trainingPlanSecondary, newFitness};
 }
 
 const getIntervalTrainingPlan = (targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace) => {
-  const velocities = getVelocities(targetPace, cNewbieGains);
+  const velocities = getVelocities(getPaces(targetPace, cNewbieGains));
   // velocities in km/hr, paces in s/m
   const speedDifficulty = getSpeedDifficulty(convertToVelocity(userInfo.currentTime), convertToVelocity(userInfo.targetTime), velocities); // getSpeedDifficulty(currentVelocity, paces);
   const {
@@ -250,7 +257,7 @@ const getIntervalTrainingPlan = (targetPace, cNewbieGains, userInfo, primary, se
     trainingPlanSecondary,
     newFitness
   } = generateTrainingPlans(speedDifficulty, targetPace, userInfo, primary, secondary, previousWorkout);
-  console.log(JSON.stringify(trainingPlanPrimary), JSON.stringify(trainingPlanSecondary))
+  // console.log(JSON.stringify(trainingPlanPrimary), JSON.stringify(trainingPlanSecondary))
   let trainingPlan = getBestTrainingPlan(trainingPlanPrimary, trainingPlanSecondary)
     ? trainingPlanSecondary[1]
     : trainingPlanPrimary[1];
@@ -272,6 +279,16 @@ const getFartlekWorkout = (fillerWorkout, tempoPace, targetPace) => {
   let jogTime, jogDistance, jogPace
   const {sprintDistance} = fillerWorkout.parts[0]
   const jogPaceFunction = (jogPaceString) => new Function('tempoPace', jogPaceString)
+  /* the Python version had a better implementation of jogPaceFunction --> rather than adding a string to the database, we simply create an array like this ['tempoPace', '0.5'] where 0.5 is meant to be added to tempoPace
+  def get_sprint_pace(sprintPace):
+        y = 0
+        for x in sprintPace:
+            if x == 'goalPace':
+                y += goalPace
+            else:
+                y += int(x)
+        return y
+   */
   if (fillerWorkout.parts[0].jogByTime) {
     jogTime = fillerWorkout.parts[0].jogByTime
     jogPace = jogPaceFunction(fillerWorkout.parts[0].jogPace)(tempoPace)
@@ -281,7 +298,7 @@ const getFartlekWorkout = (fillerWorkout, tempoPace, targetPace) => {
     jogPace = jogPaceFunction(fillerWorkout.parts[0].jogPace)(tempoPace)
     jogTime = jogDistance * jogPace
   }
-  const sprintPaceFunction = (sprintPaceString) => new Function('targetPace', sprintPaceString)
+  const sprintPaceFunction = (sprintPaceString) => new Function('targetPace', sprintPaceString) //same as jogPaceFunction
   const sprintPace = sprintPaceFunction(fillerWorkout.parts[0].sprintPace)(targetPace)
   return { //pace in s/m, distance in m, time in s
     sprintDistance,
@@ -354,12 +371,13 @@ const getNextDate = (dateToCompare, previousWorkoutDate) => {
   return dateToCompare
 }
 
+//todo this function is using test values
 const getSuggestedDate = (userInfo, previousWorkout) => {
   const sanitisedCurrentDatestamp = sanitiseWeekDateStamp(Date.now())
   const {ipptDatestamp} = userInfo
-  //below for if close to IPPT date
+  //if close to IPPT date
   if ((sanitiseWeekDateStamp(ipptDatestamp) - sanitisedCurrentDatestamp) < (86400000 * 2)) return null
-  if (!!(previousWorkout.workout_ID.match(/^4]/)[0])) {
+  if (!!(previousWorkout.workout_ID && previousWorkout.workout_ID.match(/^4]/)[0])) {
     const firstWorkoutTimestamp = parseInt('1622542227000')
     const currentDatestamp = Date.now()
     let {numberOfWeeksElapsed} = getWeeksAndStartDate(firstWorkoutTimestamp, currentDatestamp)
@@ -367,27 +385,27 @@ const getSuggestedDate = (userInfo, previousWorkout) => {
     return getNextDate(nextWeekStart, previousWorkout.date)
   }
   return getNextDate(sanitisedCurrentDatestamp, previousWorkout.date)
+//  return getNextDate(sanitisedCurrentDatestamp, Date.now())
 }
 
-const getOneOfTHreeTrainingPlan = (targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace, alpha) => {
+const getOneOfThreeTrainingPlan = (targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace, alpha, pyramid, longDistance, fartlek) => {
   const firstWorkoutTimestamp = parseInt('1622542227000')
   const {workoutFrequency, ipptDatestamp} = userInfo
   const currentDatestamp = Date.now()
   userInfo.duration = 8//todo Math.floor(ipptDatestamp - currentDatestamp)
-  const previousWorkoutDatestamp = previousWorkout.date
-  console.log('in function oneOFthre', previousWorkout.workout_ID)
+  const previousWorkoutDatestamp = previousWorkout ? previousWorkout.date : ''
   let {numberOfWeeksElapsed, weekStartDatestamp} = getWeeksAndStartDate(firstWorkoutTimestamp, currentDatestamp)
   weekStartDatestamp = sanitiseWeekDateStamp(weekStartDatestamp)
   const nextWeekStart = sanitiseWeekDateStamp((604800000 * (numberOfWeeksElapsed + 1)) + firstWorkoutTimestamp)
   const tempoPace = getPaces(targetPace, cNewbieGains)[0]
-  const isPreviousWorkoutIntervalWorkout = !!(previousWorkout.workout_ID.match(/^[123]/)[0])
+  const isPreviousWorkoutIntervalWorkout = !!(previousWorkout.workout_ID && previousWorkout.workout_ID.match(/^[123]/)[0])
   if ((ipptDatestamp - currentDatestamp) < 604800000) {
     if (isPreviousWorkoutIntervalWorkout) return getLongDistanceTrainingPlan(alpha, numberOfWeeksElapsed, tempoPace)
     return getFartlekTrainingPlan(alpha, numberOfWeeksElapsed, tempoPace, targetPace)
   }
   if (workoutFrequency === 1 || !(Object.keys(previousWorkout).length > 0)) return getIntervalTrainingPlan(targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace);
   if (workoutFrequency === 2) {
-    if (isPreviousWorkoutIntervalWorkout && previousWorkoutDatestamp > weekStartDatestamp && currentDatestamp < nextWeekStart) return getLongDistanceTrainingPlan()
+    if (isPreviousWorkoutIntervalWorkout && previousWorkoutDatestamp > weekStartDatestamp && currentDatestamp < nextWeekStart) return getLongDistanceTrainingPlan(alpha, numberOfWeeksElapsed, tempoPace)
   }
   if (workoutFrequency === 3) {
     if (previousWorkoutDatestamp > weekStartDatestamp && currentDatestamp < nextWeekStart) {
@@ -406,13 +424,11 @@ export const getTrainingPlan = (questionnaireData, workouts, previousWorkout = {
   const userInfo = getUserInfo(questionnaireData, previousFitness);
   const {alpha, beta, cNewbieGains} = generateConstants(questionnaireData);
   const {targetPace, displayPace} = getTargetPaces(userInfo.targetTime);
-  // add logic here to decide if we're doing intervals
-  console.log(previousWorkout.workout_ID)
-  const suggestedDate = getSuggestedDate(targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace)
+  const suggestedDate = getSuggestedDate(userInfo, previousWorkout)
   const {
     newFitness,
     trainingPlan
-  } = getOneOfTHreeTrainingPlan(targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace, alpha);
+  } = getOneOfThreeTrainingPlan(targetPace, cNewbieGains, userInfo, primary, secondary, previousWorkout, displayPace, alpha, pyramid, longDistance, fartlek);
   return {newFitness, trainingPlan, suggestedDate};
 };
 
@@ -450,60 +466,6 @@ const myResults = {
     },
   ],
 };
-
-//todo get rid of the retarded parseFloat all over the place
-const getMissed = (previousWorkout) =>
-  previousWorkout.parts[0]["sets"] - previousWorkout.parts[0]["timings"].length;
-
-const getAverageTime = (previousWorkout) => {
-  // in seconds
-  const timings = previousWorkout.parts[0]["timings"];
-  return (
-    timings.reduce((total, setTime) => total + parseFloat(setTime), 0) /
-    previousWorkout.parts[0]["timings"].length
-  );
-};
-
-const getStandardDeviation = (previousWorkout) => {
-  const mean = getAverageTime(previousWorkout); // in ms
-  return Math.sqrt(
-    previousWorkout.parts[0]["timings"]
-      .map((set) => Math.pow(set - mean, 2))
-      .reduce((total, value) => total + value, 0) / previousWorkout.parts[0]["timings"].length
-  );
-};
-
-const getGoalSetTime = (
-  previousWorkout // in ms
-) =>
-  (parseFloat(previousWorkout.parts[0]["pace"]) *
-    parseFloat(previousWorkout.parts[0]["distance"])) /
-  100;
-
-//todo confirm values
-const kValue = 0.25;
-const yValue = 1.25;
-
-const penaliseMissed = (missed, previousWorkout) =>
-  (Math.exp(missed / parseFloat(previousWorkout.parts[0]["sets"])) - 1) * yValue;
-
-const getWorkoutScore = (previousWorkout) => {
-  if (!previousWorkout.parts[0]["timings"].length) {
-    return {goalTimePerSet: 0, averageTime: 0, standardDeviation: 0, missed: 0, workoutScore: 0};
-  }
-  const goalTimePerSet = getGoalSetTime(previousWorkout); // in ms
-  const averageTime = getAverageTime(previousWorkout); // in ms
-  const standardDeviation = getStandardDeviation(previousWorkout);
-  const missed = getMissed(previousWorkout); // integer value
-  const workoutScore =
-    100 *
-    (goalTimePerSet / averageTime +
-      (Math.exp(standardDeviation / goalTimePerSet) - 1) * kValue -
-      penaliseMissed(missed, previousWorkout));
-  return {workoutScore}; // {goalTimePerSet, averageTime, standardDeviation, missed, workoutScore}
-};
-
-export const scoredWorkouts = (previousWorkout) => getWorkoutScore(previousWorkout);
 
 // const testObj = {
 //   userProfile: {
