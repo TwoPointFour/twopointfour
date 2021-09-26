@@ -1,0 +1,12 @@
+.icon {
+  height: 2rem;
+  width: 2rem;
+  fill: var(--red-500);
+}
+
+.pause {
+  background-color: rgba(254, 226, 226, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--red-500);
+  flex: 1 1 0px;
+}

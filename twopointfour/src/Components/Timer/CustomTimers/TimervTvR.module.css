@@ -1,0 +1,74 @@
+.metrics {
+  /* position: fixed; */
+  /* bottom: 6rem;
+    left: 50%;
+    transform: translateX(-50%); */
+  display: grid;
+  /* width: 90vw; */
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+  z-index: 1;
+  grid-template-areas: "actions actions" "actions actions" "previous_set set_count";
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#previous_set {
+  grid-area: previous_set;
+}
+
+#set_count {
+  grid-area: set_count;
+}
+
+.action__item svg {
+  height: 2rem;
+  fill: white;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+}
+
+.action__item {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.timer__actions {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  gap: 1.5rem;
+  grid-area: actions;
+}
+
+.large__clock {
+  z-index: 1;
+}
+
+.small__clock {
+  z-index: 1;
+}
+
+.timer__interface {
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clock__group {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.map {
+  position: absolute;
+  height: 91vh;
+  width: 100vw;
+}

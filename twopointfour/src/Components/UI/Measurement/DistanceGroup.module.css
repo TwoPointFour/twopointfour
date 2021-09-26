@@ -1,0 +1,11 @@
+.distance__group {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.measurement span {
+  align-self: flex-end;
+  font-size: 2rem;
+}

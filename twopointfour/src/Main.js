@@ -11,6 +11,10 @@ import LoadingModal from "./Components/UI/Loading/LoadingModal";
 import Profile from "./Components/Profile/Profile";
 import Analytics from "./Components/Analytics/Analytics";
 import RadioTabs from "./Components/UI/Input/RadioTabs";
+import ProfileModal from "./Components/Profile/ProfileModal";
+import Shop from "./Components/Shop/Shop";
+import Map from "./Components/Map/Map";
+import TimervTvR from "./Components/Timer/CustomTimers/TimervTvR";
 
 const Main = () => {
   const dispatch = useDispatch();
@@ -32,7 +36,8 @@ const Main = () => {
             <Redirect to="/login"></Redirect>
           </Route>
           <Route path="/timer">
-            <Timer></Timer>
+            {/* <Timer></Timer> */}
+            <TimervTvR />
           </Route>
           <Route path="/run">
             <Run></Run>
@@ -48,6 +53,12 @@ const Main = () => {
           </Route>
           <Route path="/profile">
             <Profile />
+          </Route>
+          <Route path="/shop">
+            <Shop />
+          </Route>
+          <Route path="/map">
+            <TimervTvR />
           </Route>
         </>
       )}

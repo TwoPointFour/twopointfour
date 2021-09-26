@@ -5,11 +5,12 @@ import styles from "./LogsPersonal.module.css";
 
 const LogsPersonal = () => {
   const logs = useSelector((state) => state.workout.logs);
-  const logsPresent = logs && Object.keys(logs).length !== 0 && logs.constructor === Object;
+  // const logsPresent = false;
+  const logsPresent = logs.length > 0;
   const logList =
     logsPresent &&
-    Object.entries(logs).map((ele) => {
-      return <LogItem noComments={true} workoutData={[ele[0], ele[1]]} />;
+    logs.map((ele) => {
+      return <LogItem noComments={true} workoutData={ele} />;
     });
   console.log(logs, logsPresent);
 

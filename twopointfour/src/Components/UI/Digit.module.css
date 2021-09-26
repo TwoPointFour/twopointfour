@@ -9,6 +9,11 @@
   font-weight: 700;
   width: 5.5rem;
 }
+.large-free {
+  font-size: 8rem;
+  font-weight: 700;
+  line-height: 7rem;
+}
 .small {
   font-size: 4rem;
   font-weight: 500;

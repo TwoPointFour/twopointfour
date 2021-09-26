@@ -1,0 +1,23 @@
+.card {
+  display: flex;
+  flex-flow: column;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 1rem;
+}
+
+.item__title {
+  color: var(--yellow-500);
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+.item__amount {
+  color: var(--yellow-800);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.item__image {
+  width: 7rem;
+  height: 7rem;
+}

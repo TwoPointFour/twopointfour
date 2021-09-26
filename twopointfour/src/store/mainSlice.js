@@ -2,6 +2,11 @@ import { configureStore, createSlice, current } from "@reduxjs/toolkit";
 import { useHistory } from "react-router";
 import { postHTTP, putHTTP, deleteHTTP } from "../Components/Helper/Complementary";
 import { getJSON, getTrainingPlan } from "../Components/Helper/Helper";
+import { API_ROOT_ENDPOINT } from "../Configurations/Config";
+import { createBrowserHistory } from "history";
+import { vTvRSlice } from "./vTvRSlice";
+export const browserHistory = createBrowserHistory();
+// ...
 
 const initialUIState = {
   main: {
@@ -16,6 +21,9 @@ const initialUIState = {
     description: "Getting data... to do ownas;ldfjasl;dfjl workouts!!!",
     buttonText: "temp",
     buttonPath: "/run",
+  },
+  profile: {
+    show: false,
   },
 };
 
@@ -36,6 +44,10 @@ const UISlice = createSlice({
     },
     showModal(state, action) {
       state.modal.show = action.payload;
+    },
+    setProfileModalStatus(state, action) {
+      state.profile.show = action.payload;
+      console.log(current(state));
     },
   },
 });
@@ -65,188 +77,121 @@ const workoutSlice = createSlice({
       state.logs = action.payload.logs;
       state.currentFitness = action.payload.currentFitness;
     },
+    setWorkoutLogs(state, action) {
+      state.logs = action.payload.logs;
+    },
   },
 });
 
 export const workoutAction = workoutSlice.actions;
 
-const INTERVAL = 25;
+export const INTERVAL = 25;
 
-const initialTimerState = {
-  trainingDate: "unset",
+export const initialTimerState = {
   timerUpdateInterval: INTERVAL,
   expectedFunctionExecutionTime: null,
-  permSetCount: 5,
-  permDistance: 500,
-  permPaceTime: 3000,
-  permSetTime: 30000000,
-  permRestTime: 10000,
-  permPaceCount: 5,
-  distance: 0,
-  paceTime: 3000,
-  paceCount: 0,
-  setTime: 30000000,
-  setTimeElpased: 0,
+  trainingDate: "",
+  permSetCount: 0,
   setCount: 1,
-  pause: false,
+  permDistance: 0,
+  permRestTime: 0,
+  restTime: 0,
+  restElapsed: 0,
+  permSetTime: 0,
+  setTime: 0,
+  setElapsed: 0,
+  expectedDistance: 0,
   rest: false,
-  bigTimeValue: {
-    tenSec: null,
-    oneSec: null,
-    tenMilli: null,
-    oneMilli: null,
-  },
-  smallTimeValue: {
-    tenMin: null,
-    oneMin: null,
-    tenSec: null,
-    oneSec: null,
-  },
-  workoutData: {
-    workout_ID: "1000",
-    type: "Distance Interval",
-    segment: "primary",
-    difficultyMultiplier: 66.8,
-    personalisedDifficultyMultiplier: 110,
-    parts: [{ part_ID: "1000_0", timings: ["temp"], restMultiplier: 2, sets: 10, distance: 300 }],
-  },
+  pause: true,
+  gpsActiveData: [],
+  gpsStoredData: [],
 };
 
-const timerSlice = createSlice({
-  name: "timer",
-  initialState: initialTimerState,
-  reducers: {
-    initialiseTimer(state, action) {
-      state.trainingDate = Date.now();
-      state.permSetCount = action.payload.parts[0].sets;
-      state.permDistance = action.payload.parts[0].distance;
-      state.permPaceTime = action.payload.parts[0].pace;
-      state.permSetTime = 30000000;
-      state.permRestTime = action.payload.parts[0].rest * 1000;
-      state.permPaceCount = parseInt(action.payload.parts[0].distance / 100);
-      state.distance = 0;
-      state.paceTime = action.payload.parts[0].pace;
-      state.paceCount = 0;
-      state.setTime = 30000000;
-      state.setTimeElpased = 0;
-      state.setCount = 1;
-      state.rest = false;
-      state.bigTimeValue = {
-        tenSec: null,
-        oneSec: null,
-        tenMilli: null,
-        oneMilli: null,
-      };
-      state.smallTimeValue = {
-        tenMin: null,
-        oneMin: null,
-        tenSec: null,
-        oneSec: null,
-      };
-      state.pause = true;
-      state.workoutData.workout_ID = action.payload.workout_ID;
-      state.workoutData.type = action.payload.type;
-      state.workoutData.segment = action.payload.segment;
-      state.workoutData.difficultyMultiplier = action.payload.difficultyMultiplier;
-      state.workoutData.personalisedDifficultyMultiplier =
-        action.payload.personalisedDifficultyMultiplier;
-      state.workoutData.parts[0] = { ...action.payload.parts[0], timings: [] };
-      state.workoutData.date = Date.now();
-    },
-    updateSetTime(state) {
-      if (state.setTime <= 0 && state.setCount < state.permSetCount) {
-        state.paceCount = 0;
-        state.paceTime = state.permPaceTime - state.timerUpdateInterval;
-        state.setTime = state.permSetTime - state.timerUpdateInterval;
-        state.setTimeElpased = state.permSetTime - state.setTime;
-        state.rest = false;
-        state.setCount++;
-      } else if (state.setCount >= state.permSetCount && state.setTime <= 0) {
-        state.setTime = 0;
-      } else {
-        state.setTime -= state.timerUpdateInterval;
-        state.setTimeElpased = state.permSetTime - state.setTime;
-      }
+// const timerSlice = createSlice({
+//   name: "timer",
+//   initialState: initialTimerState,
+//   reducers: {
+//     initialiseTimer(state, action) {
+//       state.trainingDate = Date.now();
+//       state.permSetCount = action.payload.sets;
+//       state.setCount = 1;
+//       state.permDistance = action.payload.distance;
+//       state.permRestTime = action.payload.restTime;
+//       state.restTime = action.payload.restTime;
+//       state.restElapsed = 0;
+//       state.permSetTime = action.payload.setTime;
+//       state.setTime = action.payload.setTime;
+//       state.setElapsed = 0;
+//       state.pace = action.payload.pace;
+//       state.expectedDistance = 0;
+//       state.rest = false;
+//       state.pause = true;
+//     },
+//     updateSetTime(state) {
+//       if (state.setCount > state.permSetCount) return;
+//       if (state.rest === false) {
+//         state.setElapsed += INTERVAL;
+//         state.setTime -= INTERVAL;
+//       } else if (state.rest === true && state.restTime > 0) {
+//         state.restTime -= INTERVAL;
+//         state.restElapsed += INTERVAL;
+//       } else {
+//         state.rest = false;
+//         state.setCount += 1;
+//         state.setElapsed = INTERVAL;
+//         state.setTime = state.permSetTime - INTERVAL;
+//       }
 
-      const displayedTime = state.rest ? state.setTime : state.setTimeElpased;
+//       state.expectedDistance = (state.setTimeElpased / state.permPaceTime) * 100;
+//     },
+//     pauseTimer(state, action) {
+//       state.pause = action.payload;
+//     },
+//     initialExecutionTime(state) {
+//       state.expectedFunctionExecutionTime = Date.now() + state.timerUpdateInterval;
+//     },
+//     updateExecutionTime(state, action) {
+//       state.expectedFunctionExecutionTime += action.payload;
+//     },
+//     splitTimer(state) {
+//       state.restTime = state.setTime - state.setTimeElpased;
+//       state.rest = true;
+//     },
+//     updateActiveGPS(state, action) {
+//       state.gpsActiveData = action.payload;
+//     },
+//     updateStoredGPS(state, action) {
+//       state.gpsStoredData = [...state.gpsStoredData, action.payload];
+//       console.log(current(state));
+//     },
+//   },
+// });
 
-      const minutes = Math.floor(displayedTime / (1000 * 60));
-      const seconds = Math.floor((displayedTime - minutes * 1000 * 60) / 1000);
-      const minutesPad = minutes.toString().padStart(2, "0");
-      const secondsPad = seconds.toString().padStart(2, "0");
-      state.smallTimeValue.tenMin = minutesPad[0];
-      state.smallTimeValue.oneMin = minutesPad[1];
-      state.smallTimeValue.tenSec = secondsPad[0];
-      state.smallTimeValue.oneSec = secondsPad[1];
-    },
-    updatePaceTime(state) {
-      if (state.paceTime <= 0 && state.paceCount < state.permPaceCount) {
-        // starttimepace = Date.now();
-        // Callouts for Pace
-        state.paceCount++;
-        state.distance = state.paceCount * 100;
-        // callCallout(`callouts/${state.paceCount * 100}`);
-        state.paceTime = state.permPaceTime - state.timerUpdateInterval;
-      } else if (state.paceCount >= state.permPaceCount) {
-        state.paceTime = 0;
-      } else {
-        state.paceTime -= state.timerUpdateInterval;
-      }
+// export const timerAction = timerSlice.actions;
 
-      const seconds = Math.floor(state.paceTime / 1000);
-      const milliseconds = state.paceTime - seconds * 1000;
-      const secondsPad = seconds.toString().padStart(2, "0");
-      const milliPad = milliseconds.toString().padStart(3, "0");
-      state.bigTimeValue.tenSec = secondsPad[0];
-      state.bigTimeValue.oneSec = secondsPad[1];
-      state.bigTimeValue.tenMilli = milliPad[0];
-      state.bigTimeValue.oneMilli = milliPad[1];
-    },
-    pauseTimer(state, action) {
-      state.pause = action.payload;
-    },
-    initialExecutionTime(state) {
-      state.expectedFunctionExecutionTime = Date.now() + state.timerUpdateInterval;
-    },
-    updateExecutionTime(state, action) {
-      state.expectedFunctionExecutionTime += action.payload;
-    },
-    splitTimer(state) {
-      state.workoutData.parts[0].timings.push(state.setTimeElpased);
-      state.setTime = state.permRestTime;
-      state.paceCount = state.permPaceCount;
-      state.paceTime = 0;
-      state.distance = state.paceCount * 100;
-      state.rest = true;
-    },
-  },
-});
-
-export const timerAction = timerSlice.actions;
-
-export const startTimer = () => {
-  return (dispatch, getState) => {
-    function updateCountdown() {
-      const state = getState();
-      const lagTime = Date.now() - state.timer.expectedFunctionExecutionTime;
-      dispatch(timerAction.updateSetTime());
-      dispatch(timerAction.updatePaceTime());
-      dispatch(timerAction.updateExecutionTime(state.timer.timerUpdateInterval));
-      if (!state.timer.pause) {
-        setTimeout(updateCountdown, Math.max(0, state.timer.timerUpdateInterval - lagTime));
-      }
-    }
-    const state = getState();
-    dispatch(timerAction.pauseTimer(false));
-    dispatch(timerAction.initialExecutionTime());
-    setTimeout(updateCountdown, state.timer.timerUpdateInterval);
-  };
-};
+// export const startTimer = () => {
+//   return (dispatch, getState) => {
+//     function updateCountdown() {
+//       const state = getState();
+//       const lagTime = Date.now() - state.timer.expectedFunctionExecutionTime;
+//       dispatch(timerAction.updateSetTime());
+//       dispatch(timerAction.updateExecutionTime(state.timer.timerUpdateInterval));
+//       if (!state.timer.pause) {
+//         setTimeout(updateCountdown, Math.max(0, state.timer.timerUpdateInterval - lagTime));
+//       }
+//     }
+//     const state = getState();
+//     dispatch(timerAction.pauseTimer(false));
+//     dispatch(timerAction.initialExecutionTime());
+//     setTimeout(updateCountdown, state.timer.timerUpdateInterval);
+//   };
+// };
 
 const initialUserState = {
   authentication: {
     idToken: "",
     uid: "",
+    pid: "",
     refreshToken: "",
   },
   userProfile: {
@@ -255,6 +200,7 @@ const initialUserState = {
     bio: "",
     dp: "",
     uid: "",
+    coins: null,
   },
   questionnaire: {
     regular: "",
@@ -274,6 +220,9 @@ const userSlice = createSlice({
     updateAuthentication(state, action) {
       state.authentication.idToken = action.payload.idToken;
       state.authentication.uid = action.payload.uid;
+      state.authentication.refreshToken = action.payload.refreshToken;
+      state.authentication.pid = action.payload.pid;
+      console.log(current(state));
     },
     updateUserProfile(state, action) {
       state.userProfile.email = action.payload.email;
@@ -281,12 +230,25 @@ const userSlice = createSlice({
       state.userProfile.bio = action.payload.bio;
       state.userProfile.dp = action.payload.dp;
       state.userProfile.uid = action.payload.uid;
+      state.userProfile.coins = action.payload.coins;
     },
     updateQuestionnaire(state, action) {
       state.questionnaire = action.payload;
     },
     updateRefreshToken(state, action) {
       state.authentication.refreshToken = action.payload;
+    },
+    updateTokens(state, action) {
+      state.authentication.idToken = action.payload.idToken;
+      state.authentication.refreshToken = action.payload.refreshToken;
+      console.log(current(state));
+    },
+    updatePID(state, action) {
+      state.authentication.pid = action.payload;
+      console.log(current(state));
+    },
+    updateCoins(state, action) {
+      state.userProfile.coins = action.payload;
     },
   },
 });
@@ -336,97 +298,7 @@ export const sendQuestionnaire = (input) => {
       })
     );
 
-    await putHTTP(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/questionnaire.json?auth=${idToken}`,
-      input
-    );
-
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "temp",
-        buttonPath: "/run",
-        status: "loading",
-        title: "Loading...",
-        description: "Clearing any previous records...",
-      })
-    );
-
-    await putHTTP(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/previousWorkout.json?auth=${idToken}`,
-      ""
-    );
-
-    dispatch(userAction.updateQuestionnaire(input));
-
-    /////////////////////////////
-
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "temp",
-        buttonPath: "/run",
-        status: "loading",
-        title: "Loading...",
-        description: "Downloading available workouts...",
-      })
-    );
-
-    const workouts = await Promise.all([
-      getJSON(
-        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/primary.json?auth=${idToken}`
-      ),
-      getJSON(
-        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/secondary.json?auth=${idToken}`
-      ),
-      getJSON(
-        `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/main/pyramid.json?auth=${idToken}`
-      ),
-      getJSON(
-          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/filler/longDistance.json?auth=${idToken}`
-      ),
-      getJSON(
-          `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/workouts/filler/fartlek.json?auth=${idToken}`
-      )
-    ]);
-
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "temp",
-        buttonPath: "/run",
-        status: "loading",
-        title: "Loading...",
-        description:
-          "Analysing your questionnaire responses and running our advanced workout suggestion algorithm...",
-      })
-    );
-
-    const { newFitness, trainingPlan: training } = getTrainingPlan(input, workouts);
-
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "temp",
-        buttonPath: "/run",
-        status: "loading",
-        title: "Loading...",
-        description: "Updating the server...",
-      })
-    );
-
-    await putHTTP(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/currentFitness.json?auth=${idToken}`,
-      newFitness
-    );
-    await putHTTP(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/workouts/nextWorkout.json?auth=${idToken}`,
-      training
-    );
-
-    dispatch(workoutAction.setCurrentFitness(newFitness));
-
-    dispatch(workoutAction.setNextWorkout(training));
+    await postHTTP(`${API_ROOT_ENDPOINT}/questionnaire/create/`, idToken, input);
 
     dispatch(
       UIAction.setModalUIStatus({
@@ -435,7 +307,8 @@ export const sendQuestionnaire = (input) => {
         buttonPath: "/run",
         status: "success",
         title: "Success!",
-        description: "Personalised workout found! View your next workout now! 🏃‍♂️",
+        description:
+          "Your questionnaire has been submitted! You should see you suggested workout soon! 🏃‍♂️",
       })
     );
   };
@@ -661,54 +534,70 @@ export const updateDatabase = (input, path) => {
   };
 };
 
-export const updateUserProfileHTTP = (input) => {
+export const createUserProfileHTTP = (input) => {
   return async (dispatch, getState) => {
-    const state = getState().user.authentication;
-    const idToken = state.idToken;
-    const uid = state.uid;
+    const { idToken } = getState().user.authentication;
+    const request = await fetch(`${API_ROOT_ENDPOINT}/profile/new/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      },
+      body: JSON.stringify(input),
+    });
+    const response = await request.json();
 
-    const userProfileInfo = {
-      email: input.email,
-      bio: input.bio,
-      displayName: input.displayName,
-      dp: input.dp,
-      uid: input.uid,
-    };
+    dispatch(userAction.updatePID(response.id));
+    // browserHistory.push("/run");
+  };
+};
 
-    dispatch(userAction.updateUserProfile(userProfileInfo));
+export const updateUserProfileHTTP = (formInput) => {
+  return async (dispatch, getState) => {
+    try {
+      const { idToken } = getState().user.authentication;
 
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "temp",
-        buttonPath: "/run",
-        status: "loading",
-        title: "Loading",
-        description: "Updating your user profile...",
-      })
-    );
+      dispatch(
+        UIAction.setModalUIStatus({
+          show: true,
+          buttonText: "temp",
+          buttonPath: "/run",
+          status: "loading",
+          title: "Loading",
+          description: "Updating your user profile...",
+        })
+      );
 
-    await fetch(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/userProfile.json?auth=${idToken}`,
-      {
-        method: "PUT",
+      const request = await fetch(`${API_ROOT_ENDPOINT}/profile/update/`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
         },
-        body: JSON.stringify(userProfileInfo),
-      }
-    );
+        body: JSON.stringify(formInput),
+      });
 
-    dispatch(
-      UIAction.setModalUIStatus({
-        show: true,
-        buttonText: "close",
-        buttonPath: "/profile",
-        status: "success",
-        title: "Success!",
-        description: "Your profile has been updated!",
-      })
-    );
+      const response = await request.json();
+
+      if (!request.ok) throw new Error("No profile detected!");
+
+      const { profileFormatted } = await getProfileDjango(idToken);
+
+      dispatch(userAction.updateUserProfile(profileFormatted));
+
+      dispatch(
+        UIAction.setModalUIStatus({
+          show: true,
+          buttonText: "close",
+          buttonPath: "/profile",
+          status: "success",
+          title: "Success!",
+          description: "Your profile has been updated!",
+        })
+      );
+    } catch (error) {
+      dispatch(UIAction.setProfileModalStatus(true));
+    }
   };
 };
 
@@ -723,24 +612,88 @@ export function logout() {
   };
 }
 
+async function getProfileDjango(idToken) {
+  try {
+    const profile = await fetch(`${API_ROOT_ENDPOINT}/profile/initialize`, {
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+
+    const profileData = await profile.json();
+
+    const profileFormatted = {
+      email: profileData.user.email,
+      displayName: profileData.user.username,
+      bio: profileData.bio,
+      dp: profileData.profileImage,
+      uid: profileData.id,
+      coins: profileData.coins,
+    };
+
+    const workoutFormatted = {
+      logs: profileData.workoutlogs,
+      nextWorkout: profileData.workoutlogs[0],
+      previousWorkout: profileData.workoutlogs[1],
+      currentFitness: profileData.currentFitness,
+    };
+
+    const questionnaire = profileData.questionnaire;
+
+    return { profileFormatted, workoutFormatted };
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const initialiseData = () => {
   return async (dispatch, getState) => {
-    const state = getState().user.authentication;
-    const idToken = state.idToken;
-    const uid = state.uid;
-    dispatch(UIAction.setMainUIStatus({ status: "loading" }));
+    try {
+      const { idToken } = getState().user.authentication;
+      console.log(idToken);
+      console.log(getState());
+      dispatch(UIAction.setMainUIStatus({ status: "loading" }));
 
-    const userData = await getJSON(
-      `https://twopointfour-c41d2-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}.json?auth=${idToken}`
-    );
+      const { profileFormatted, workoutFormatted, questionnaire } = await getProfileDjango(idToken);
 
-    dispatch(workoutAction.setWorkoutData(userData.workouts));
+      // const profile = await fetch(`${API_ROOT_ENDPOINT}/profile/initialize`, {
+      //   headers: {
+      //     Authorization: `Bearer ${idToken}`,
+      //   },
+      // });
 
-    dispatch(userAction.updateUserProfile(userData.userProfile));
+      // const profileData = await profile.json();
 
-    dispatch(userAction.updateQuestionnaire(userData.questionnaire));
+      // console.log(profileData);
+      // console.log(getState());
 
-    dispatch(UIAction.setMainUIStatus({ status: "success" }));
+      // const workoutFormatted = {
+      //   logs: profileData.workoutlogs,
+      //   nextWorkout: profileData.workoutlogs[0],
+      //   previousWorkout: profileData.workoutlogs[1],
+      //   currentFitness: profileData.currentFitness,
+      // };
+
+      // const profileFormatted = {
+      //   email: profileData.user.email,
+      //   displayName: profileData.user.username,
+      //   bio: profileData.bio,
+      //   dp: profileData.profileImage,
+      //   uid: profileData.id,
+      // };
+
+      dispatch(workoutAction.setWorkoutData(workoutFormatted));
+
+      dispatch(userAction.updateUserProfile(profileFormatted));
+      console.log(getState());
+
+      dispatch(userAction.updateQuestionnaire(questionnaire));
+
+      dispatch(UIAction.setMainUIStatus({ status: "success" }));
+    } catch {
+      console.log("UI ACTION ACTIVATED!!!");
+      dispatch(UIAction.setProfileModalStatus(true));
+    }
   };
 };
 
@@ -818,10 +771,25 @@ export const initializeCommunityWorkouts = () => {
     );
   };
 };
+export const addCoins = () => {
+  return async (dispatch, getState) => {
+    console.log("add coins activated!");
+    const { idToken, uid } = getState().user.authentication;
+    const response = await postHTTP(`${API_ROOT_ENDPOINT}/profile/update/`, idToken, {
+      user: { id: uid },
+      coins: 100,
+    });
+    dispatch(userAction.updateCoins(response.coins));
+  };
+};
 
 const store = configureStore({
   reducer: {
-    timer: timerSlice.reducer,
+    // timer: timerSlice.reducer,
+    // vTfR: vTfRSlice.reducer,
+    vTvR: vTvRSlice.reducer,
+    // fTfR: fTfRSlice.reducer,
+    // fTvR: fTvRSlice.reducer,
     user: userSlice.reducer,
     workout: workoutSlice.reducer,
     ui: UISlice.reducer,
