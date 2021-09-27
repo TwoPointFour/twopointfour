@@ -85,16 +85,31 @@ export const getOverallFitness = (speedDifficulty, duration, currentFitness, pre
   const deltaDifficulty = speedDifficulty - 100;
   const deltaDifficultyPerWeek = deltaDifficulty / duration;
   if (Object.keys(previousWorkout).length < 1) return {newFitness: 100, targetDifficulty: 100 + deltaDifficultyPerWeek};
-  //todo if workout large success, use all the previous workouts
   const previousWorkoutScore = scoredWorkouts(previousWorkout);
   if (previousWorkoutScore.workoutScore < 94) {
     return {newFitness: currentFitness, targetDifficulty: currentFitness + deltaDifficultyPerWeek};
   }
-
   return {
     newFitness: previousWorkout.personalisedDifficultyMultiplier,
     targetDifficulty: previousWorkout.personalisedDifficultyMultiplier + deltaDifficultyPerWeek,
   };
+  /* To update code above with the following decision logic
+      1. Decision logic to determine if workout is a success or failure
+        a. If workout score is between 94-105, workout=success
+        b. If workout score < 94, workout=fail
+        c. If workout score > 105, workout= breakthrough
+
+    2. If workout turns out to be a failure or success
+        a. if previous workout is success, continue with next workout, change nothing
+        b. if workout is a failure and fail_count == 0,
+            i. Set k = 1.2, fail_count++
+        c. if workout is a failure and fail_count == 1,
+            i. Set x = P(avg)
+        d. if workout is a breakthrough and breakthrough_count == 0,
+            i. breakthrough count++
+        e. if workout is a breakthrough and breakthrough _count == 1,
+            i. Set x = P(avg)
+   */
 };
 
 /// for the first time we are calling get_diffs, we use 100. For the second stage, we use the calculated diff

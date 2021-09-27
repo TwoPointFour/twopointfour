@@ -1,6 +1,7 @@
 //todo get rid of the retarded parseFloat all over the place
-export const getMissed = (previousWorkout) =>
-    previousWorkout.parts[0]["sets"] - previousWorkout.parts[0]["timings"].length;
+export const filterImproperTimings = (previousWorkout, goalTimePerSet) => {
+    return previousWorkout.parts[0]["timings"].filter(x => x >= goalTimePerSet - 3000 || x <= goalTimePerSet + 7000);
+}
 
 export const getAverageTime = (previousWorkout) => {
     // in seconds
@@ -39,15 +40,18 @@ const getWorkoutScore = (previousWorkout) => {
         return {goalTimePerSet: 0, averageTime: 0, standardDeviation: 0, missed: 0, workoutScore: 0};
     }
     const goalTimePerSet = getGoalSetTime(previousWorkout); // in ms
-    const averageTime = getAverageTime(previousWorkout); // in ms
-    const standardDeviation = getStandardDeviation(previousWorkout);
-    const missed = getMissed(previousWorkout); // integer value
-    const workoutScore =
-        100 *
-        (goalTimePerSet / averageTime +
-            (Math.exp(standardDeviation / goalTimePerSet) - 1) * kValue -
-            penaliseMissed(missed, previousWorkout));
-    return {workoutScore}; // {goalTimePerSet, averageTime, standardDeviation, missed, workoutScore}
+    const totalTime = goalTimePerSet * previousWorkout.parts[0]["sets"]
+    const totalDistance = previousWorkout.parts[0]["sets"] * parseFloat(previousWorkout.parts[0]["distance"])
+    // const averageTime = getAverageTime(previousWorkout); // in ms
+    // const standardDeviation = getStandardDeviation(previousWorkout);
+    const completedTimings = filterImproperTimings(previousWorkout, goalTimePerSet); // integer value
+    const totalCompletedTime = completedTimings.reduce((a, b) => a + b, 0); // in ms
+    const totalCompletedDistance = parseFloat(previousWorkout.parts[0]["distance"]) * completedTimings.length
+    const averageCompletedPaceSeconds = totalCompletedTime / (totalCompletedDistance * 1000) // converted to seconds here
+    const averageGoalPaceSeconds = totalTime / (totalDistance * 1000)
+    const completionRatio = totalCompletedDistance / totalDistance
+    const workoutScore = 100 * ((averageGoalPaceSeconds / averageCompletedPaceSeconds) * ((completionRatio + 2) / 3))
+    return {workoutScore}; // {goalTimePerSet, averageTime, standardDeviation, completedTimings, workoutScore}
 };
 
 export const scoredWorkouts = (previousWorkout) => getWorkoutScore(previousWorkout);
